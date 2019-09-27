@@ -200,8 +200,5 @@ def vlog_to_model(infiles, includes, top, outfile=None):
     if len(models_xml) == 0:
         models_xml.insert(0, ET.Comment("this file is intentionally left blank"))
 
-    f = open(outfile, 'w')
-    f.write(ET.tostring(models_xml, pretty_print=True).decode('utf-8'))
-    f.close()
-    print("Generated {} from {}".format(outfile, iname))
+    return ET.tostring(models_xml, pretty_print=True).decode('utf-8')
 

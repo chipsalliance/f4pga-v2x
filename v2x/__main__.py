@@ -7,9 +7,11 @@ import sys
 
 def main(args):
     if args.mode == "pb_type":
-        vlog_to_pbtype.vlog_to_pbtype(args.infiles, args.outfile, args.top)
+        with open(args.outfile, "w") as fp:
+            fp.write(vlog_to_pbtype.vlog_to_pbtype(args.infiles, args.outfile, args.top))
     else:
-        vlog_to_model.vlog_to_model(args.infiles, args.includes, args.top, args.outfile)
+        with open(args.outfile, "w") as fp:
+            fp.write(vlog_to_model.vlog_to_model(args.infiles, args.includes, args.top, args.outfile))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
