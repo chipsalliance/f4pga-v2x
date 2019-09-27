@@ -14,7 +14,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/SymbiFlow/python-symbiflow-v2x",
     packages=setuptools.find_packages(),
-    install_requires=['ply', 'pyjson'],
+    install_requires=['lxml', 'pyjson'],
     setup_requires=["pytest-runner"],
     tests_require=["pytest"],
     classifiers=[
