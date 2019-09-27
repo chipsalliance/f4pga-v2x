@@ -62,7 +62,7 @@ import lxml.etree as ET
 from .yosys import run
 from .yosys.json import YosysJSON
 
-from .lib import xmlinc  # noqa: E402
+from .xml import xmlinc  # noqa: E402
 
 
 def normalize_pb_name(pb_name):
