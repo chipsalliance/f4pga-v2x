@@ -797,39 +797,6 @@ def make_pb_type(
 
     return pb_type_xml
 
-
-parser = argparse.ArgumentParser(
-    description=__doc__.strip(), formatter_class=argparse.RawTextHelpFormatter
-)
-parser.add_argument(
-    'infiles',
-    metavar='input.v',
-    type=str,
-    nargs='+',
-    help="""\
-One or more Verilog input files, that will be passed to Yosys internally.
-They should be enough to generate a flattened representation of the model,
-so that paths through the model can be determined.
-"""
-)
-parser.add_argument(
-    '--top',
-    help="""\
-Top level module, will usually be automatically determined from the file name
-%.sim.v
-"""
-)
-parser.add_argument(
-    '--outfile',
-    '-o',
-    type=argparse.FileType('w'),
-    default="pb_type.xml",
-    help="""\
-Output filename, default 'model.xml'
-"""
-)
-
-
 def vlog_to_pbtype(infiles, outfile, top=None):
     iname = os.path.basename(infiles[0])
 
@@ -870,9 +837,3 @@ def vlog_to_pbtype(infiles, outfile, top=None):
     print("Generated {} from {}".format(outfile.name, iname))
     outfile.close()
 
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
-    args = parser.parse_args()
-    sys.exit(main(args))

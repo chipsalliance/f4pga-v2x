@@ -205,36 +205,3 @@ def vlog_to_model(infiles, includes, top, outfile=None):
     f.close()
     print("Generated {} from {}".format(outfile, iname))
 
-if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser(description=__doc__.strip())
-    parser.add_argument(
-        'infiles',
-        metavar='input.v',
-        type=str,
-        nargs='+',
-        help="""\
-    One or more Verilog input files, that will be passed to Yosys internally.
-    They should be enough to generate a flattened representation of the model,
-    so that paths through the model can be determined.
-    """
-    )
-    parser.add_argument(
-        '--top',
-        help="""\
-    Top level module, will usually be automatically determined from the file name
-    %.sim.v
-    """
-    )
-    parser.add_argument(
-        '--includes',
-        help="""\
-    Comma separate list of include directories.
-    """,
-        default=""
-    )
-    parser.add_argument('-o', help="""\
-    Output filename, default 'model.xml'
-    """)
-
-    args = parser.parse_args()
