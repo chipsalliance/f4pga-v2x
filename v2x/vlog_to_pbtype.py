@@ -800,8 +800,6 @@ def make_pb_type(
 def vlog_to_pbtype(infiles, outfile, top=None):
     iname = os.path.basename(infiles[0])
 
-    outfile = open(outfile, 'w')
-
     run.add_define("PB_TYPE")
     vjson = run.vlog_to_json(infiles, flatten=False, aig=False)
     yj = YosysJSON(vjson)
@@ -824,16 +822,12 @@ def vlog_to_pbtype(infiles, outfile, top=None):
 
     tmod = yj.module(top)
 
-    pb_type_xml = make_pb_type(infiles, outfile.name, yj, tmod)
+    pb_type_xml = make_pb_type(infiles, outfile, yj, tmod)
 
-    outfile.write(
-        ET.tostring(
+    return ET.tostring(
             pb_type_xml,
             pretty_print=True,
             encoding="utf-8",
             xml_declaration=True
         ).decode('utf-8')
-    )
-    print("Generated {} from {}".format(outfile.name, iname))
-    outfile.close()
 
