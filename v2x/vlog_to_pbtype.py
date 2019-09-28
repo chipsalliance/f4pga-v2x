@@ -59,11 +59,10 @@ from collections import defaultdict
 
 import lxml.etree as ET
 
-import yosys.run
-from yosys.json import YosysJSON
+from .yosys import run
+from .yosys.json import YosysJSON
 
-sys.path.insert(0, "..")
-from lib import xmlinc  # noqa: E402
+from .xml import xmlinc  # noqa: E402
 
 
 def normalize_pb_name(pb_name):
@@ -678,7 +677,7 @@ def make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml):
 
 
 def make_pb_type(
-        outfile, yj, mod, mode_processing=False, mode_xml=None, mode_name=None
+        infiles, outfile, yj, mod, mode_processing=False, mode_xml=None, mode_name=None
 ):
     """Build the pb_type for a given module. mod is the YosysModule object to
     generate."""
@@ -748,7 +747,7 @@ def make_pb_type(
         ET.SubElement(pb_type_xml, "pb_class", {}).text = pb_attrs["class"]
 
     # Create the pins for this pb_type
-    clocks = yosys.run.list_clocks(args.infiles, mod.name)
+    clocks = run.list_clocks(infiles, mod.name)
     make_ports(clocks, mod, pb_type_xml, "clocks")
     make_ports(clocks, mod, pb_type_xml, "inputs")
     make_ports(clocks, mod, pb_type_xml, "outputs")
@@ -759,8 +758,8 @@ def make_pb_type(
             mode_xml = ET.SubElement(pb_type_xml, "mode", {"name": smode})
             # Rerun Yosys with mode parameter
             mode_yj = YosysJSON(
-                yosys.run.vlog_to_json(
-                    args.infiles,
+                run.vlog_to_json(
+                    infiles,
                     flatten=False,
                     aig=False,
                     mode=smode,
@@ -768,7 +767,7 @@ def make_pb_type(
                 )
             )
             mode_mod = mode_yj.module(mod.name)
-            make_pb_type(outfile, mode_yj, mode_mod, True, mode_xml, smode)
+            make_pb_type(infiles, outfile, mode_yj, mode_mod, True, mode_xml, smode)
 
             # if mode pb_type contains interconnect tag, add new connctions there
             ic_xml = mode_xml.find("interconnect")
@@ -798,48 +797,15 @@ def make_pb_type(
 
     return pb_type_xml
 
+def vlog_to_pbtype(infiles, outfile, top=None):
+    iname = os.path.basename(infiles[0])
 
-parser = argparse.ArgumentParser(
-    description=__doc__.strip(), formatter_class=argparse.RawTextHelpFormatter
-)
-parser.add_argument(
-    'infiles',
-    metavar='input.v',
-    type=str,
-    nargs='+',
-    help="""\
-One or more Verilog input files, that will be passed to Yosys internally.
-They should be enough to generate a flattened representation of the model,
-so that paths through the model can be determined.
-"""
-)
-parser.add_argument(
-    '--top',
-    help="""\
-Top level module, will usually be automatically determined from the file name
-%.sim.v
-"""
-)
-parser.add_argument(
-    '--outfile',
-    '-o',
-    type=argparse.FileType('w'),
-    default="pb_type.xml",
-    help="""\
-Output filename, default 'model.xml'
-"""
-)
-
-
-def main(args):
-    iname = os.path.basename(args.infiles[0])
-
-    yosys.run.add_define("PB_TYPE")
-    vjson = yosys.run.vlog_to_json(args.infiles, flatten=False, aig=False)
+    run.add_define("PB_TYPE")
+    vjson = run.vlog_to_json(infiles, flatten=False, aig=False)
     yj = YosysJSON(vjson)
 
-    if args.top is not None:
-        top = args.top
+    if top is not None:
+        top = top
     else:
         wm = re.match(r"([A-Za-z0-9_]+)\.sim\.v", iname)
         if wm:
@@ -856,22 +822,12 @@ def main(args):
 
     tmod = yj.module(top)
 
-    pb_type_xml = make_pb_type(args.outfile.name, yj, tmod)
+    pb_type_xml = make_pb_type(infiles, outfile, yj, tmod)
 
-    args.outfile.write(
-        ET.tostring(
+    return ET.tostring(
             pb_type_xml,
             pretty_print=True,
             encoding="utf-8",
             xml_declaration=True
         ).decode('utf-8')
-    )
-    print("Generated {} from {}".format(args.outfile.name, iname))
-    args.outfile.close()
 
-
-if __name__ == "__main__":
-    import doctest
-    doctest.testmod()
-    args = parser.parse_args()
-    sys.exit(main(args))

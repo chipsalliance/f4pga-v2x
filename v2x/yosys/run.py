@@ -4,7 +4,7 @@ import os
 import re
 import subprocess
 import tempfile
-import yosys.utils
+from . import utils
 
 
 def get_verbose():
@@ -140,7 +140,7 @@ def vlog_to_json(
     else:
         mode_str = ""
     cmds = "{}prep {}; write_json {}".format(mode_str, prep_opts, json_opts)
-    j = yosys.utils.strip_yosys_json(commands(cmds, infiles))
+    j = utils.strip_yosys_json(commands(cmds, infiles))
     """with open('dump.json', 'w') as dbg:
         print(j,file=dbg)"""
     return json.loads(j)
