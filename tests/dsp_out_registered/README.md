@@ -1,4 +1,4 @@
-## dsp\_out\_registered tests
+# `dsp_out_registered` tests
 
 This directory contains test for the `v2x_to_model.py` and `v2x_to_pb_type` tools.
 The tests use model from fig42-dff and dps\_combinational tests.

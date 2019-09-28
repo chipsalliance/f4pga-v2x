@@ -1,4 +1,4 @@
-## CARRY tests
+# `carry` - `cblock` tests
 
 This directory contains test for the `v2x_to_model.py` and `v2x_to_pb_type` tools.
 Those tests should check the following features:
@@ -17,6 +17,6 @@ Those tests should check the following features:
 
  - [ ] carry chains inference - carry chains defined on wires with `carry` attribute should be propagated to pb\_type xml file
 
-## Timings
+## Timing
 
- - [ ] all the timings defined in Verilog should be propagated to result pb\_type file
+ - [ ] all the timing defined in Verilog should be propagated to result pb\_type file

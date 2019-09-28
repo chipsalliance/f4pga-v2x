@@ -1,4 +1,4 @@
-## PAIR tests
+# `fig28-lutff-pair` test
 
 This directory contains test for the `v2x_to_model.py` and `v2x_to_pb_type` tools.
 The tests use models defined in ff, lut and omux tests.

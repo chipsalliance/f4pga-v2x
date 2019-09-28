@@ -1,4 +1,4 @@
-## LUT tests
+# `fig28-lutff-pair` - `lut` test
 
 This directory contains test for the `v2x_to_model.py` and `v2x_to_pb_type` tools.
 Those tests should check the following features:

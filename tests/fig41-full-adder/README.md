@@ -1,4 +1,4 @@
-## Adder tests
+# `fig41-full-adder` test
 
 This directory contains test for the blackbox detection for the
 `v2x_to_model.py` and `v2x_to_pb_type` tools.
