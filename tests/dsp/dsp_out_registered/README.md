@@ -1,18 +1,19 @@
-# `dsp_out_registered` tests
+# `dsp_out_registered` test
 
-This directory contains test for the `v2x_to_model.py` and `v2x_to_pb_type` tools.
-The tests use model from fig42-dff and dps\_combinational tests.
-Those tests should check the following features:
+Test for "DSP style" block with outputs registered.
+
+The tests use model from [`fig42-dff`](FIXME) and
+[`dsp_combinational`](../dsp_combinational/README.md) tests.
 
 
 ## Detection of combinational connections
 
  - [ ] output has combinational connection with input
- - [ ] pack\_pattern defined on wire connections with `pack` attribute
+ - [ ] `pack_pattern` defined on wire connections with `pack` attribute
 
 ## Blackbox detection
 
- - [ ] model of the leaf pb\_type is generated
- - [ ] leaf pb\_type xml is generated
- - [ ] all dependency models and pb\_types are included in the output files
+ - [ ] model of the leaf `pb_type` is generated
+ - [ ] leaf `pb_type` XML is generated
+ - [ ] all dependency models and `pb_type`s are included in the output files
 

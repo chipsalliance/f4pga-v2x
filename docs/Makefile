@@ -30,22 +30,18 @@ venv:
 # Update fuzzer / minitest markdown links.
 tests-links:
 	@mkdir -p $(MAKEDIR)/tests
-	@cd $(MAKEDIR)/tests && rm -f *.md
+	@cd $(MAKEDIR)/tests && find -name '*.md' -delete && find -type d -empty -delete
 	@cd $(MAKEDIR)/tests && \
-		for i in ../../tests/*; do \
-			n=$$(basename $$i | sed -e's/^[0-9][0-9][0-9]-//'); \
-			if [ ! -d $$i ]; then \
-				continue; \
+		for I in $$(cd ../../tests/ ; find -name '*.md' | sort); do \
+			F=$$(dirname $$I); D=$$(dirname $$F); N=$$(basename $$F); \
+			S=../../tests/$$I; O=$$D/$$N.md; \
+			if [ ! -d $$D ]; then \
+				mkdir -p $$D; \
 			fi; \
-			if [ -e $$i/README.md ]; then \
-				echo "Linking $$i/README.md"; \
-				ln -s $$i/README.md $${n}.md; \
-			else \
-				echo "Missing $$i/README.md"; \
-			fi; \
+			ln -sf $$(realpath $$S --relative-to=$$D) $$O; \
 		done
 
-links: tests-links
+links:
 	@true
 
 .PHONY: tests-links links
