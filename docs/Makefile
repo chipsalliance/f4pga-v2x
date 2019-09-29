@@ -5,8 +5,8 @@ MAKEDIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
 # You can set these variables from the command line.
 SPHINXOPTS      =
-SPHINXBUILD     = [ -e venv/bin/activate ] && source venv/bin/activate; sphinx-build
-SPHINXAUTOBUILD = [ -e venv/bin/activate ] && source venv/bin/activate; sphinx-autobuild
+SPHINXBUILD     = [ -e env/bin/activate ] && source env/bin/activate; sphinx-build
+SPHINXAUTOBUILD = [ -e env/bin/activate ] && source env/bin/activate; sphinx-autobuild
 SPHINXPROJ      = SymbiFlowV2X
 SOURCEDIR       = .
 BUILDDIR        = _build
@@ -20,12 +20,21 @@ livehtml:
 
 .PHONY: help livehtml Makefile
 
-venv:
-	rm -rf venv
-	virtualenv --python=python3 venv
-	source venv/bin/activate; pip install -r requirements.txt
 
-.PHONY: venv
+env/Miniconda3-latest-Linux-x86_64.sh:
+	mkdir env
+	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O env/Miniconda3-latest-Linux-x86_64.sh
+	chmod a+x env/Miniconda3-latest-Linux-x86_64.sh
+
+env:
+	rm -rf env
+	make env/Miniconda3-latest-Linux-x86_64.sh
+	./env/Miniconda3-latest-Linux-x86_64.sh -p $(PWD)/env -b -f
+	source env/bin/activate; conda config --system --add envs_dirs $(PWD)/env/envs
+	source env/bin/activate; conda config --system --add pkgs_dirs $(PWD)/env/pkgs
+	source env/bin/activate; conda env update --name base --file ./environment.yml
+
+.PHONY: env
 
 # Update fuzzer / minitest markdown links.
 tests-links:
