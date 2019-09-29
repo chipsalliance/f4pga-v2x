@@ -40,8 +40,14 @@ tests-links:
 			fi; \
 			ln -sf $$(realpath $$S --relative-to=$$D) $$O; \
 		done
+	@cd $(MAKEDIR)/tests && \
+		for I in $$(cd ../../tests/ ; find -name '*.svg' -o -name '*.png' | sort); do \
+			F=$$(dirname $$I); D=$$(dirname $$F); N=$$(basename $$I); \
+			S=../../tests/$$I; O=$$D/$$N; \
+			ln -sf $$(realpath $$S --relative-to=$$D) $$O; \
+		done
 
-links:
+links: tests-links
 	@true
 
 .PHONY: tests-links links
