@@ -11,3 +11,8 @@ sphinxcontrib-napoleon
 
 # Markdown cross-reference solver library
 git+https://github.com/SymbiFlow/sphinxcontrib-markdown-symlinks
+
+symbolator
+
+pycairo
+# vext.gi

@@ -3,18 +3,18 @@
 Clock Examples
 ==============
 
-FlipFlop Examples
------------------
+Autodetection clock from flipflop
+---------------------------------
 
 .. toctree::
 
-   clocks/dff_comb_one_clock.md
-   clocks/dff_comb_one_clock.md
    clocks/dff_one_clock.md
    clocks/dff_two_clocks.md
 
-Input Clocks
-------------
+.. include:: ../../tests/clocks/dff_comb_one_clock/README.rst
+
+Manual Input Clock
+------------------
 
 .. toctree::
 
@@ -22,8 +22,8 @@ Input Clocks
    clocks/input_named_clk.md
    clocks/input_named_rdclk.md
 
-Output Clocks
--------------
+Manual Output Clock
+-------------------
 
 .. toctree::
 

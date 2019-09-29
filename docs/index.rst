@@ -9,10 +9,14 @@ Welcome to SymbiFlow Verilog to XML
 .. _V2X: http://symbiflow-v2x.readthedocs.io/
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :glob:
-   :caption: Tests
 
    tests/vtr-examples.rst
-   tests/clocks.rst
    tests/dsp.rst
+
+.. toctree::
+   :maxdepth: 3
+   :glob:
+
+   tests/clocks.rst
