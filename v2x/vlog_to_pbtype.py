@@ -460,7 +460,7 @@ def get_list_name_and_length(l: List[str]) -> Tuple[str, int]:
         assert expected_item == sl[
             i], "index {} expected: {} != actual: {}\n{}".format(
                 i, expected_item, sl[i], sl
-            )
+        )
     return list_name, len(l)
 
 
@@ -639,7 +639,7 @@ def make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml):
                 assert iodir == "output", \
                     "Only output ports can have T_clock_to_Q timing \
                     definition. Port {}, direction {}.".format(
-                            port, iodir)
+                        port, iodir)
                 attrs["max"] = splitspec[1]
             else:
                 assert iodir == "input", \
@@ -842,8 +842,8 @@ def vlog_to_pbtype(infiles, outfile, top=None):
     pb_type_xml = make_pb_type(infiles, outfile, yj, tmod)
 
     return ET.tostring(
-            pb_type_xml,
-            pretty_print=True,
-            encoding="utf-8",
-            xml_declaration=True
-        ).decode('utf-8')
+        pb_type_xml,
+        pretty_print=True,
+        encoding="utf-8",
+        xml_declaration=True
+    ).decode('utf-8')
