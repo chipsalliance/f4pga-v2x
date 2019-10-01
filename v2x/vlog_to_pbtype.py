@@ -9,49 +9,56 @@ The following are allowed on a top level module:
     This will also set the BLIF model to be `.subckt <name>` unless CLASS is
     also specified.
 
-    - `(* CLASS="lut|routing|mux|flipflop|mem" *)` : specify the class of an given
-    instance.
+    - `(* CLASS="lut|routing|mux|flipflop|mem" *)` : specify the class of an
+    given instance.
 
-    - `(* MODES="mode1; mode2; ..." *)` : specify that the module has more than one functional
-    mode, each with a given name. The module will be evaluated n times, each time setting
-    the MODE parameter to the nth value in the list of mode names. Each evaluation will be
-    put in a pb_type `<mode>` section named accordingly.
+    - `(* MODES="mode1; mode2; ..." *)` : specify that the module has more
+    than one functional mode, each with a given name. The module will be
+    evaluated n times, each time setting the MODE parameter to the nth value
+    in the list of mode names. Each evaluation will be put in a pb_type
+    `<mode>` section named accordingly.
 
     - `(* MODEL_NAME="model" *)` : override the name used for <model> and for
-    ".subckt name" in the BLIF model. Mostly intended for use with w.py, when several
-    different pb_types implement the same model.
+    ".subckt name" in the BLIF model. Mostly intended for use with w.py, when
+    several different pb_types implement the same model.
 
-The following are allowed on nets within modules (TODO: use proper Verilog timing):
+The following are allowed on nets within modules
+(TODO: use proper Verilog timing):
     - `(* SETUP="clk 10e-12" *)` : specify setup time for a given clock
 
     - `(* HOLD="clk 10e-12" *)` : specify hold time for a given clock
 
-    - `(* CLK_TO_Q="clk 10e-12" *)` : specify clock-to-output time for a given clock
+    - `(* CLK_TO_Q="clk 10e-12" *)` : specify clock-to-output time for
+                                      a given clock
 
-    - `(* DELAY_CONST_{input}="30e-12" *)` : specify a constant max delay from an input
-                                            (applied to the output)
+    - `(* DELAY_CONST_{input}="30e-12" *)` : specify a constant max delay
+                                             from an input (applied to the
+                                             output)
 
-    - `(* DELAY_MATRIX_{input}="30e-12 35e-12; 20e-12 25e-12; ..." *)` : specify a VPR
-        delay matrix (semicolons indicate rows). In this format columns specify
-        inputs bits and rows specify output bits. This should be applied to the output.
+    - `(* DELAY_MATRIX_{input}="30e-12 35e-12; 20e-12 25e-12; ..." *)` :
+        specify a VPR delay matrix (semicolons indicate rows). In this
+        format columns specify inputs bits and rows specify output bits.
+        This should be applied to the output.
 
-    - `(* carry = ADDER *)` : specify carry chain pack_pattern associated with this wire
+    - `(* carry = ADDER *)` : specify carry chain pack_pattern associated
+                              with this wire
 
 The following are allowed on ports:
     - `(* CLOCK *)` : force a given port to be a clock
 
-    - `(* ASSOC_CLOCK="RDCLK" *)` : force a port's associated clock to a given value
+    - `(* ASSOC_CLOCK="RDCLK" *)` : force a port's associated clock to a
+                                    given value
 
     - `(* PORT_CLASS="clock" *)` : specify the VPR "port_class"
 
-    - `(* carry = ADDER *)` : specify carry chain pack_pattern associated with this port
+    - `(* carry = ADDER *)` : specify carry chain pack_pattern associated
+                              with this port
 
 The Verilog define "PB_TYPE" is set during generation.
 """
 
 import os
 import sys
-import argparse
 import re
 
 from typing import List, Dict, Tuple
@@ -111,12 +118,12 @@ GENBLOCK_REGEX = re.compile(
 def strip_name(name: str, include_index=True) -> str:
     """Convert generate block into normal array form.
 
-    >>> n = r"$genblock$/vlog/tests/multiple_instance/multiple_instance.sim.v:12$64[57].\\comb"
+    >>> n = r"$genblock$/tests/multiple_instance/multiple_instance.sim.v:12$64[57].\\comb" # noqa: E501
     >>> strip_name(n)
     'comb[57]'
     >>> strip_name(n, False)
     'comb'
-    >>> n = r"$genblock$/vlog/tests/multiple_instance/multiple_instance.sim.v:15$10[3].\\comba"
+    >>> n = r"$genblock$/tests/multiple_instance/multiple_instance.sim.v:15$10[3].\\comba" # noqa: #501
     >>> strip_name(n)
     'comba[3]'
     """
@@ -287,11 +294,13 @@ def get_interconnects(yj, mod, mod_pname: str,
         for pin, net in inp_cons:
             drvs = mod.net_drivers(net)
             assert len(drvs) > 0, (
-                "ERROR: pin {}.{} has no driver, interconnect will be missing\n{}"
+                "ERROR: pin {}.{} has no driver, \
+                interconnect will be missing\n{}"
                 .format(cname, pin, mod)
             )
             assert len(drvs) < 2, (
-                "ERROR: pin {}.{} has multiple drivers, interconnect will be overspecified"
+                "ERROR: pin {}.{} has multiple drivers, \
+                interconnect will be overspecified"
                 .format(cname, pin)
             )
             for drv_cell, drv_pin in drvs:
@@ -365,7 +374,8 @@ def get_children(yj, mod) -> Tuple[ChildrenDict, ChildrenDict]:
         assert d[cname_prefix][
             0
         ] == ctype, \
-            "Type of {} with prefix {} doesn't match existing. Type: {}, existing: {}".format(
+            "Type of {} with prefix {} doesn't match \
+            existing. Type: {}, existing: {}".format(
                 cname, cname_prefix, ctype, children[cname_prefix]
         )
         d[cname_prefix][-1].append(strip_name(cname))
@@ -603,7 +613,8 @@ Mux {}.{} is trying to drive mux input pin {}.{}""".format(
                         driver_cell, driver_pin, mux_cell, sink_pin
                     )
                 assert sink_pin not in mux_inputs, """\
-Pin {}.{} is trying to drive mux pin {}.{} (already driving by {}.{})""".format(
+Pin {}.{} is trying to drive mux pin {}.{} (already driving by {}.{})\
+                 """.format(
                     driver_cell, driver_pin, mux_cell, mux_pin,
                     *mux_inputs[sink_pin]
                 )
@@ -620,14 +631,15 @@ def make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml):
             splitspec = tmgspec.split(" ")
             assert len(
                 splitspec
-            ) == 2, 'bad timing specification "{}", must be of format "clock value"'.format(
-                tmgspec
-            )
+            ) == 2, 'bad timing specification "{}", must be of format \
+            "clock value"'.format(tmgspec)
+
             attrs = {"port": port, "clock": splitspec[0]}
             if xmltype == "T_clock_to_Q":
                 assert iodir == "output", \
-                    "Only output ports can have T_clock_to_Q timing definition."
-                "Port {}, direction {}.".format(port, iodir)
+                    "Only output ports can have T_clock_to_Q timing \
+                    definition. Port {}, direction {}.".format(
+                            port, iodir)
                 attrs["max"] = splitspec[1]
             else:
                 assert iodir == "input", \
@@ -677,7 +689,8 @@ def make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml):
 
 
 def make_pb_type(
-        infiles, outfile, yj, mod, mode_processing=False, mode_xml=None, mode_name=None
+        infiles, outfile, yj, mod, mode_processing=False,
+        mode_xml=None, mode_name=None
 ):
     """Build the pb_type for a given module. mod is the YosysModule object to
     generate."""
@@ -767,9 +780,11 @@ def make_pb_type(
                 )
             )
             mode_mod = mode_yj.module(mod.name)
-            make_pb_type(infiles, outfile, mode_yj, mode_mod, True, mode_xml, smode)
+            make_pb_type(infiles, outfile, mode_yj, mode_mod,
+                         True, mode_xml, smode)
 
-            # if mode pb_type contains interconnect tag, add new connctions there
+            # if mode pb_type contains interconnect tag,
+            # add new connctions there
             ic_xml = mode_xml.find("interconnect")
             print("ic_xml is", ic_xml, file=sys.stderr)
             if ic_xml is None:
@@ -797,6 +812,7 @@ def make_pb_type(
 
     return pb_type_xml
 
+
 def vlog_to_pbtype(infiles, outfile, top=None):
     iname = os.path.basename(infiles[0])
 
@@ -812,8 +828,9 @@ def vlog_to_pbtype(infiles, outfile, top=None):
             top = wm.group(1).upper()
         else:
             print(
-                "ERROR file name not of format %.sim.v ({}), cannot detect top level."
-                " Manually specify the top level module using --top".
+                "ERROR file name not of format %.sim.v ({}),"
+                " cannot detect top level. Manually specify"
+                " the top level module using --top".
                 format(iname)
             )
             sys.exit(1)
@@ -830,4 +847,3 @@ def vlog_to_pbtype(infiles, outfile, top=None):
             encoding="utf-8",
             xml_declaration=True
         ).decode('utf-8')
-

@@ -125,7 +125,8 @@ class YosysModule:
         return self.data["netnames"][netname]["attributes"]
 
     def net_attr(self, netname, attr, defval=None):
-        """Get an attribute of a given net (specified by name), or defval is not set"""
+        """Get an attribute of a given net (specified by name),
+        or defval is not set"""
         if attr in self.net_attrs(netname):
             return self.net_attrs(netname)[attr]
         else:
@@ -336,7 +337,8 @@ class YosysJSON:
         return YosysModule(module, self.data["modules"][module])
 
     def modules_with_attr(self, attr_name, attr_value):
-        """Return a list of `YosysModule`s, selecting based on a given attribute"""
+        """Return a list of `YosysModule`s, selecting based on
+        a given attribute"""
         mods = []
         for mod in self.data["modules"]:
             ymod = self.module(mod)
@@ -345,7 +347,8 @@ class YosysJSON:
         return mods
 
     def all_modules(self):
-        """Return a list of the names of all modules in the design, sorted alphabetically"""
+        """Return a list of the names of all modules in the design,
+        sorted alphabetically"""
         return sorted(self.data["modules"].keys())
 
     @property

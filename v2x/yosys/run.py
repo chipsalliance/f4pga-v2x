@@ -29,7 +29,8 @@ def get_yosys_common_args():
 
 
 def get_output(params):
-    """Run Yosys with given command line parameters, and return stdout as a string"""
+    """Run Yosys with given command line parameters, and return
+    stdout as a string"""
 
     verbose = get_verbose()
 
@@ -76,19 +77,20 @@ def add_define(defname):
 
 
 def get_defines():
-    """Return a list of set Verilog defines, as a list of arguments to pass to Yosys
-`read_verilog`"""
+    """Return a list of set Verilog defines, as a list of arguments
+    to pass to Yosys `read_verilog`"""
     return " ".join(["-D" + _ for _ in defines])
 
 
 def add_include(path):
-    """ Add a path to search when reading verilog to the list of includes set in Yosys"""
+    """ Add a path to search when reading verilog to the list of
+    includes set in Yosys"""
     includes.append(path)
 
 
 def get_includes():
-    """Return a list of include directories, as a list of arguments to pass to Yosys
-`read_verilog`"""
+    """Return a list of include directories, as a list of arguments
+    to pass to Yosys `read_verilog`"""
     return " ".join(["-I" + _ for _ in includes])
 
 
@@ -130,7 +132,8 @@ def vlog_to_json(
     infiles : list of input files
     flatten : set to flatten output hierarchy
     aig : generate And-Inverter-Graph modules for gates
-    mode : set to a value other than None to use `chparam` to set the value of the MODE parameter
+    mode : set to a value other than None to use `chparam` to
+           set the value of the MODE parameter
     module_with_mode : the name of the module to apply `mode` to
     """
     prep_opts = "-flatten" if flatten else ""
@@ -166,8 +169,8 @@ def extract_pin(module, pstr, _regex=re.compile(r"([^/]+)/([^/]+)")):
 
 def do_select(infiles, module, expr, prep=False, flatten=False):
     """
-    Run a Yosys select command (given the expression and input files) on a module
-    and return the result as a list of pins
+    Run a Yosys select command (given the expression and input files)
+    on a module and return the result as a list of pins
 
     Inputs
     -------

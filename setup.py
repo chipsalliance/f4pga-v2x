@@ -22,7 +22,4 @@ setuptools.setup(
         "License :: OSI Approved :: ISC License",
         "Operating System :: OS Independent",
     ],
-    #entry_points={
-    #    'console_scripts': ['sdf_timing_parse=sdf_timing.sdfparse:main'],
-    #},
 )
