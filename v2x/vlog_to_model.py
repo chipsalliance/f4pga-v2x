@@ -5,18 +5,19 @@ Convert a Verilog simulation model to a VPR `model.xml`
 The following Verilog attributes are considered on ports:
     - `(* CLOCK *)` : force a given port to be a clock
 
-    - `(* ASSOC_CLOCK="RDCLK" *)` : force a port's associated clock to a given value
+    - `(* ASSOC_CLOCK="RDCLK" *)` : force a port's associated
+                                    clock to a given value
 
 The following Verilog attributes are considered on modules:
-    - `(* MODEL_NAME="model" *)` : override the name used for <model> and for
-    ".subckt name" in the BLIF model. Mostly intended for use with w.py, when several
-    different pb_types implement the same model.
+    - `(* MODEL_NAME="model" *)` : override the name used for
+    <model> and for ".subckt name" in the BLIF model. Mostly
+    intended for use with w.py, when several different pb_types
+    implement the same model.
 
-    - `(* CLASS="lut|routing|mux|flipflop|mem" *)` : specify the class of an given
-    instance. A model will not be generated for the `lut`, `routing` or `flipflop`
-    class.
+    - `(* CLASS="lut|routing|mux|flipflop|mem" *)` : specify the
+    class of an given instance. A model will not be generated for
+    the `lut`, `routing` or `flipflop` class.
 """
-import argparse
 import os
 import re
 import sys
@@ -73,6 +74,7 @@ def is_registered_path(tmod, pin, pout):
             return True
 
     return False
+
 
 def vlog_to_model(infiles, includes, top, outfile=None):
     iname = os.path.basename(infiles[0])
@@ -143,7 +145,8 @@ def vlog_to_model(infiles, includes, top, outfile=None):
                     wm.group(1).lower()
                 )
             else:
-                assert False, "included Verilog file name {} does not follow pattern %%.sim.v".format(
+                assert False, "included Verilog file name {} does \
+                        not follow pattern %%.sim.v".format(
                     module_basename
                 )
             xmlinc.include_xml(
@@ -177,8 +180,8 @@ def vlog_to_model(infiles, includes, top, outfile=None):
                     if is_registered_path(tmod, name, sink):
                         sinks.remove(sink)
 
-                # FIXME: Check if ignoring clock for "combination_sink_ports" is a
-                # valid thing to do.
+                # FIXME: Check if ignoring clock for "combination_sink_ports"
+                # is a valid thing to do.
                 if name in clocks or "clk" in name.lower():
                     attrs["is_clock"] = "1"
                 else:
@@ -195,10 +198,11 @@ def vlog_to_model(infiles, includes, top, outfile=None):
                 elif iodir == "output":
                     ET.SubElement(outports_xml, "port", attrs)
                 else:
-                    assert False, "bidirectional ports not permitted in VPR models"
+                    assert False, "bidirectional ports not permitted \
+                                  in VPR models"
 
     if len(models_xml) == 0:
-        models_xml.insert(0, ET.Comment("this file is intentionally left blank"))
+        models_xml.insert(0,
+                          ET.Comment("this file is intentionally left blank"))
 
     return ET.tostring(models_xml, pretty_print=True).decode('utf-8')
-

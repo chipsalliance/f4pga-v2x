@@ -1,0 +1,9 @@
+# Include the README
+include *.md
+
+# Include the license file
+include COPYING
+
+include *.yapf
+include *.txt
+recursive-include v2x *.py
