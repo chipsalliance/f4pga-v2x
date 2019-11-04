@@ -1,3 +1,7 @@
+exclude .readthedocs.yml
+exclude tox.ini
+exclude *.swp
+
 # Include the README
 include *.md
 
@@ -6,4 +10,18 @@ include COPYING
 
 include *.yapf
 include *.txt
+
 recursive-include v2x *.py
+
+
+# Docs
+recursive-include docs *.py
+recursive-include docs *.rst
+recursive-include docs *.txt
+recursive-include docs *.yml
+recursive-include docs Makefile
+prune docs/_*
+prune docs/env
+
+# Tests
+graft tests
