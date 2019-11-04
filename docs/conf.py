@@ -15,7 +15,7 @@
 import re
 
 # Markdown support
-import recommonmark
+import recommonmark  # noqa
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -24,7 +24,7 @@ import recommonmark
 import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
-from markdown_code_symlinks import LinkParser, MarkdownSymlinksDomain
+from markdown_code_symlinks import LinkParser, MarkdownSymlinksDomain  # noqa
 
 # -- General configuration ------------------------------------------------
 
@@ -124,7 +124,8 @@ html_theme = 'sphinx_materialdesign_theme'
 html_theme_options = {
     # Specify a list of menu in Header.
     # Tuples forms:
-    #  ('Name', 'external url or path of pages in the document', boolean, 'icon name')
+    #  ('Name', 'external url or path of pages in the document',
+    #   boolean, 'icon name')
     #
     # Third argument:
     # True indicates an external link.
@@ -136,45 +137,39 @@ html_theme_options = {
     # https://material.io/icons/
     'header_links': [
         ('Home', 'index', False, 'home'),
-        ("GitHub", "https://github.com/SymbiFlow/python-symbiflow-v2x", True, 'link')
+        ("GitHub", "https://github.com/SymbiFlow/python-symbiflow-v2x",
+         True, 'link'),
     ],
 
     # Customize css colors.
     # For details see link.
     # https://getmdl.io/customize/index.html
     #
-    # Values: amber, blue, brown, cyan deep_orange, deep_purple, green, grey, indigo, light_blue,
-    #         light_green, lime, orange, pink, purple, red, teal, yellow(Default: indigo)
-    'primary_color':
-    'deep_purple',
+    # Values: amber, blue, brown, cyan deep_orange, deep_purple, green, grey,
+    #         indigo, light_blue, light_green, lime, orange, pink, purple, red,
+    #         teal, yellow
+    # (Default: indigo)
+    'primary_color': 'deep_purple',
     # Values: Same as primary_color. (Default: pink)
-    'accent_color':
-    'purple',
+    'accent_color': 'purple',
 
     # Customize layout.
     # For details see link.
     # https://getmdl.io/components/index.html#layout-section
-    'fixed_drawer':
-    True,
-    'fixed_header':
-    True,
-    'header_waterfall':
-    True,
-    'header_scroll':
-    False,
+    'fixed_drawer': True,
+    'fixed_header': True,
+    'header_waterfall': True,
+    'header_scroll': False,
 
     # Render title in header.
     # Values: True, False (Default: False)
-    'show_header_title':
-    False,
+    'show_header_title': False,
     # Render title in drawer.
     # Values: True, False (Default: True)
-    'show_drawer_title':
-    True,
+    'show_drawer_title': True,
     # Render footer.
     # Values: True, False (Default: True)
-    'show_footer':
-    True
+    'show_footer': True
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
