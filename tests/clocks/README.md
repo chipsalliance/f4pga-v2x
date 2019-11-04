@@ -1,4 +1,4 @@
-## Clock detection tests
+# `clocks` tests
 
 This directory contains test for the clock detection functionality for the
 `v2x_to_model.py` tool.
