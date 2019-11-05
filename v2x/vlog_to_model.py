@@ -27,7 +27,7 @@ import lxml.etree as ET
 from .yosys import run
 from .yosys.json import YosysJSON
 
-from .xml import xmlinc
+from .xmlinc import xmlinc
 
 
 def is_clock_assoc(infiles, module, clk, port, direction):
