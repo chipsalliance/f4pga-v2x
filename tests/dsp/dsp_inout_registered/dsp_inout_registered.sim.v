@@ -1,4 +1,4 @@
-`include "../fig42-dff/dff.sim.v"
+`include "../../vtr/dff/dff.sim.v"
 `include "../dsp_combinational/dsp_combinational.sim.v"
 
 /* DSP Block with register on both the inputs and the output */

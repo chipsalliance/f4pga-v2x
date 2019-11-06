@@ -1,4 +1,4 @@
-`include "../fig41-full-adder/adder.sim.v"
+`include "../vtr/full-adder/adder.sim.v"
 module MULTIPLE_INSTANCE (a, b, c, d, cin, cout, sum);
 	localparam DATA_WIDTH = 4;
 
