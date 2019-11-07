@@ -1,6 +1,7 @@
 exclude .readthedocs.yml
 exclude tox.ini
 exclude *.swp
+prune conf
 
 # Include the README
 include *.md
