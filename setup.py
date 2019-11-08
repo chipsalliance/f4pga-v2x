@@ -14,9 +14,16 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/SymbiFlow/python-symbiflow-v2x",
     packages=setuptools.find_packages(),
-    install_requires=['lxml', 'pyjson'],
+    install_requires=[
+        'lxml',
+        'pyjson',
+        'vtr_xml_utils @ \
+         git+https://github.com/Symbiflow/vtr-xml-utils',
+    ],
     setup_requires=["pytest-runner"],
-    tests_require=["pytest"],
+    tests_require=[
+        'pytest',
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: ISC License",
