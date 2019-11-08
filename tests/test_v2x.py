@@ -6,10 +6,7 @@ import os
 from v2x import vlog_to_model
 from v2x import vlog_to_pbtype
 
-
-def get_filenames_containing(pattern, rootdir):
-    return list(set([str(f) for f in
-                     Path(os.path.dirname(__file__)).rglob(pattern)]))
+from vtr_xml_utils import convert
 
 
 def find_files(pattern, rootdir):
@@ -17,7 +14,8 @@ def find_files(pattern, rootdir):
 
 
 @pytest.mark.parametrize("testdatafile",
-                         get_filenames_containing('*.model.xml', __file__))
+                         convert.get_filenames_containing('golden.model.xml',
+                                                          __file__))
 def test_model_generation_with_vlog_to_model(testdatafile):
     """Parametrized test that checks  if the model.xml files produced by the
     vlog_to_model function are valid
@@ -35,7 +33,8 @@ def test_model_generation_with_vlog_to_model(testdatafile):
     assert modelout == open(testdatafile).read()
 
 @pytest.mark.parametrize("testdatafile",
-                         get_filenames_containing('*.pb_type.xml', __file__))
+                         convert.get_filenames_containing('*.pb_type.xml',
+                                                          __file__))
 def test_pbtype_generation_with_vlog_to_pbtype(testdatafile):
     """Parametrized test that checks  if the pb_type.xml files produced by the
     vlog_to_pbtype function are valid
