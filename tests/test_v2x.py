@@ -25,12 +25,19 @@ def test_model_generation_with_vlog_to_model(testdatafile):
         The filename of the model.xml file that should be produced by the
         corresponding sim.v file
     """
-    testdatadir = os.path.dirname(testdatafile)
+    testdatadir = os.path.dirname(testdatafile) + '/'
     vlog_filenames = find_files('*.sim.v', testdatadir)
     assert len(vlog_filenames) == 1
     vlog_filename = vlog_filenames[0]
     modelout = vlog_to_model.vlog_to_model([vlog_filename], None, None)
-    assert modelout == open(testdatafile).read()
+    with open(testdatadir + 'testmodel.xml', 'w') as model:
+        model.write(modelout)
+
+    convertedgolden = convert.vtr_stylize_xml(testdatafile)
+    convertedmodel = convert.vtr_stylize_xml(testdatadir + 'testmodel.xml')
+
+    assert convertedmodel == convertedgolden
+
 
 @pytest.mark.parametrize("testdatafile",
                          convert.get_filenames_containing('*.pb_type.xml',
