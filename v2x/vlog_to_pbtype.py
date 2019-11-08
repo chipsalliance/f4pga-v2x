@@ -9,8 +9,8 @@ The following are allowed on a top level module:
     This will also set the BLIF model to be `.subckt <name>` unless CLASS is
     also specified.
 
-    - `(* CLASS="lut|routing|mux|flipflop|mem" *)` : specify the class of an
-    given instance.
+    - `(* CLASS="lut|routing|mux|flipflop|mem|input|output" *)` : specify the
+    class of an given instance.
 
     - `(* MODES="mode1; mode2; ..." *)` : specify that the module has more
     than one functional mode, each with a given name. The module will be
@@ -727,6 +727,12 @@ def make_pb_type(
         elif mod_cls == "flipflop":
             pb_attrs["blif_model"] = ".latch"
             pb_attrs["class"] = "flipflop"
+        elif mod_cls == "output":
+            pb_attrs["blif_model"] = ".output"
+            pb_attrs["class"] = "output"
+        elif mod_cls == "input":
+            pb_attrs["blif_model"] = ".input"
+            pb_attrs["class"] = "input"
         else:
             assert False, "unknown class {}".format(mod_cls)
     elif is_blackbox and not has_modes:

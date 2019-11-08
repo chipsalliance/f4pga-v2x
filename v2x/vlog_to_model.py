@@ -14,10 +14,11 @@ The following Verilog attributes are considered on modules:
     intended for use with w.py, when several different pb_types
     implement the same model.
 
-    - `(* CLASS="lut|routing|mux|flipflop|mem" *)` : specify the
-    class of an given instance. A model will not be generated for
-    the `lut`, `routing` or `flipflop` class.
-"""
+    - `(* CLASS="lut|routing|mux|flipflop|mem|input|output" *)`
+    specify the class of an given instance. A model will not be
+    generated for the `lut`, `routing`, `flipflop`, `input`,
+    or `output` class
+    """
 import os
 import re
 import sys
@@ -162,7 +163,7 @@ def vlog_to_model(infiles, includes, top, outfile=None):
         ), "Leaf model names should be all uppercase!"
         modclass = tmod.attr("CLASS", "")
 
-        if modclass not in ("lut", "routing", "flipflop"):
+        if modclass not in ("lut", "routing", "flipflop", "input", "output"):
             model_xml = ET.SubElement(models_xml, "model", {'name': topname})
             ports = tmod.ports
 
