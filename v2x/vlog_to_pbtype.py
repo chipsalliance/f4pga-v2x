@@ -776,7 +776,8 @@ def make_pb_type(
                     flatten=False,
                     aig=False,
                     mode=smode,
-                    module_with_mode=mod.name
+                    module_with_mode=mod.name,
+                    noopt=True
                 )
             )
             mode_mod = mode_yj.module(mod.name)
@@ -817,7 +818,7 @@ def vlog_to_pbtype(infiles, outfile, top=None):
     iname = os.path.basename(infiles[0])
 
     run.add_define("PB_TYPE")
-    vjson = run.vlog_to_json(infiles, flatten=False, aig=False)
+    vjson = run.vlog_to_json(infiles, flatten=False, aig=False, noopt=True)
     yj = YosysJSON(vjson)
 
     if top is not None:

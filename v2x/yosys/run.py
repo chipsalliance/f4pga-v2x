@@ -122,7 +122,8 @@ def script(script, infiles=[]):
 
 
 def vlog_to_json(
-        infiles, flatten=False, aig=False, mode=None, module_with_mode=None
+        infiles, flatten=False, aig=False, mode=None, module_with_mode=None,
+        noopt=False
 ):
     """
     Convert Verilog to a JSON representation using Yosys
@@ -136,13 +137,16 @@ def vlog_to_json(
            set the value of the MODE parameter
     module_with_mode : the name of the module to apply `mode` to
     """
-    prep_opts = "-flatten" if flatten else ""
+    if noopt:
+        command = "proc; {}".format("flatten" if flatten else "")
+    else:
+        command = "prep {}".format("-flatten" if flatten else "")
     json_opts = "-aig" if aig else ""
     if mode is not None:
         mode_str = 'chparam -set MODE "{}" {}; '.format(mode, module_with_mode)
     else:
         mode_str = ""
-    cmds = "{}prep {}; write_json {}".format(mode_str, prep_opts, json_opts)
+    cmds = "{}{}; write_json {}".format(mode_str, command, json_opts)
     j = utils.strip_yosys_json(commands(cmds, infiles))
     """with open('dump.json', 'w') as dbg:
         print(j,file=dbg)"""
