@@ -7,11 +7,11 @@
   <output name="out" num_pins="4"/>
   <pb_type num_pb="2" name="q_a_ff">
     <!--old_name DFF old_num_pb 1-->
-    <xi:include href="../fig42-dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+    <xi:include href="../../vtr/dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
   </pb_type>
   <pb_type num_pb="2" name="q_b_ff">
     <!--old_name DFF old_num_pb 1-->
-    <xi:include href="../fig42-dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+    <xi:include href="../../vtr/dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
   </pb_type>
   <pb_type num_pb="1" name="comb">
     <!--old_name DSP_COMBINATIONAL-->
@@ -19,7 +19,7 @@
   </pb_type>
   <pb_type num_pb="1" name="m_ff">
     <!--old_name DFF-->
-    <xi:include href="../fig42-dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+    <xi:include href="../../vtr/dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
   </pb_type>
   <interconnect>
     <direct>
