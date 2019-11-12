@@ -30,18 +30,18 @@ def find_files(pattern, rootdir):
     return [str(f) for f in Path(os.path.abspath(rootdir)).glob(pattern)]
 
 
-def get_tests_for_models(testfile):
+def get_test_goldens(goldentype, testfile):
     simfiles = sorted(
         sorted(convert.get_filenames_containing('*.sim.v', testfile)),
         key=cmp_to_key(order_based_on_deps))
     for sim in simfiles:
-        res = find_files('golden.model.xml', os.path.dirname(sim))
+        res = find_files('golden.' + goldentype, os.path.dirname(sim))
         if len(res) == 1:
             yield res[0]
 
 
 @pytest.mark.parametrize("testdatafile",
-                         get_tests_for_models(__file__))
+                         get_test_goldens('model.xml', __file__))
 def test_model_generation_with_vlog_to_model(testdatafile):
     """Parametrized test that checks  if the model.xml files produced by the
     vlog_to_model function are valid
@@ -72,8 +72,7 @@ def test_model_generation_with_vlog_to_model(testdatafile):
 
 
 @pytest.mark.parametrize("testdatafile",
-                         convert.get_filenames_containing('golden.pbtype.xml',
-                                                          __file__))
+                         get_test_goldens('pb_type.xml', __file__))
 def test_pbtype_generation_with_vlog_to_pbtype(testdatafile):
     """Parametrized test that checks  if the pb_type.xml files produced by the
     vlog_to_pbtype function are valid
@@ -87,7 +86,18 @@ def test_pbtype_generation_with_vlog_to_pbtype(testdatafile):
     vlog_filenames = find_files('*.sim.v', testdatadir)
     assert len(vlog_filenames) == 1
     vlog_filename = vlog_filenames[0]
+    testname = vlog_filename.split('/')[-1].split('.')[0]
+    generatedmodelfile = testdatadir + testname + '.pb_type.xml'
     pbtypeout = vlog_to_pbtype.vlog_to_pbtype([vlog_filename],
-                                              testdatadir + 'actual.xml',
+                                              generatedmodelfile,
                                               None)
-    assert pbtypeout == open(testdatafile).read()
+    with open(generatedmodelfile, 'w') as model:
+        model.write(pbtypeout)
+
+    convertedgolden = convert.vtr_stylize_xml(testdatafile)
+    convertedmodel = convert.vtr_stylize_xml(generatedmodelfile)
+
+    assert convertedmodel == convertedgolden
+
+    with open(generatedmodelfile, 'w') as model:
+        model.write(convertedmodel)
