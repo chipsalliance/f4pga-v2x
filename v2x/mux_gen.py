@@ -13,9 +13,9 @@ import lxml.etree as ET
 import os
 import sys
 
-from lib import mux as mux_lib
-from lib.argparse_extra import ActionStoreBool
-from lib.asserts import assert_eq
+from .lib import mux as mux_lib
+from .lib.argparse_extra import ActionStoreBool
+from .lib.asserts import assert_eq
 
 parser = argparse.ArgumentParser(
     description='Generate a MUX wrapper.',
