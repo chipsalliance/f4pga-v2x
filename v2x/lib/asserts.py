@@ -56,6 +56,7 @@ def assert_len_eq(l):
     for i, p in enumerate(l):
         assert len(
             p
-        ) == max_len, "Length check failed!\nl[{}] has {} elements != {} ({!r})\n{!r}".format(
+        ) == max_len, "Length check failed!\n \
+l[{}] has {} elements != {} ({!r})\n{!r}".format(
             i, len(p), max_len, p, l
         )

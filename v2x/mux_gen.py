@@ -74,7 +74,8 @@ parser.name_inputs = parser.add_argument(
     type=str,
     default=None,
     help=  # noqa: E251
-    "Comma deliminator list for the name of each input to the mux (implies --split-inputs)."
+    "Comma deliminator list for the name of each input to the mux " + \
+    "(implies --split-inputs)."
 )
 
 parser.add_argument(
@@ -96,7 +97,8 @@ parser.name_selects = parser.add_argument(
     type=str,
     default=None,
     help=  # noqa: E251
-    "Comma deliminator list for the name of each select to the mux (implies --split-selects)."
+    "Comma deliminator list for the name of each select to the mux " +
+    "(implies --split-selects)."
 )
 
 parser.add_argument(
@@ -105,7 +107,8 @@ parser.add_argument(
     [''.join(x) for x in itertools.permutations('io')],
     default='iso',
     help=  # noqa: E251
-    """Order of the arguments for the MUX. (i - Inputs, o - Output, s - Select)"""
+    """Order of the arguments for the MUX.
+(i - Inputs, o - Output, s - Select)"""
 )
 
 parser.add_argument(
@@ -281,7 +284,8 @@ Generated with %s
         with open(techmap_pathname, "w") as f:
             module_args = []
             for port in port_names:
-                if args.type == 'routing' and port.pin_type == mux_lib.MuxPinType.SELECT:
+                if (args.type == 'routing' and
+                        port.pin_type == mux_lib.MuxPinType.SELECT):
                     continue
                 module_args.append(port.name)
 
@@ -333,7 +337,8 @@ Generated with %s
     with open(sim_pathname, "w") as f:
         module_args = []
         for port in port_names:
-            if args.type == 'routing' and port.pin_type == mux_lib.MuxPinType.SELECT:
+            if (args.type == 'routing' and
+                    port.pin_type == mux_lib.MuxPinType.SELECT):
                 continue
             module_args.append(port.name)
 
@@ -385,7 +390,8 @@ Generated with %s
             if previous_type != port.pin_type:
                 f.write("\n")
                 previous_type = port.pin_type
-            if args.type == 'routing' and port.pin_type == mux_lib.MuxPinType.SELECT:
+            if (args.type == 'routing' and
+                    port.pin_type == mux_lib.MuxPinType.SELECT):
                 f.write('\tparameter MODE = "";\n')
             else:
                 f.write(port.getDefinition())
@@ -455,7 +461,8 @@ Generated with %s
             f.write('\t\telse\n')
             f.write('\t\tbegin\n')
             f.write(
-                '\t\t\t//$error("%s: Invalid routing value %%s (options are: %s)", MODE);\n'
+                ('\t\t\t//$error("%s: Invalid routing value %%s ' +
+                    '(options are: %s)", MODE);\n')
                 % (args.name_mux, ", ".join(modes))
             )
             f.write('\t\tend\n')
