@@ -8,10 +8,31 @@ from functools import cmp_to_key
 from v2x import vlog_to_model
 from v2x import vlog_to_pbtype
 from v2x.xmlinc import xmlinc
+from v2x.mux_gen import mux_gen
 
 from vtr_xml_utils import convert
 
 
+@pytest.fixture(scope="session", autouse=True)
+def prepare_files(request):
+    mux_gen(outdir='tests/muxes/routing',
+            outfilename='rmux',
+            datatype='routing',
+            width=2,
+            split_inputs=True,
+            name_output='O',
+            name_mux='RMUX',
+            name_inputs='I0,I1'
+            )
+    mux_gen(outdir='tests/vtr/lutff-pair/omux',
+            outfilename='omux',
+            datatype='routing',
+            width=2,
+            split_inputs=True,
+            name_output='O',
+            name_mux='omux',
+            name_inputs='L,F'
+            )
 def order_based_on_deps(left, right):
     with open(left, 'r') as leftfile:
         relhref = xmlinc.make_relhref(left, right)
