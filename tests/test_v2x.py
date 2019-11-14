@@ -33,6 +33,30 @@ def prepare_files(request):
             name_mux='omux',
             name_inputs='L,F'
             )
+
+    newpbfile = 'tests/vtr/dff/dff.pb_type.xml'
+    pbtypeout = vlog_to_pbtype.vlog_to_pbtype(
+        ['tests/vtr/dff/dff.sim.v'],
+        newpbfile,
+        None)
+    with open(newpbfile, 'w') as model:
+        model.write(pbtypeout)
+    convertedmodel = convert.vtr_stylize_xml(newpbfile)
+    with open(newpbfile, 'w') as model:
+        model.write(convertedmodel)
+
+    newpbfile = 'tests/vtr/lutff-pair/ff/ff.pb_type.xml'
+    pbtypeout = vlog_to_pbtype.vlog_to_pbtype(
+        ['tests/vtr/lutff-pair/ff/ff.sim.v'],
+        newpbfile,
+        'DFF')
+    with open(newpbfile, 'w') as model:
+        model.write(pbtypeout)
+    convertedmodel = convert.vtr_stylize_xml(newpbfile)
+    with open(newpbfile, 'w') as model:
+        model.write(convertedmodel)
+
+
 def order_based_on_deps(left, right):
     # TODO: this is overly simplified sorting over files with dependencies
     # normally it should be solved with use of topological sort
