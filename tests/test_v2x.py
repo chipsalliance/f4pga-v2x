@@ -87,17 +87,23 @@ def get_test_goldens(goldentype, testfile):
     for sim in simfiles:
         res = find_files('golden.' + goldentype, os.path.dirname(sim))
         if len(res) == 1:
-            goldens.append(res[0])
+            goldens.append({
+                'simfile': sim,
+                'goldenfile': res[0]})
     return goldens
 
 
 def pytest_generate_tests(metafunc):
     if "modelcase" in metafunc.fixturenames:
         models = get_test_goldens('model.xml', __file__)
-        metafunc.parametrize("modelcase", models)
+        metafunc.parametrize("modelcase",
+                             models,
+                             ids=[i['simfile'] for i in models])
     if "pbtypecase" in metafunc.fixturenames:
         models = get_test_goldens('pb_type.xml', __file__)
-        metafunc.parametrize("pbtypecase", models)
+        metafunc.parametrize("pbtypecase",
+                             models,
+                             ids=[i['simfile'] for i in models])
 
 
 def test_model_generation_with_vlog_to_model(modelcase):
@@ -105,15 +111,14 @@ def test_model_generation_with_vlog_to_model(modelcase):
     vlog_to_model function are valid
     Parameters
     ----------
-    modelcase : str
-        The filename of the model.xml file that should be produced by the
-        corresponding sim.v file
+    modelcase : dict
+        A dict of the filename of the model.xml file that should be produced
+        by the corresponding sim.v file ('goldenfile') and the corresponding
+        sim.v file ('simfile')
     """
-    modelfile = modelcase
+    modelfile = modelcase['goldenfile']
     testdatadir = os.path.dirname(modelfile) + '/'
-    vlog_filenames = find_files('*.sim.v', testdatadir)
-    assert len(vlog_filenames) == 1
-    vlog_filename = vlog_filenames[0]
+    vlog_filename = modelcase['simfile']
     testname = vlog_filename.split('/')[-1].split('.')[0]
     generatedmodelfile = testdatadir + testname + '.model.xml'
     modelout = vlog_to_model.vlog_to_model([vlog_filename], None, None,
@@ -135,15 +140,14 @@ def test_pbtype_generation_with_vlog_to_pbtype(pbtypecase):
     vlog_to_pbtype function are valid
     Parameters
     ----------
-    pbtypecase : str
-        The filename of the pb_type.xml file that should be produced by the
-        corresponding sim.v file
+    pbtypecase : dict
+        A dict of the filename of the model.xml file that should be produced
+        by the corresponding sim.v file ('goldenfile') and the corresponding
+        sim.v file ('simfile')
     """
-    testdatafile = pbtypecase
+    testdatafile = pbtypecase['goldenfile']
     testdatadir = os.path.dirname(testdatafile) + '/'
-    vlog_filenames = find_files('*.sim.v', testdatadir)
-    assert len(vlog_filenames) == 1
-    vlog_filename = vlog_filenames[0]
+    vlog_filename = pbtypecase['simfile']
     testname = vlog_filename.split('/')[-1].split('.')[0]
     generatedmodelfile = testdatadir + testname + '.pb_type.xml'
     pbtypeout = vlog_to_pbtype.vlog_to_pbtype([vlog_filename],
