@@ -129,10 +129,10 @@ def test_model_generation_with_vlog_to_model(modelcase):
     convertedgolden = convert.vtr_stylize_xml(modelfile)
     convertedmodel = convert.vtr_stylize_xml(generatedmodelfile)
 
-    assert convertedmodel == convertedgolden
-
     with open(generatedmodelfile, 'w') as model:
         model.write(convertedmodel)
+
+    assert convertedmodel == convertedgolden
 
 
 def test_pbtype_generation_with_vlog_to_pbtype(pbtypecase):
@@ -159,7 +159,7 @@ def test_pbtype_generation_with_vlog_to_pbtype(pbtypecase):
     convertedgolden = convert.vtr_stylize_xml(testdatafile)
     convertedmodel = convert.vtr_stylize_xml(generatedmodelfile)
 
-    assert convertedmodel == convertedgolden
-
     with open(generatedmodelfile, 'w') as model:
         model.write(convertedmodel)
+
+    assert convertedmodel == convertedgolden
