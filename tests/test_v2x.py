@@ -12,10 +12,24 @@ from v2x.mux_gen import mux_gen
 
 from vtr_xml_utils import convert
 
+from distutils.dir_util import copy_tree
 
-@pytest.fixture(scope="session", autouse=True)
-def prepare_files(request):
-    mux_gen(outdir='tests/muxes/routing',
+TEST_TMP_SUFFIX = 'build/'
+
+
+def prepare_files():
+    # Copy all files for tests to the build/ directory
+    scriptdir = os.path.dirname(__file__)
+    testdir = os.path.join(os.path.dirname(scriptdir), TEST_TMP_SUFFIX)
+    os.makedirs(testdir, exist_ok=True)
+
+    for tdir in os.listdir(scriptdir):
+        s = os.path.join(scriptdir, tdir)
+        d = os.path.join(testdir, tdir)
+        if os.path.isdir(s):
+            copy_tree(s, d, update=1)
+
+    mux_gen(outdir=os.path.join(testdir, 'muxes/routing'),
             outfilename='rmux',
             datatype='routing',
             width=2,
@@ -24,7 +38,7 @@ def prepare_files(request):
             name_mux='RMUX',
             name_inputs='I0,I1'
             )
-    mux_gen(outdir='tests/vtr/lutff-pair/omux',
+    mux_gen(outdir=os.path.join(testdir, 'vtr/lutff-pair/omux'),
             outfilename='omux',
             datatype='routing',
             width=2,
@@ -34,9 +48,9 @@ def prepare_files(request):
             name_inputs='L,F'
             )
 
-    newpbfile = 'tests/vtr/dff/dff.pb_type.xml'
+    newpbfile = os.path.join(testdir, 'vtr/dff/dff.pb_type.xml')
     pbtypeout = vlog_to_pbtype.vlog_to_pbtype(
-        ['tests/vtr/dff/dff.sim.v'],
+        [os.path.join(testdir, 'vtr/dff/dff.sim.v')],
         newpbfile,
         None)
     with open(newpbfile, 'w') as model:
@@ -45,9 +59,9 @@ def prepare_files(request):
     with open(newpbfile, 'w') as model:
         model.write(convertedmodel)
 
-    newpbfile = 'tests/vtr/lutff-pair/ff/ff.pb_type.xml'
+    newpbfile = os.path.join(testdir, 'vtr/lutff-pair/ff/ff.pb_type.xml')
     pbtypeout = vlog_to_pbtype.vlog_to_pbtype(
-        ['tests/vtr/lutff-pair/ff/ff.sim.v'],
+        [os.path.join(testdir, 'vtr/lutff-pair/ff/ff.sim.v')],
         newpbfile,
         'DFF')
     with open(newpbfile, 'w') as model:
@@ -94,13 +108,17 @@ def get_test_goldens(goldentype, testfile):
 
 
 def pytest_generate_tests(metafunc):
+    prepare_files()
+    scriptdir = os.path.dirname(__file__)
+    testdir = os.path.join(os.path.dirname(scriptdir), TEST_TMP_SUFFIX)
+
     if "modelcase" in metafunc.fixturenames:
-        models = get_test_goldens('model.xml', __file__)
+        models = get_test_goldens('model.xml', os.path.join(testdir, 'test'))
         metafunc.parametrize("modelcase",
                              models,
                              ids=[i['simfile'] for i in models])
     if "pbtypecase" in metafunc.fixturenames:
-        models = get_test_goldens('pb_type.xml', __file__)
+        models = get_test_goldens('pb_type.xml', os.path.join(testdir, 'test'))
         metafunc.parametrize("pbtypecase",
                              models,
                              ids=[i['simfile'] for i in models])
@@ -120,7 +138,7 @@ def test_model_generation_with_vlog_to_model(modelcase):
     testdatadir = os.path.dirname(modelfile) + '/'
     vlog_filename = modelcase['simfile']
     testname = vlog_filename.split('/')[-1].split('.')[0]
-    generatedmodelfile = testdatadir + testname + '.model.xml'
+    generatedmodelfile = os.path.join(testdatadir, testname) + '.model.xml'
     modelout = vlog_to_model.vlog_to_model([vlog_filename], None, None,
                                            generatedmodelfile)
     with open(generatedmodelfile, 'w') as model:
@@ -149,7 +167,7 @@ def test_pbtype_generation_with_vlog_to_pbtype(pbtypecase):
     testdatadir = os.path.dirname(testdatafile) + '/'
     vlog_filename = pbtypecase['simfile']
     testname = vlog_filename.split('/')[-1].split('.')[0]
-    generatedmodelfile = testdatadir + testname + '.pb_type.xml'
+    generatedmodelfile = os.path.join(testdatadir, testname) + '.pb_type.xml'
     pbtypeout = vlog_to_pbtype.vlog_to_pbtype([vlog_filename],
                                               generatedmodelfile,
                                               None)
