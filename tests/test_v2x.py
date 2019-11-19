@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import pytest
 from pathlib import Path
 import os
 from functools import cmp_to_key
@@ -55,9 +54,6 @@ def prepare_files():
         None)
     with open(newpbfile, 'w') as model:
         model.write(pbtypeout)
-    convertedmodel = convert.vtr_stylize_xml(newpbfile)
-    with open(newpbfile, 'w') as model:
-        model.write(convertedmodel)
 
     newpbfile = os.path.join(testdir, 'vtr/lutff-pair/ff/ff.pb_type.xml')
     pbtypeout = vlog_to_pbtype.vlog_to_pbtype(
@@ -66,9 +62,6 @@ def prepare_files():
         'DFF')
     with open(newpbfile, 'w') as model:
         model.write(pbtypeout)
-    convertedmodel = convert.vtr_stylize_xml(newpbfile)
-    with open(newpbfile, 'w') as model:
-        model.write(convertedmodel)
 
 
 def order_based_on_deps(left, right):
@@ -147,7 +140,7 @@ def test_model_generation_with_vlog_to_model(modelcase):
     convertedgolden = convert.vtr_stylize_xml(modelfile)
     convertedmodel = convert.vtr_stylize_xml(generatedmodelfile)
 
-    with open(generatedmodelfile, 'w') as model:
+    with open(generatedmodelfile + '.actual', 'w') as model:
         model.write(convertedmodel)
 
     assert convertedmodel == convertedgolden
@@ -177,7 +170,7 @@ def test_pbtype_generation_with_vlog_to_pbtype(pbtypecase):
     convertedgolden = convert.vtr_stylize_xml(testdatafile)
     convertedmodel = convert.vtr_stylize_xml(generatedmodelfile)
 
-    with open(generatedmodelfile, 'w') as model:
+    with open(generatedmodelfile + '.actual', 'w') as model:
         model.write(convertedmodel)
 
     assert convertedmodel == convertedgolden
