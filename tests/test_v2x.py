@@ -17,6 +17,12 @@ TEST_TMP_SUFFIX = 'build/'
 
 
 def prepare_files():
+    """Prepares the files for running tests.
+
+    It copies all test files to the temporary build/ directory.
+    It also generates files that are required by the test files as XInclude and
+    are not part of any test.
+    """
     # Copy all files for tests to the build/ directory
     scriptdir = os.path.dirname(__file__)
     testdir = os.path.join(os.path.dirname(scriptdir), TEST_TMP_SUFFIX)
@@ -69,6 +75,20 @@ def prepare_files():
 
 
 def order_based_on_deps(left, right):
+    """Compares two Verilog files  based on their dependencies.
+
+    It checks if any of two files depends on the other and and applies an
+    order in which the Verilog file required by the other is processed first
+    during tests. If both files do not depend on each other, they are ordered
+    by their number of dependencies.
+
+    Parameters
+    ----------
+    left: str
+        The left operand in the comparison, which is a path to Verilog file.
+    right: str
+        The right operand in the comparison, which is a path to Verilog file.
+    """
     # TODO: this is overly simplified sorting over files with dependencies
     # normally it should be solved with use of topological sort
     with open(left, 'r') as leftfile:
@@ -87,10 +107,28 @@ def order_based_on_deps(left, right):
 
 
 def find_files(pattern, rootdir):
+    """Finds files that match pattern in the given directory.
+
+    Parameters
+    ----------
+    pattern: str
+        A regex pattern for files in the rootdir.
+    rootdir: str
+        A directory in which the function should look for files.
+    """
     return [str(f) for f in Path(os.path.abspath(rootdir)).glob(pattern)]
 
 
 def get_test_goldens(goldentype, testfile):
+    """Gets all files for testing that match a goldentype regex.
+
+    Parameters
+    ----------
+    goldentype: str
+        A suffix for golden* files that should be used for tests.
+    testfile: str
+        A path to test script.
+    """
     simfiles = sorted(
         sorted(convert.get_filenames_containing('*.sim.v', testfile)),
         key=cmp_to_key(order_based_on_deps))
@@ -105,6 +143,12 @@ def get_test_goldens(goldentype, testfile):
 
 
 def pytest_generate_tests(metafunc):
+    """Scans for golden files and applies appropriate tests for those files.
+
+    Parameters
+    ----------
+    metafunc: A pytest object representing the test context.
+    """
     prepare_files()
     scriptdir = os.path.dirname(__file__)
     testdir = os.path.join(os.path.dirname(scriptdir), TEST_TMP_SUFFIX)
@@ -122,8 +166,8 @@ def pytest_generate_tests(metafunc):
 
 
 def test_model_generation_with_vlog_to_model(modelcase):
-    """Parametrized test that checks  if the model.xml files produced by the
-    vlog_to_model function are valid
+    """Checks  model.xml files produced by the vlog_to_model.
+
     Parameters
     ----------
     modelcase : dict
@@ -151,8 +195,8 @@ def test_model_generation_with_vlog_to_model(modelcase):
 
 
 def test_pbtype_generation_with_vlog_to_pbtype(pbtypecase):
-    """Parametrized test that checks  if the pb_type.xml files produced by the
-    vlog_to_pbtype function are valid
+    """Checks  pb_type.xml files produced by the vlog_to_pbtype.
+
     Parameters
     ----------
     pbtypecase : dict
