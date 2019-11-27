@@ -1,0 +1,5 @@
+name: yosys-env
+channels:
+  - symbiflow
+dependencies:
+  - yosys

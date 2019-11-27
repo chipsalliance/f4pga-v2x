@@ -9,10 +9,10 @@
   <input  name="d"    num_pins="4"/>
   <output name="sum"  num_pins="8"/>
   <pb_type name="comb_apb" num_pb="4">
-    <xi:include href="../fig41-full-adder/adder.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+    <xi:include href="../vtr/full-adder/adder.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
   </pb_type>
   <pb_type name="comb_cpd" num_pb="4">
-    <xi:include href="../fig41-full-adder/adder.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+    <xi:include href="../vtr/full-adder/adder.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
   </pb_type>
   <interconnect>
 

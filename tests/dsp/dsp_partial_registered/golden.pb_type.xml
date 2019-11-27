@@ -11,19 +11,19 @@
   </pb_type>
   <pb_type num_pb="1" name="dffs_gen_q_a_ff_0">
     <!--old_name DFF-->
-    <xi:include href="../fig42-dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+    <xi:include href="../../vtr/dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
   </pb_type>
   <pb_type num_pb="1" name="dffs_gen_q_b_ff_0">
     <!--old_name DFF-->
-    <xi:include href="../fig42-dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+    <xi:include href="../../vtr/dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
   </pb_type>
   <pb_type num_pb="1" name="dffs_gen_q_a_ff_1">
     <!--old_name DFF-->
-    <xi:include href="../fig42-dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+    <xi:include href="../../vtr/dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
   </pb_type>
   <pb_type num_pb="1" name="dffs_gen_q_b_ff_1">
     <!--old_name DFF-->
-    <xi:include href="../fig42-dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+    <xi:include href="../../vtr/dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
   </pb_type>
   <interconnect>
     <direct>

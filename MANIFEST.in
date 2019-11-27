@@ -1,6 +1,7 @@
 exclude .readthedocs.yml
 exclude tox.ini
 exclude *.swp
+prune conf
 
 # Include the README
 include *.md
@@ -13,6 +14,8 @@ include *.txt
 
 recursive-include v2x *.py
 
+# Include the preparation script
+include prepareenv.sh
 
 # Docs
 recursive-include docs *.py
