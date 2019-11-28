@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """\
 Convert a Verilog simulation model to a VPR `pb_type.xml`
 

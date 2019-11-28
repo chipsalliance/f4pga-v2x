@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 from . import vlog_to_pbtype
 from . import vlog_to_model
 import argparse

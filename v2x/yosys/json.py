@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 This is intended to provide a range of helper functions around the output of
 Yosys' `write_json`. Depending on the tasks, this may need to be flattened

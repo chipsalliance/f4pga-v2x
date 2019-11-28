@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import re
 """The JSON Yosys outputs isn't acutally compliant JSON, as it contains C-style
 comments. These must be stripped."""
