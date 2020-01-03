@@ -212,7 +212,7 @@ def net_and_pin_attrs(yj, mod, driver: CellPin, sink: CellPin, netid: int):
         smod = yj.module(sink_type)
         potential_attrs.append(filter_src(smod.port_attrs(sink_pin)))
 
-    net_attrs = filter_src(mod.net_attrs(mod.net_name(netid)))
+    net_attrs = filter_src(mod.net_attrs_by_netid(netid))
     copy_attrs(net_attrs, potential_attrs)
     return net_attrs
 
