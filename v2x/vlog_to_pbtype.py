@@ -813,23 +813,42 @@ def make_pb_type(
                 )
             )
             mode_mod = mode_yj.module(mod.name)
-            make_pb_type(infiles, outfile, mode_yj, mode_mod,
-                         True, mode_xml, smode)
 
-            # if mode pb_type contains interconnect tag,
-            # add new connctions there
-            ic_xml = mode_xml.find("interconnect")
-            print("ic_xml is", ic_xml, file=sys.stderr)
-            if ic_xml is None:
+            # The mode has no children. Don't generate a pb_type then. Make
+            # only the interconnect instead.
+            if len(mode_mod.cells) == 0:
+
+                inter = get_interconnects(mode_yj, mode_mod, smode,[smode])
                 ic_xml = ET.SubElement(mode_xml, "interconnect")
 
-            for (driver_cell,
-                 driver_pin), (sink_cell,
-                               sink_pin) in mode_interconnects(mod, smode):
-                make_direct_conn(
-                    ic_xml, (driver_cell, driver_pin), (sink_cell, sink_pin),
-                    {}
-                )
+                for (driv_cell, driv_pin), sinks in inter.items():
+                    for (sink_cell, sink_pin), attrs in sinks:
+                        make_direct_conn(
+                            ic_xml,
+                            (driv_cell, driv_pin),
+                            (sink_cell, sink_pin),
+                            attrs)
+
+            # The mode has children, recurse
+            else:
+
+                make_pb_type(infiles, outfile, mode_yj, mode_mod,
+                             True, mode_xml, smode)
+
+                # if mode pb_type contains interconnect tag,
+                # add new connctions there
+                ic_xml = mode_xml.find("interconnect")
+                print("ic_xml is", ic_xml, file=sys.stderr)
+                if ic_xml is None:
+                    ic_xml = ET.SubElement(mode_xml, "interconnect")
+
+                for (driver_cell,
+                     driver_pin), (sink_cell,
+                                   sink_pin) in mode_interconnects(mod, smode):
+                    make_direct_conn(
+                        ic_xml, (driver_cell, driver_pin), (sink_cell, sink_pin),
+                        {}
+                    )
 
     if not modes or mode_processing:
         routing = children = []
@@ -839,10 +858,6 @@ def make_pb_type(
         if routing or children:
             make_container_pb(
                 outfile, yj, mod, mod_pname, pb_type_xml, routing, children
-            )
-        elif not children and 'blif_model' not in pb_attrs:
-            make_container_pb(
-                outfile, yj, mod, mod_pname, pb_type_xml, {}, {}
             )
         else:
             make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml)
