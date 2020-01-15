@@ -283,6 +283,8 @@ def get_interconnects(yj, mod, mod_pname: str,
         A dictionary containing with a list of sink pins for each driver pin.
     """
     interconn = defaultdict(list)
+
+    # Cell connections
     for cname, ctype in mod.cells:
         pb_name = strip_name(cname)
         assert pb_name in valid_names
@@ -327,6 +329,36 @@ def get_interconnects(yj, mod, mod_pname: str,
                     yj, mod, (pb_name, pin), (None, sink_pin), net
                 )
                 interconn[(pb_name, pin)].append(((None, sink_pin), net_attr))
+
+    # Passthrough connections. Get ports along with connections
+    inp_ports = [p for p in mod.ports if p[3] == "input"]
+    out_ports = [p for p in mod.ports if p[3] == "output"]
+
+    # Loop over outputs and assign them with connected inputs
+    for out_port in out_ports:
+        for out_bit, out_net in enumerate(out_port[2]):
+
+            # Format full output port name
+            if out_port[1] == 1:
+                out_name = out_port[0]
+            else:
+                out_name = "{}[{}]".format(out_port[0], out_bit)
+
+            # Find input
+            for inp_port in inp_ports:
+                for inp_bit, inp_net in enumerate(inp_port[2]):
+
+                    # Format full input port name
+                    if inp_port[1] == 1:
+                        inp_name = inp_port[0]
+                    else:
+                        inp_name = "{}[{}]".format(inp_port[0], inp_bit)
+
+                    # Find matching nets
+                    if out_net == inp_net:
+                        key =  (None, inp_name)
+                        val = ((None, out_name), {})
+                        interconn[key].append(val)
 
     import pprint
     pprint.pprint(list(interconn.values()))
@@ -622,9 +654,10 @@ Pin {}.{} is trying to drive mux pin {}.{} (already driving by {}.{})\
 
         make_mux_conn(ic_xml, mux_cell, mux_inputs, mux_outputs)
 
-
 def make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml):
-    # As leaf node, need to generate timing information
+
+    # As leaf node with "blif_model" set is a site., need to generate timing
+    # information.
     def process_clocked_tmg(tmgspec, port, iodir, xmltype, xml_parent):
         """Add a suitable timing spec if necessary to the pb_type"""
         if tmgspec is not None:
@@ -806,6 +839,10 @@ def make_pb_type(
         if routing or children:
             make_container_pb(
                 outfile, yj, mod, mod_pname, pb_type_xml, routing, children
+            )
+        elif not children and 'blif_model' not in pb_attrs:
+            make_container_pb(
+                outfile, yj, mod, mod_pname, pb_type_xml, {}, {}
             )
         else:
             make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml)
