@@ -7,13 +7,13 @@ module PARENT (
   output wire O1
 );
 
-  // A child cell was connected properly
+  // A child cell
   CHILD child (
   .I(I0),
   .O(O0)
   );
 
-  // Interconnect for this wasn't generated!
+  // An internal connection spanning ports of the PARENT cell.
   assign O1 = I1;
 
 endmodule
