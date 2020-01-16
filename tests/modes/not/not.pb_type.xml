@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" num_pb="1" name="NOT">
+  <blif_model>.subckt NOT</blif_model>
+  <input name="I" num_pins="1"/>
+  <output name="O" num_pins="1"/>
+  <delay_constant in_port="I" out_port="O" max="1e-10"/>
+</pb_type>

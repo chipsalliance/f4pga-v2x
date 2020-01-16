@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" num_pb="1" name="INV">
+  <input name="I" num_pins="1"/>
+  <output name="O" num_pins="1"/>
+  <mode name="PASSTHROUGH">
+    <interconnect>
+      <direct>
+        <port name="I" type="input"/>
+        <port name="O" type="output"/>
+      </direct>
+    </interconnect>
+  </mode>
+  <mode name="INVERT">
+    <pb_type num_pb="1" name="INVERT">
+      <input name="I" num_pins="1"/>
+      <output name="O" num_pins="1"/>
+      <pb_type num_pb="1" name="inverter">
+        <!--old_name NOT-->
+        <xi:include href="not/not.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+      </pb_type>
+      <interconnect>
+        <direct>
+          <port name="I" type="input"/>
+          <port name="I" type="output" from="inverter"/>
+        </direct>
+        <direct>
+          <port name="O" type="input" from="inverter"/>
+          <port name="O" type="output"/>
+        </direct>
+      </interconnect>
+    </pb_type>
+    <interconnect>
+      <direct>
+        <port name="I" type="input"/>
+        <port name="I" type="output" from="INVERT"/>
+      </direct>
+      <direct>
+        <port name="O" type="input" from="INVERT"/>
+        <port name="O" type="output"/>
+      </direct>
+    </interconnect>
+  </mode>
+</pb_type>
