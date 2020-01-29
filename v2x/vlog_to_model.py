@@ -162,7 +162,7 @@ def vlog_to_model(infiles, includes, top, outfile=None):
         ), "Leaf model names should be all uppercase!"
         modclass = tmod.attr("CLASS", "")
 
-        if modclass not in ("lut", "routing", "flipflop"):
+        if modclass not in ("input", "output", "lut", "routing", "flipflop"):
             model_xml = ET.SubElement(models_xml, "model", {'name': topname})
             ports = tmod.ports
 
