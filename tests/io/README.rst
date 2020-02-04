@@ -1,4 +1,5 @@
-# Tests for modelling I/O primitives
+Tests for modelling I/O primitives
+++++++++++++++++++++++++++++++++++
 
 In VPR top-level I/O pins are represented using `.input` and `.output` BLIF models that are implemented by leaf pb_types. In order to model those using verilog you need to assing the specific `CLASS` attribute so the V2X would know that it has to use either `.input` or `.output` BLIF model for a cell.
 
