@@ -376,7 +376,7 @@ def get_interconnects(yj, mod, mod_pname: str,
     return interconn
 
 
-def mode_interconnects(mod, mode_name) -> List[(CellPin)]:
+def mode_interconnects(mod, mode_name) -> Dict[CellPin, List[CellPin]]:
     interconn = {}
     for name, width, bits, iodir in mod.ports:
         if iodir == "input":

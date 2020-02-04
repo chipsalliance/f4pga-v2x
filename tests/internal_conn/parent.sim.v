@@ -7,13 +7,12 @@ module PARENT (
   output wire O1
 );
 
-  // A child cell
   CHILD child (
   .I(I0),
   .O(O0)
   );
 
-  // An internal connection spanning ports of the PARENT cell.
+  // An direct connection from an input to the output pins.
   assign O1 = I1;
 
 endmodule
