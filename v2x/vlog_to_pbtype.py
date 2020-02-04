@@ -377,6 +377,16 @@ def get_interconnects(yj, mod, mod_pname: str,
 
 
 def mode_interconnects(mod, mode_name) -> Dict[CellPin, List[CellPin]]:
+    """
+    This function returns a definition of an interconnect used to connect
+    a child pb_type for the given mode with its parent pb_type that provides
+    the modes.
+
+    The returned dict is indexed by tuples containing source (driver) mode
+    names and pin names. Its values contain lists of sink modes and pin names
+    that are driven by the driver. If the mode name is None then the connection
+    refers to the parent pb_type.
+    """
     interconn = {}
     for name, width, bits, iodir in mod.ports:
         if iodir == "input":
