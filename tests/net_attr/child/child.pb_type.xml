@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="CHILD" num_pb="1">
+  <blif_model>.subckt CHILD</blif_model>
+  <input name="I" num_pins="1"/>
+  <output name="O" num_pins="1"/>
+</pb_type>

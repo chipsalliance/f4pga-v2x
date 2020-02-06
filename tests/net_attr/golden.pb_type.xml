@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="PARENT" num_pb="1">
+  <input name="I" num_pins="1"/>
+  <output name="O" num_pins="1"/>
+  <pb_type name="child" num_pb="1">
+    <!--old_name CHILD-->
+    <xi:include href="./child/child.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+  </pb_type>
+  <interconnect>
+    <direct>
+      <port name="I" type="input"/>
+      <port from="child" name="I" type="output"/>
+    </direct>
+    <direct>
+      <port from="child" name="O" type="input"/>
+      <port name="O" type="output"/>
+    </direct>
+  </interconnect>
+</pb_type>

@@ -273,9 +273,48 @@ class YosysModule:
         for n, props in self.data["netnames"].items():
             if netid in props['bits']:
                 names.append(n)
+        # FIXME: This fails when there are two wires with different names
+        # connected to the same netid (yes, that's possible). Which name
+        # should be returned in that case ?
         if len(names) != 1:
             raise KeyError("Net id {} not found".format(netid))
         return names[0]
+
+    def net_attrs_by_netid(self, netid):
+        """
+        Returns attributes of a given netid. Raises RuntimeError if the same
+        attribute is defined for two or more wires belonging to the same net.
+        The attribute 'src' is an exception, 'src' strings are concatenated
+        when defined for more than one wire.
+
+        Returns dict:
+        -------
+        netid : int
+        """
+
+        attributes = {}
+
+        for name, data in self.data["netnames"].items():
+            if netid in data['bits']:
+
+                # Join attributes
+                for attr, value in data['attributes'].items():
+
+                    # Allow multiple definitions of the same attribute only
+                    # for the 'src'. Otherwise raise an exception
+                    if attr in attributes and attr != 'src':
+                        raise RuntimeError(
+                            "Conflicting attributes '{}' on netid {}".format(
+                                attr, netid))
+
+                    # Join 'src' attribute strings
+                    if attr in attributes and attr == 'src':
+                        attributes[attr] += ";{}".format(value)
+                    # Store the value
+                    else:
+                        attributes[attr] = value
+
+        return attributes
 
     def net_drivers(self, net):
         """Returns a list of drivers of a given net, both top level inputs.
