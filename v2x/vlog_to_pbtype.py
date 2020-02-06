@@ -283,6 +283,8 @@ def get_interconnects(yj, mod, mod_pname: str,
         A dictionary containing with a list of sink pins for each driver pin.
     """
     interconn = defaultdict(list)
+
+    # Cell connections
     for cname, ctype in mod.cells:
         pb_name = strip_name(cname)
         assert pb_name in valid_names
@@ -328,6 +330,36 @@ def get_interconnects(yj, mod, mod_pname: str,
                 )
                 interconn[(pb_name, pin)].append(((None, sink_pin), net_attr))
 
+    # Passthrough connections. Get ports along with connections
+    inp_ports = [p for p in mod.ports if p[3] == "input"]
+    out_ports = [p for p in mod.ports if p[3] == "output"]
+
+    # Loop over outputs and assign them with connected inputs
+    for out_port in out_ports:
+        for out_bit, out_net in enumerate(out_port[2]):
+
+            # Format full output port name
+            if out_port[1] == 1:
+                out_name = out_port[0]
+            else:
+                out_name = "{}[{}]".format(out_port[0], out_bit)
+
+            # Find input
+            for inp_port in inp_ports:
+                for inp_bit, inp_net in enumerate(inp_port[2]):
+
+                    # Format full input port name
+                    if inp_port[1] == 1:
+                        inp_name = inp_port[0]
+                    else:
+                        inp_name = "{}[{}]".format(inp_port[0], inp_bit)
+
+                    # Find matching nets
+                    if out_net == inp_net:
+                        key = (None, inp_name)
+                        val = ((None, out_name), {})
+                        interconn[key].append(val)
+
     import pprint
     pprint.pprint(list(interconn.values()))
 
@@ -344,13 +376,23 @@ def get_interconnects(yj, mod, mod_pname: str,
     return interconn
 
 
-def mode_interconnects(mod, mode_name) -> List[(CellPin)]:
-    interconn = []
+def mode_interconnects(mod, mode_name) -> Dict[CellPin, List[CellPin]]:
+    """
+    This function returns a definition of an interconnect used to connect
+    a child pb_type for the given mode with its parent pb_type that provides
+    the modes.
+
+    The returned dict is indexed by tuples containing source (driver) mode
+    names and pin names. Its values contain lists of sink modes and pin names
+    that are driven by the driver. If the mode name is None then the connection
+    refers to the parent pb_type.
+    """
+    interconn = {}
     for name, width, bits, iodir in mod.ports:
         if iodir == "input":
-            interconn.append(((None, name), (mode_name, name)))
+            interconn[(None, name)] = [((mode_name, name,), {},)]
         else:
-            interconn.append(((mode_name, name), (None, name)))
+            interconn[(mode_name, name)] = [((None, name,), {},)]
     return interconn
 
 
@@ -624,7 +666,9 @@ Pin {}.{} is trying to drive mux pin {}.{} (already driving by {}.{})\
 
 
 def make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml):
-    # As leaf node, need to generate timing information
+
+    # As leaf node with "blif_model" set is a site., need to generate timing
+    # information.
     def process_clocked_tmg(tmgspec, port, iodir, xmltype, xml_parent):
         """Add a suitable timing spec if necessary to the pb_type"""
         if tmgspec is not None:
@@ -780,23 +824,33 @@ def make_pb_type(
                 )
             )
             mode_mod = mode_yj.module(mod.name)
-            make_pb_type(infiles, outfile, mode_yj, mode_mod,
-                         True, mode_xml, smode)
 
-            # if mode pb_type contains interconnect tag,
-            # add new connctions there
+            inter = {}
+
+            # The mode has no children. Don't generate a pb_type then. Make
+            # only the interconnect instead.
+            if len(mode_mod.cells) == 0:
+                inter.update(get_interconnects(
+                    mode_yj, mode_mod, smode, [smode]))
+
+            # The mode has children, recurse
+            else:
+                make_pb_type(infiles, outfile, mode_yj, mode_mod,
+                             True, mode_xml, smode)
+                inter.update(mode_interconnects(mod, smode))
+
+            # Add or update the interconnect.
             ic_xml = mode_xml.find("interconnect")
-            print("ic_xml is", ic_xml, file=sys.stderr)
             if ic_xml is None:
                 ic_xml = ET.SubElement(mode_xml, "interconnect")
 
-            for (driver_cell,
-                 driver_pin), (sink_cell,
-                               sink_pin) in mode_interconnects(mod, smode):
-                make_direct_conn(
-                    ic_xml, (driver_cell, driver_pin), (sink_cell, sink_pin),
-                    {}
-                )
+            for (driv_cell, driv_pin), sinks in inter.items():
+                for (sink_cell, sink_pin), attrs in sinks:
+                    make_direct_conn(
+                        ic_xml,
+                        (driv_cell, driv_pin),
+                        (sink_cell, sink_pin),
+                        attrs)
 
     if not modes or mode_processing:
         routing = children = []

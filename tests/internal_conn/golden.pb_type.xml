@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="PARENT" num_pb="1">
+  <input name="I0" num_pins="1"/>
+  <input name="I1" num_pins="1"/>
+  <output name="O0" num_pins="1"/>
+  <output name="O1" num_pins="1"/>
+  <pb_type blif_model=".subckt CHILD" name="child" num_pb="1">
+    <input name="I" num_pins="1"/>
+    <output name="O" num_pins="1"/>
+  </pb_type>
+  <interconnect>
+    <direct input="child.O" name="PARENT-O0" output="PARENT.O0"/>
+    <direct input="PARENT.I1" name="PARENT-O1" output="PARENT.O1"/>
+    <direct input="PARENT.I0" name="child-I" output="child.I"/>
+  </interconnect>
+</pb_type>
