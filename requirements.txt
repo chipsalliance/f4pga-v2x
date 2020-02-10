@@ -1,2 +1,3 @@
 lxml
 pyjson
+-e git://github.com/SymbiFlow/vtr-xml-utils#egg=vtr-xml-utils
