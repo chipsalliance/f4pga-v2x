@@ -17,7 +17,10 @@ setuptools.setup(
     install_requires=[
         'lxml',
         'pyjson',
-        'vtr_xml_utils @ git+https://github.com/Symbiflow/vtr-xml-utils',
+        'vtr-xml-utils'
+    ],
+    dependency_links=[
+        'https://github.com/Symbiflow/vtr-xml-utils/tarball/master#egg=vtr-xml-utils-0.0.1'
     ],
     setup_requires=["pytest-runner"],
     tests_require=[
