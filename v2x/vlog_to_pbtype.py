@@ -485,7 +485,7 @@ def get_interconnects(yj, mod, mod_pname: str,
     # Cell connections
     for cname, ctype in mod.cells:
         pb_name = strip_name(cname)
-        assert pb_name in valid_names
+        assert pb_name in valid_names, (pb_name, valid_names)
         if pb_name == mod_pname:
             pb_name = None
 
@@ -849,8 +849,8 @@ def make_container_pb(
     valid_names = [mod_pname]
 
     routing_cells = []
-    for _, routing_names in routing.values():
-        routing_cells.extend(routing_names)
+    for _, children_data in routing.values():
+        routing_cells.extend([c[0] for c in children_data])
     valid_names.extend(routing_cells)
 
     for _, children_data in children.values():
@@ -914,7 +914,7 @@ Currently muxes can only drive a single output.""".format(
                 ", ".join("{}.{}".format(*pin) for pin, path_attr in sinks)
             )
             for (sink_cell, sink_pin), path_attr in sinks:
-                assert sink_cell not in routing_names, """\
+                assert sink_cell not in routing_cells, """\
 Mux {}.{} is trying to drive mux input pin {}.{}""".format(
                     mux_cell, mux_output_pin, sink_cell, sink_pin
                 )
@@ -924,7 +924,7 @@ Mux {}.{} is trying to drive mux input pin {}.{}""".format(
             for (sink_cell, mux_pin), path_attr in sinks:
                 if sink_cell != mux_cell:
                     continue
-                assert driver_cell not in routing_names, \
+                assert driver_cell not in routing_cells, \
                     "Mux {}.{} is trying to drive mux {}.{}".format(
                         driver_cell, driver_pin, mux_cell, sink_pin
                     )
