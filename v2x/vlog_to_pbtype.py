@@ -68,16 +68,20 @@ The following are allowed on ports:
 
 The following attributes are used to annotate cells with fasm metadata:
     - `(* FASM_PREFIX="prefix" *)` : Sets the fasm prefix of a cell instance.
-                                     Cannot be set on a module definition!
+        Cannot be set on a module definition!
 
     - `(* FASM_PREFIX="prefix1;prefix2;..." *) : Same as FASM_PREFIX but used
-                                                 for cells inside `generate`
-                                                 statements. Each instance of
-                                                 a cell will be assigned one
-                                                 prefix from the semicolon
-                                                 separated list. The number of
-                                                 prefixes in the list must
-                                                 match the cell instance count!
+        for cells inside `generate` statements. Each instance of a cell will be
+        assigned one prefix from the semicolon separated list. The number of
+        prefixes in the list must match the cell instance count!
+
+    - `(* FASM_FEATURES="str1;str2;..." *)` : Specifies a list of fasm features
+        for the given module. Has to be provided at a module definition.
+        Multiple features have to be separated by semicolon.
+
+    - `*( FASM_FEATURES_{mode}="str1;str2;..." *)` : Same as above but defines
+        a list of fasm features only for the given mode. Those will be attached
+        to the pb_type corresponding to that mode.
 
 The Verilog define "PB_TYPE" is set during generation.
 """
@@ -177,7 +181,7 @@ def parse_fasm_attribute(attribute):
     """
 
     KNOWN_FASM_ATTRS = (
-        "FASM_PREFIX",
+        "FASM_PREFIX", "FASM_FEATURES",
     )
 
     # This attribute is not mode related
@@ -196,7 +200,7 @@ def parse_fasm_attribute(attribute):
     return match.group(1), match.group(2)
 
 
-def metadata_from_attributes(attributes, mode):
+def metadata_from_attributes(attributes, mode=None):
     """
     Collects metadata and stores it as a dict
     """
@@ -212,7 +216,7 @@ def metadata_from_attributes(attributes, mode):
             continue
 
         # Filter out if not for this mode
-        if attr_mode is not None and attr_mode != mode:
+        if mode is not None and attr_mode != mode:
             continue
 
         # Store
@@ -242,8 +246,14 @@ def metadata_to_xml(xml_parent, metadata):
 
     metadata_xml = ET.SubElement(xml_parent, "metadata")
     for key, value in metadata.items():
+        value = str(value)
+
+        # Replace semicolons with newlines if any.
+        if ";" in value:
+            value = value.replace(";", "\n")
+
         meta_xml = ET.SubElement(metadata_xml, "meta", name=key)
-        meta_xml.text = str(value)
+        meta_xml.text = value
 
     return metadata_xml
 
@@ -1110,6 +1120,14 @@ def make_pb_type(
             if len(mode_mod.cells) == 0:
                 inter.update(get_interconnects(
                     mode_yj, mode_mod, smode, [smode]))
+
+                # Check if we have metadata. Metadata cannot be appended to the
+                # "mode" tag.
+                mode_metadata = metadata_from_attributes(mode_mod.module_attrs, smode)
+                if len(mode_metadata):
+                    print("ERROR: Cannot assign metadata to a mode without "
+                          "children cells")
+                    exit(-1)
 
             # The mode has children, recurse
             else:

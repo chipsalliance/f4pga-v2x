@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="MODULE" num_pb="1">
+  <input name="I0" num_pins="1"/>
+  <input name="I1" num_pins="1"/>
+  <output name="O" num_pins="1"/>
+  <mode name="MODE_A">
+    <interconnect>
+      <direct>
+        <port name="I0" type="input"/>
+        <port name="O" type="output"/>
+      </direct>
+    </interconnect>
+  </mode>
+  <mode name="MODE_B">
+    <pb_type name="MODE_B" num_pb="1">
+      <input name="I0" num_pins="1"/>
+      <input name="I1" num_pins="1"/>
+      <output name="O" num_pins="1"/>
+      <pb_type name="gate" num_pb="1">
+        <!--old_name GATE-->
+        <xi:include href="gate/gate.pb_type.xml" xpointer="xpointer(pb_type/child::node()[local-name()!='metadata'])"/>
+      </pb_type>
+      <interconnect>
+        <direct>
+          <port name="I0" type="input"/>
+          <port from="gate" name="I1" type="output"/>
+        </direct>
+        <direct>
+          <port name="I1" type="input"/>
+          <port from="gate" name="I2" type="output"/>
+        </direct>
+        <direct>
+          <port from="gate" name="O" type="input"/>
+          <port name="O" type="output"/>
+        </direct>
+      </interconnect>
+      <metadata>
+        <meta name="fasm_features">SEL_MODE_B
+ENABLE_SOMETHING</meta>
+      </metadata>
+    </pb_type>
+    <interconnect>
+      <direct>
+        <port name="I0" type="input"/>
+        <port from="MODE_B" name="I0" type="output"/>
+      </direct>
+      <direct>
+        <port name="I1" type="input"/>
+        <port from="MODE_B" name="I1" type="output"/>
+      </direct>
+      <direct>
+        <port from="MODE_B" name="O" type="input"/>
+        <port name="O" type="output"/>
+      </direct>
+    </interconnect>
+  </mode>
+  <metadata>
+    <meta name="fasm_features">IN_USE</meta>
+  </metadata>
+</pb_type>
