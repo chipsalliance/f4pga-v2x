@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="PARENT" num_pb="1">
+  <clock name="CLK" num_pins="1"/>
+  <input name="I0" num_pins="1"/>
+  <input name="I1" num_pins="1"/>
+  <input name="I2" num_pins="1"/>
+  <output name="O0" num_pins="1"/>
+  <output name="O1" num_pins="1"/>
+  <output name="O2" num_pins="1"/>
+  <output name="Y" num_pins="2"/>
+  <pb_type name="gate" num_pb="2">
+    <!--old_name GATE old_num_pb 1-->
+    <xi:include href="gate/gate.pb_type.xml" xpointer="xpointer(pb_type/child::node()[local-name()!='metadata'])"/>
+    <metadata>
+      <meta name="fasm_prefix">PREFIX_FOR_GATE_X PREFIX_FOR_GATE_Y</meta>
+    </metadata>
+  </pb_type>
+  <pb_type name="ff" num_pb="1">
+    <!--old_name FF-->
+    <xi:include href="ff/ff.pb_type.xml" xpointer="xpointer(pb_type/child::node()[local-name()!='metadata'])"/>
+    <metadata>
+      <meta name="fasm_prefix">FASM_PREFIX_FOR_FF</meta>
+    </metadata>
+  </pb_type>
+  <pb_type name="gate_a" num_pb="1">
+    <!--old_name GATE-->
+    <xi:include href="gate/gate.pb_type.xml" xpointer="xpointer(pb_type/child::node()[local-name()!='metadata'])"/>
+    <metadata>
+      <meta name="fasm_prefix">FASM_PREFIX_FOR_GATE_A</meta>
+    </metadata>
+  </pb_type>
+  <pb_type name="gate_b" num_pb="1">
+    <!--old_name GATE-->
+    <xi:include href="gate/gate.pb_type.xml" xpointer="xpointer(pb_type/child::node()[local-name()!='metadata'])"/>
+    <metadata>
+      <meta name="fasm_prefix">FASM_PREFIX_FOR_GATE_B</meta>
+    </metadata>
+  </pb_type>
+  <interconnect>
+    <direct>
+      <port name="I0" type="input"/>
+      <port from="gate[0]" name="I1" type="output"/>
+    </direct>
+    <direct>
+      <port name="I0" type="input"/>
+      <port from="gate[1]" name="I1" type="output"/>
+    </direct>
+    <direct>
+      <port name="I0" type="input"/>
+      <port from="gate_a" name="I1" type="output"/>
+    </direct>
+    <direct>
+      <port name="I0" type="input"/>
+      <port from="gate_b" name="I1" type="output"/>
+    </direct>
+    <direct>
+      <port name="I1" type="input"/>
+      <port from="gate[0]" name="I2" type="output"/>
+    </direct>
+    <direct>
+      <port name="I1" type="input"/>
+      <port from="gate[1]" name="I2" type="output"/>
+    </direct>
+    <direct>
+      <port name="I1" type="input"/>
+      <port from="gate_a" name="I2" type="output"/>
+    </direct>
+    <direct>
+      <port name="I1" type="input"/>
+      <port from="gate_b" name="I2" type="output"/>
+    </direct>
+    <direct>
+      <port from="gate[0]" name="O" type="input"/>
+      <port name="Y[0]" type="output"/>
+    </direct>
+    <direct>
+      <port from="gate[1]" name="O" type="input"/>
+      <port name="Y[1]" type="output"/>
+    </direct>
+    <direct>
+      <port name="CLK" type="input"/>
+      <port from="ff" name="CLK" type="output"/>
+    </direct>
+    <direct>
+      <port name="I2" type="input"/>
+      <port from="ff" name="D" type="output"/>
+    </direct>
+    <direct>
+      <port from="ff" name="Q" type="input"/>
+      <port name="O2" type="output"/>
+    </direct>
+    <direct>
+      <port from="gate_a" name="O" type="input"/>
+      <port name="O0" type="output"/>
+    </direct>
+    <direct>
+      <port from="gate_b" name="O" type="input"/>
+      <port name="O1" type="output"/>
+    </direct>
+  </interconnect>
+</pb_type>
