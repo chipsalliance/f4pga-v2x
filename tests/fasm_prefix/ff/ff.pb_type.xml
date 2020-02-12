@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="FF" num_pb="1">
+  <blif_model>.subckt FF</blif_model>
+  <clock name="CLK" num_pins="1"/>
+  <input name="D" num_pins="1"/>
+  <output name="Q" num_pins="1"/>
+</pb_type>
