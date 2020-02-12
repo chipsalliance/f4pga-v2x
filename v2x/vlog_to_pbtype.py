@@ -83,6 +83,10 @@ The following attributes are used to annotate cells with fasm metadata:
         a list of fasm features only for the given mode. Those will be attached
         to the pb_type corresponding to that mode.
 
+    - `(* FASM_PARAMS="str1=param1;str2=param2;.." *)` : A semicolon separated
+        list of fasm features and module parameters that they are to be 
+        assigned with. Can only be specified for a module definition.
+
 The Verilog define "PB_TYPE" is set during generation.
 """
 
@@ -181,7 +185,7 @@ def parse_fasm_attribute(attribute):
     """
 
     KNOWN_FASM_ATTRS = (
-        "FASM_PREFIX", "FASM_FEATURES",
+        "FASM_PREFIX", "FASM_FEATURES", "FASM_PARAMS",
     )
 
     # This attribute is not mode related
