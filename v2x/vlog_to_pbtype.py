@@ -84,7 +84,7 @@ The following attributes are used to annotate cells with fasm metadata:
         to the pb_type corresponding to that mode.
 
     - `(* FASM_PARAMS="str1=param1;str2=param2;.." *)` : A semicolon separated
-        list of fasm features and module parameters that they are to be 
+        list of fasm features and module parameters that they are to be
         assigned with. Can only be specified for a module definition.
 
 The Verilog define "PB_TYPE" is set during generation.
@@ -287,7 +287,7 @@ def update_metadata(metadata, new_metadata, concatenate_keys=()):
 
             # Do not merge, throw an error
             elif metadata[key] != value:
-                print("ERROR: metadata conflict (!): '{}'='{}' vs '{}'" \
+                print("ERROR: metadata conflict (!): '{}'='{}' vs '{}'"
                       .format(key, metadata[key], value))
                 exit(-1)
 
@@ -302,7 +302,8 @@ def sanity_check_child_metadata(metadata):
     not_allowed_keys = ("fasm_params", "fasm_lut", )
     for key in metadata.keys():
         if key in not_allowed_keys:
-            print("ERROR: metadata '{}' is not allowed for module instances".format(key))
+            print("ERROR: metadata '{}' is not allowed for module instances"
+                  .format(key))
             exit(-1)
 
 
@@ -314,7 +315,8 @@ def sanity_check_parent_metadata(metadata):
     not_allowed_keys = ("fasm_prefix", )
     for key in metadata.keys():
         if key in not_allowed_keys:
-            print("ERROR: metadata '{}' is not allowed for module definition".format(key))
+            print("ERROR: metadata '{}' is not allowed for module definition"
+                  .format(key))
             exit(-1)
 
 
@@ -774,7 +776,7 @@ def make_container_pb(
         xptr = None
         parent_xml = pb_type_xml
         if include_as_is is not True:
-            xptr="xpointer(pb_type/child::node()[local-name()!='metadata'])"
+            xptr = "xpointer(pb_type/child::node()[local-name()!='metadata'])"
             parent_xml = ET.SubElement(pb_type_xml, 'pb_type', inc_attrib)
             parent_xml.append(ET.Comment(comment_str))
 
@@ -810,8 +812,9 @@ def make_container_pb(
                 attr_metadata = metadata_from_attributes(child_attrs, None)
                 sanity_check_child_metadata(attr_metadata)
 
-                # Check if the prefix count for the cell array equals its count.
-                # Isolate fasm_prefix for the correct child index and use it.
+                # Check if the prefix count for the cell array equals its
+                # count. Isolate fasm_prefix for the correct child index and
+                # use it.
                 if "fasm_prefix" in attr_metadata:
                     fasm_prefixes = attr_metadata["fasm_prefix"].split(";")
                     if len(fasm_prefixes) != len(children_data):
@@ -823,8 +826,7 @@ def make_container_pb(
                 # Merge
                 metadata = update_metadata(
                     metadata,
-                    attr_metadata, ("fasm_prefix")
-                    )
+                    attr_metadata, ("fasm_prefix"))
 
                 # Count occurrences of the "fasm_prefix" key
                 fasm_prefix_count += 1
@@ -1007,7 +1009,6 @@ def make_pb_type(
 
     # Create metadata
     metadata = metadata_from_attributes(mod.module_attrs, mode_name)
-    is_fasm_lut = "fasm_lut" in metadata.keys()
 
     mod_pname = mod.name
     assert mod_pname == mod_pname.upper(
@@ -1127,7 +1128,10 @@ def make_pb_type(
 
                 # Check if we have metadata. Metadata cannot be appended to the
                 # "mode" tag.
-                mode_metadata = metadata_from_attributes(mode_mod.module_attrs, smode)
+                mode_metadata = metadata_from_attributes(
+                    mode_mod.module_attrs,
+                    smode)
+
                 if len(mode_metadata):
                     print("ERROR: Cannot assign metadata to a mode without "
                           "children cells")
