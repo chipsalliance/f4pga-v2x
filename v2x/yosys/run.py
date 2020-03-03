@@ -19,9 +19,37 @@ def get_verbose():
 
 
 def get_yosys():
-    """Return how to execute Yosys: the value of $YOSYS if set, otherwise just
-    `yosys`."""
-    return os.getenv("YOSYS", "yosys")
+    """
+    Searches for the Yosys binary. If the env. var. "YOSYS" is set, then it
+    checks if it points to a valid executable binary. Otherwise it searches
+    in PATH for binaries named "yosys" and returns the first one found.
+    """
+
+    def is_exe(fpath):
+        """
+        Returns True if a file exists and is executable.
+        """
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    # The environmental variable "YOSYS" is set. It should point to the Yosys
+    # executable.
+    if "YOSYS" in os.environ:
+        fpath = os.environ["YOSYS"]
+        if not is_exe(fpath):
+            return None
+
+        return fpath
+
+    # Look for the 'yosys' binary in the current PATH but only if the PATH
+    # variable is available.
+    elif "PATH" in os.environ:
+        for path in os.environ["PATH"].split(os.pathsep):
+            fpath = os.path.join(path, "yosys")
+            if is_exe(fpath):
+                return fpath
+
+    # Couldn't find Yosys.
+    return None
 
 
 def get_yosys_common_args():
