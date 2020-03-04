@@ -236,7 +236,7 @@ def list_clocks(infiles, module):
     """
     return do_select(
         infiles, module,
-        "c:* %x:+[CLK]:+[clk]:+[clock]:+[CLOCK] a:CLOCK=1 %u c:* %d x:* %i"
+        "c:* %x:+[CLK]:+[clk]:+[clock]:+[CLOCK] c:* %d x:* %i"
     )
 
 

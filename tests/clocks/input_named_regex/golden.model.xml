@@ -1,0 +1,17 @@
+<models xmlns:xi="http://www.w3.org/2001/XInclude">
+  <model name="BLOCK">
+    <input_ports>
+      <port is_clock="1" name="CLK"/>
+      <port is_clock="1" name="Clk"/>
+      <port is_clock="1" name="clk"/>
+      <port is_clock="1" name="clkBus"/>
+      <port is_clock="1" name="clkX"/>
+      <port name="regular_input"/>
+      <port is_clock="1" name="sys_clk"/>
+      <port is_clock="1" name="sys_clk10"/>
+    </input_ports>
+    <output_ports>
+      <port name="o"/>
+    </output_ports>
+  </model>
+</models>

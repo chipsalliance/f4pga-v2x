@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="BLOCK" num_pb="1">
+  <blif_model>.subckt BLOCK</blif_model>
+  <clock name="CLK" num_pins="1"/>
+  <clock name="Clk" num_pins="1"/>
+  <clock name="clk" num_pins="1"/>
+  <clock name="clkBus" num_pins="1"/>
+  <clock name="clkX" num_pins="1"/>
+  <clock name="sys_clk" num_pins="1"/>
+  <clock name="sys_clk10" num_pins="1"/>
+  <input name="regular_input" num_pins="1"/>
+  <output name="o" num_pins="1"/>
+</pb_type>

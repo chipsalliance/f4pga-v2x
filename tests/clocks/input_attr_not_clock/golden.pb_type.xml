@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="BLOCK" num_pb="1">
+  <blif_model>.subckt BLOCK</blif_model>
+  <input name="a" num_pins="1"/>
+  <input name="b" num_pins="1"/>
+  <output name="c" num_pins="1"/>
+</pb_type>

@@ -3,7 +3,9 @@
 Convert a Verilog simulation model to a VPR `model.xml`
 
 The following Verilog attributes are considered on ports:
-    - `(* CLOCK *)` : force a given port to be a clock
+    - `(* CLOCK *)` or `(* CLOCK=1 *)` : force a given port to be a clock
+
+    - `(* CLOCK=0 *)` : force a given port not to be a clock
 
     - `(* ASSOC_CLOCK="RDCLK" *)` : force a port's associated
                                     clock to a given value
@@ -26,6 +28,7 @@ import lxml.etree as ET
 
 from .yosys import run
 from .yosys.json import YosysJSON
+from .yosys import utils as utils
 
 from .xmlinc import xmlinc
 
@@ -173,6 +176,13 @@ def vlog_to_model(infiles, includes, top, outfile=None):
 
             for name, width, bits, iodir in ports:
                 nocomb = tmod.net_attr(name, "NO_COMB")
+
+                is_clock = name in clocks or utils.is_clock_name(name)
+
+                port_attrs = tmod.port_attrs(name)
+                if "CLOCK" in port_attrs:
+                    is_clock = int(port_attrs["CLOCK"]) != 0
+
                 attrs = dict(name=name)
                 sinks = run.get_combinational_sinks(infiles, top, name)
 
@@ -183,7 +193,7 @@ def vlog_to_model(infiles, includes, top, outfile=None):
 
                 # FIXME: Check if ignoring clock for "combination_sink_ports"
                 # is a valid thing to do.
-                if name in clocks or "clk" in name.lower():
+                if is_clock:
                     attrs["is_clock"] = "1"
                 else:
                     clks = list()

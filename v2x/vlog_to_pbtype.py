@@ -44,7 +44,9 @@ The following are allowed on nets within modules
                               with this wire
 
 The following are allowed on ports:
-    - `(* CLOCK *)` : force a given port to be a clock
+    - `(* CLOCK *)` or `(* CLOCK=1 *)` : force a given port to be a clock
+
+    - `(* CLOCK=0 *)` : force a given port not to be a clock
 
     - `(* ASSOC_CLOCK="RDCLK" *)` : force a port's associated clock to a
                                     given value
@@ -68,6 +70,7 @@ import lxml.etree as ET
 
 from .yosys import run
 from .yosys.json import YosysJSON
+from .yosys import utils as utils
 
 from .xmlinc import xmlinc  # noqa: E402
 
@@ -808,7 +811,22 @@ def make_pb_type(
         ET.SubElement(pb_type_xml, "pb_class", {}).text = pb_attrs["class"]
 
     # Create the pins for this pb_type
-    clocks = run.list_clocks(infiles, mod.name)
+    clocks = set(run.list_clocks(infiles, mod.name))
+
+    # Add extra clocks inferred from port names
+    # Mask out clocks with the attribute "CLOCK" not equal to 1
+    for name, width, bits, iodir in mod.ports:
+        port_attrs = mod.port_attrs(name)
+
+        is_clock = utils.is_clock_name(name)
+        if "CLOCK" in port_attrs:
+            is_clock = int(port_attrs["CLOCK"]) != 0
+
+        if is_clock:
+            clocks.add(name)
+        else:
+            clocks.discard(name)
+
     make_ports(clocks, mod, pb_type_xml, "clocks")
     make_ports(clocks, mod, pb_type_xml, "inputs")
     make_ports(clocks, mod, pb_type_xml, "outputs")
