@@ -819,6 +819,12 @@ def make_pb_type(
         port_attrs = mod.port_attrs(name)
 
         is_clock = utils.is_clock_name(name)
+
+        # In pb_type "clock" ports can be only inputs. Clock outputs must
+        # be declared as "output".
+        if iodir == "output":
+            is_clock = False
+
         if "CLOCK" in port_attrs:
             is_clock = int(port_attrs["CLOCK"]) != 0
 
