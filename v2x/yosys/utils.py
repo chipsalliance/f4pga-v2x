@@ -17,6 +17,25 @@ def is_clock_name(name):
     """
     Returns true if the port name correspond to a clock according to arbitrary
     regular expressions.
+
+    >>> is_clock_name("data")
+    False
+    >>> is_clock_name("clk")
+    True
+    >>> is_clock_name("Clk")
+    True
+    >>> is_clock_name("Clk_Rst0")
+    False
+    >>> is_clock_name("Data_clk")
+    True
+    >>> is_clock_name("clk99")
+    True
+    >>> is_clock_name("bus_clk99")
+    True
+    >>> is_clock_name("busclk15")
+    True
+    >>> is_clock_name("clkb")
+    True
     """
     match = CLOCK_NAME_REGEX.match(name.lower())
     return match is not None

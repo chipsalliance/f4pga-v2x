@@ -5,13 +5,13 @@
  */
 module BLOCK(a, b, c);
     (* CLOCK=0 *)
-	input wire a;
-	input wire b;
-	output wire c;
-
-	reg r;
-	always @ ( posedge a ) begin
-		r <= b;
-	end
-	assign c = r;
+    input wire a;
+    input wire b;
+    output wire c;
+    
+    reg r;
+    always @ ( posedge a ) begin
+    	r <= b;
+    end
+    assign c = r;
 endmodule
