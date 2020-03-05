@@ -1,14 +1,14 @@
 # `clocks` tests
 
 This directory contains test for the clock detection functionality for the
-`v2x_to_model.py` tool.
+`vlog_to_model.py` and `vlog_to_pbtype.py` tool.
 
 
 ## Detection of clock signals
 
- - [ ] Signal is named `clk`.
- - [ ] Signal has `clk` in the name.
- - [ ] Manually set via the `(* CLOCK *)` Verilog attribute.
+ - [ ] Signal name matches the regexp `[a-z_]*clk[a-z0-9]*$`
+ - [ ] Manually set via the `(* CLOCK *)` or `(* CLOCK=1 *)` Verilog attribute.
+ - [ ] Manually cleared via the `(* CLOCK=0 *)` Verilog attribute.
  - [ ] Signal drives synchronous logic (IE flipflop).
  - [ ] Detection in recursive module includes.
 
