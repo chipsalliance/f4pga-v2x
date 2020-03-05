@@ -19,9 +19,37 @@ def get_verbose():
 
 
 def get_yosys():
-    """Return how to execute Yosys: the value of $YOSYS if set, otherwise just
-    `yosys`."""
-    return os.getenv("YOSYS", "yosys")
+    """
+    Searches for the Yosys binary. If the env. var. "YOSYS" is set, then it
+    checks if it points to a valid executable binary. Otherwise it searches
+    in PATH for binaries named "yosys" and returns the first one found.
+    """
+
+    def is_exe(fpath):
+        """
+        Returns True if a file exists and is executable.
+        """
+        return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
+
+    # The environmental variable "YOSYS" is set. It should point to the Yosys
+    # executable.
+    if "YOSYS" in os.environ:
+        fpath = os.environ["YOSYS"]
+        if not is_exe(fpath):
+            return None
+
+        return fpath
+
+    # Look for the 'yosys' binary in the current PATH but only if the PATH
+    # variable is available.
+    elif "PATH" in os.environ:
+        for path in os.environ["PATH"].split(os.pathsep):
+            fpath = os.path.join(path, "yosys")
+            if is_exe(fpath):
+                return fpath
+
+    # Couldn't find Yosys.
+    return None
 
 
 def get_yosys_common_args():
@@ -30,13 +58,16 @@ def get_yosys_common_args():
 
 def get_output(params):
     """Run Yosys with given command line parameters, and return
-    stdout as a string"""
+    stdout as a string. Raises CalledProcessError on a non-zero exit code."""
 
     verbose = get_verbose()
 
     cmd = [get_yosys()] + get_yosys_common_args() + params
     if verbose:
-        print(cmd)
+        msg = ""
+        msg += "command".ljust(9).ljust(80, "=") + "\n"
+        msg += str(cmd)
+        print(msg)
 
     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -47,23 +78,32 @@ def get_output(params):
 
     retcode = p.wait()
 
-    msg = ""
-    msg += "stdout" + "=" * 75 + "\n"
-    msg += stdout + "\n"
-    msg += "stderr" + "-" * 75 + "\n"
-    msg += stderr + "\n"
-    msg += "=" * 75 + "\n"
-    msg += "Return Code: {}".format(retcode)
-
     if verbose:
+        msg = ""
+
+        if len(stdout):
+            msg += "stdout".ljust(9).ljust(80, "=") + "\n"
+            msg += stdout
+
+        if len(stderr):
+            msg += "stderr".ljust(9).ljust(80, "=") + "\n"
+            msg += stderr
+
+        msg += "exitcode".ljust(9).ljust(80, "=") + "\n"
+        msg += "{}\n".format(retcode)
+
+        msg += "=" * 80 + "\n"
         print(msg)
 
     if retcode != 0:
         emsg = ""
-        emsg += "Failed to run {}".join(" ".join(cmd)) + "\n"
-        emsg += msg
+        emsg += "Yosys failed with exit code {}\n".format(retcode)
+        emsg += "Command: '{}'\n".format(" ".join(cmd))
+        emsg += "Message:\n"
+        emsg += "\n".join([" " + l for l in stderr.splitlines()])
 
         raise subprocess.CalledProcessError(retcode, cmd, emsg)
+
     return stdout
 
 
@@ -105,7 +145,7 @@ def commands(commands, infiles=[]):
     commands = "read_verilog {} {} {}; ".format(
         get_defines(), get_includes(), " ".join(infiles)
     ) + commands
-    params = ["-q", "-p", commands]
+    params = ["-p", commands]
     return get_output(params)
 
 
@@ -117,7 +157,7 @@ def script(script, infiles=[]):
     script : path to Yosys script to run
     infiles : list of input files
     """
-    params = ["-q", "-s", script] + infiles
+    params = ["-s", script] + infiles
     return get_output(params)
 
 
@@ -143,9 +183,13 @@ def vlog_to_json(
     else:
         mode_str = ""
     cmds = "{}prep {}; write_json {}".format(mode_str, prep_opts, json_opts)
-    j = utils.strip_yosys_json(commands(cmds, infiles))
-    """with open('dump.json', 'w') as dbg:
-        print(j,file=dbg)"""
+
+    try:
+        j = utils.strip_yosys_json(commands(cmds, infiles))
+    except subprocess.CalledProcessError as ex:
+        print(ex.output)
+        exit(-1)
+
     return json.loads(j)
 
 
@@ -198,7 +242,13 @@ def do_select(infiles, module, expr, prep=False, flatten=False):
 
     outfile = tempfile.mktemp()
     sel_cmd = "{} cd {}; select -write {} {}".format(p, module, outfile, expr)
-    commands(sel_cmd, infiles)
+
+    try:
+        commands(sel_cmd, infiles)
+    except subprocess.CalledProcessError as ex:
+        print(ex.output)
+        exit(-1)
+
     pins = []
     with open(outfile, 'r') as f:
         for net in f:
@@ -207,6 +257,7 @@ def do_select(infiles, module, expr, prep=False, flatten=False):
                 pin = extract_pin(module, snet)
                 if pin is not None:
                     pins.append(pin)
+
     os.remove(outfile)
     return pins
 

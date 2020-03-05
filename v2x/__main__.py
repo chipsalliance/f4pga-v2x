@@ -5,8 +5,16 @@ from . import vlog_to_model
 import argparse
 import sys
 
+from .yosys.run import get_yosys
+
 
 def main(args):
+
+    # Check if Yosys can be found. Print an error message if not.
+    if get_yosys() is None:
+        print("ERROR: Cannot find the Yosys binary or its not executable.")
+        return -1
+
     if args.mode == "pb_type":
         with open(args.outfile, "w") as fp:
             fp.write(vlog_to_pbtype.vlog_to_pbtype(
