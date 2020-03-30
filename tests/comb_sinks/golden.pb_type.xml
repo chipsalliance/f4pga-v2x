@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="GMUX" num_pb="1">
+  <blif_model>.subckt GMUX</blif_model>
+  <clock name="IC" num_pins="1"/>
+  <clock name="IP" num_pins="1"/>
+  <input name="IS0" num_pins="1"/>
+  <output name="IZ" num_pins="1"/>
+</pb_type>

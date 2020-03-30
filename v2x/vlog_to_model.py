@@ -10,6 +10,14 @@ The following Verilog attributes are considered on ports:
     - `(* ASSOC_CLOCK="RDCLK" *)` : force a port's associated
                                     clock to a given value
 
+    - `(* NO_COMB *)` : Specify on an input port. When given forces the port
+                        not to have any combinational sinks in the model.
+
+    - `(* COMB_SINKS="<sink1> <sink2> ... <sinkN>" *)` : Provies a means of
+            explicit specification of combinatinal sinks for an input port.
+            the string has to contain a space-separated list of valid output
+            port names.
+
 The following Verilog attributes are considered on modules:
     - `(* MODEL_NAME="model" *)` : override the name used for
     <model> and for ".subckt name" in the BLIF model. Mostly
@@ -175,7 +183,10 @@ def vlog_to_model(infiles, includes, top, outfile=None):
             clocks = run.list_clocks(infiles, top)
 
             for name, width, bits, iodir in ports:
-                nocomb = tmod.net_attr(name, "NO_COMB")
+                nocomb = int(tmod.net_attr(name, "NO_COMB", "0"))
+
+                exp_comb_sinks = tmod.net_attr(name, "COMB_SINKS", "")
+                exp_comb_sinks = exp_comb_sinks.strip().split()
 
                 is_clock = name in clocks or utils.is_clock_name(name)
 
@@ -194,11 +205,18 @@ def vlog_to_model(infiles, includes, top, outfile=None):
                 # FIXME: Check if ignoring clock for "combination_sink_ports"
                 # is a valid thing to do.
                 if is_clock:
+                    sinks = []
+
+                # Add explicitly given sinks
+                sinks.extend(exp_comb_sinks)
+
+                if len(sinks) > 0 and iodir == "input" and nocomb == 0:
+                    attrs["combinational_sink_ports"] = " ".join(sinks)
+
+                if is_clock:
                     attrs["is_clock"] = "1"
                 else:
                     clks = list()
-                    if len(sinks) > 0 and iodir == "input" and nocomb is None:
-                        attrs["combinational_sink_ports"] = " ".join(sinks)
                     for clk in clocks:
                         if is_clock_assoc(infiles, top, clk, name, iodir):
                             clks.append(clk)
