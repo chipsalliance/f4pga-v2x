@@ -5,13 +5,11 @@
 module GMUX (IP, IC, IS0, IZ);
 
     // 1st clock input
-    (* CLOCK *)
-    (* COMB_SINKS="IZ" *)
+    (* ASYNC_CLOCK *)
     input  wire IP;
 
     // 2nd clock input
-    (* CLOCK *)
-    (* COMB_SINKS="IZ" *)
+    (* ASYNC_CLOCK *)
     input  wire IC;
 
     // Select input

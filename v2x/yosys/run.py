@@ -277,20 +277,6 @@ def get_combinational_sinks(infiles, module, innet):
     )
 
 
-def list_clocks(infiles, module):
-    """Return a list of clocks in the module
-
-    Inputs
-    -------
-    infiles: List of Verilog source files to pass to Yosys
-    module: Name of module to run command on
-    """
-    return do_select(
-        infiles, module,
-        "c:* %x:+[CLK]:+[clk]:+[clock]:+[CLOCK] c:* %d x:* %i"
-    )
-
-
 def get_clock_assoc_signals(infiles, module, clk):
     """Return the list of signals associated with a given clock.
 

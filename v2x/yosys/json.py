@@ -10,16 +10,79 @@ import json
 import pprint
 import re
 
+from .utils import is_clock_name
+
 
 class YosysModule:
     def __init__(self, name, module_data):
         self.name = name
         self.data = module_data
 
+        self.clock_ports = set()
+        self._identify_clocks()
+
     def __str__(self):
         return "YosysModule({},\n{})".format(
             self.name, pprint.pformat(self.data)
         )
+
+    def _identify_clocks(self):
+        """
+        Identifies clock inputs by checking whether they are connected to
+        any of the known sequential internal cells (like $dff).
+        """
+
+        # Dict of known Yosys' sequential cell. Holds sets of clock ports of
+        # the cell types. The list is derived from the Yosys's src file:
+        # kernel/celltypes.h
+        KNOWN_SEQUENTIAL_CELLS = {
+            "$dff": {"CLK"},
+            "$dffe": {"CLK"},
+            "$dffsr": {"CLK"},
+            "$sdff": {"CLK"},
+            "$memrd": {"CLK"},
+            "$memwr": {"CLK"},
+            "$mem": {"RD_CLK", "WR_CLK"},
+            "$fsm": {"CLK"},
+        }
+
+        # Check all ports
+        for port_name, port_data in self.data["ports"].items():
+
+            # Check if the port has the "CLOCK" attribute
+            port_attrs = self.port_attrs(port_name)
+            if "CLOCK" in port_attrs:
+                is_clock = int(port_attrs["CLOCK"]) != 0
+
+                # Explicit clock
+                if is_clock:
+                    self.clock_ports.add(port_name)
+
+                # Explicit clock / non-clock, continue
+                continue
+
+            # Check if the port name corresponds to a clock
+            if is_clock_name(port_name):
+                self.clock_ports.add(port_name)
+                continue
+
+            # Check its connections
+            for port_bit in port_data["bits"]:
+
+                # Find connected cell
+                for cell in self.data["cells"].values():
+
+                    if cell["type"] not in KNOWN_SEQUENTIAL_CELLS:
+                        continue
+
+                    # Check cell port(s)
+                    for cell_port in KNOWN_SEQUENTIAL_CELLS[cell["type"]]:
+                        if cell_port in cell["connections"]:
+                            for cell_bit in cell["connections"][cell_port]:
+
+                                # Got a clock connection
+                                if cell_bit == port_bit:
+                                    self.clock_ports.add(port_name)
 
     @property
     def ports(self):
@@ -39,6 +102,13 @@ class YosysModule:
                 (port, len(pdata["bits"]), pdata["bits"], pdata["direction"])
             )
         return plist
+
+    @property
+    def clocks(self):
+        """
+        Returns a list of clock inputs
+        """
+        return sorted(list(self.clock_ports))
 
     @property
     def cells(self):

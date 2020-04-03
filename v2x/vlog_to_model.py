@@ -7,6 +7,10 @@ The following Verilog attributes are considered on ports:
 
     - `(* CLOCK=0 *)` : force a given port not to be a clock
 
+    - `(* ASYNC_CLOCK *)` : Makes an input port an "asynchronous clock" which
+                            means that it is not clocking any sequential logic
+                            but should be treated as a clock signal.
+
     - `(* ASSOC_CLOCK="RDCLK" *)` : force a port's associated
                                     clock to a given value
 
@@ -36,7 +40,6 @@ import lxml.etree as ET
 
 from .yosys import run
 from .yosys.json import YosysJSON
-from .yosys import utils as utils
 
 from .xmlinc import xmlinc
 
@@ -180,19 +183,17 @@ def vlog_to_model(infiles, includes, top, outfile=None):
             inports_xml = ET.SubElement(model_xml, "input_ports")
             outports_xml = ET.SubElement(model_xml, "output_ports")
 
-            clocks = run.list_clocks(infiles, top)
+            async_clocks = set()
+            for name, width, bits, iodir in ports:
+                port_attrs = tmod.port_attrs(name)
+                if int(port_attrs.get("ASYNC_CLOCK", "0")) == 1:
+                    async_clocks.add(name)
 
             for name, width, bits, iodir in ports:
                 nocomb = int(tmod.net_attr(name, "NO_COMB", "0"))
 
                 exp_comb_sinks = tmod.net_attr(name, "COMB_SINKS", "")
                 exp_comb_sinks = exp_comb_sinks.strip().split()
-
-                is_clock = name in clocks or utils.is_clock_name(name)
-
-                port_attrs = tmod.port_attrs(name)
-                if "CLOCK" in port_attrs:
-                    is_clock = int(port_attrs["CLOCK"]) != 0
 
                 attrs = dict(name=name)
                 sinks = run.get_combinational_sinks(infiles, top, name)
@@ -202,9 +203,8 @@ def vlog_to_model(infiles, includes, top, outfile=None):
                     if is_registered_path(tmod, name, sink):
                         sinks.remove(sink)
 
-                # FIXME: Check if ignoring clock for "combination_sink_ports"
-                # is a valid thing to do.
-                if is_clock:
+                # Remove combinational sinks of a clock
+                if name in tmod.clocks:
                     sinks = []
 
                 # Add explicitly given sinks
@@ -213,15 +213,16 @@ def vlog_to_model(infiles, includes, top, outfile=None):
                 if len(sinks) > 0 and iodir == "input" and nocomb == 0:
                     attrs["combinational_sink_ports"] = " ".join(sinks)
 
-                if is_clock:
+                if name in tmod.clocks or name in async_clocks:
                     attrs["is_clock"] = "1"
                 else:
                     clks = list()
-                    for clk in clocks:
-                        if is_clock_assoc(infiles, top, clk, name, iodir):
-                            clks.append(clk)
-                        if clks:
-                            attrs["clock"] = " ".join(clks)
+                    for clk in tmod.clocks:
+                        if clk not in async_clocks:
+                            if is_clock_assoc(infiles, top, clk, name, iodir):
+                                clks.append(clk)
+                    if clks:
+                        attrs["clock"] = " ".join(clks)
                 if iodir == "input":
                     ET.SubElement(inports_xml, "port", attrs)
                 elif iodir == "output":

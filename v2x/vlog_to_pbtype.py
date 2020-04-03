@@ -48,6 +48,10 @@ The following are allowed on ports:
 
     - `(* CLOCK=0 *)` : force a given port not to be a clock
 
+    - `(* ASYNC_CLOCK *)` : Makes an input port an "asynchronous clock" which
+                            means that it is not clocking any sequential logic
+                            but should be treated as a clock signal.
+
     - `(* ASSOC_CLOCK="RDCLK" *)` : force a port's associated clock to a
                                     given value
 
@@ -70,7 +74,6 @@ import lxml.etree as ET
 
 from .yosys import run
 from .yosys.json import YosysJSON
-from .yosys import utils as utils
 
 from .xmlinc import xmlinc  # noqa: E402
 
@@ -811,27 +814,12 @@ def make_pb_type(
         ET.SubElement(pb_type_xml, "pb_class", {}).text = pb_attrs["class"]
 
     # Create the pins for this pb_type
-    clocks = set(run.list_clocks(infiles, mod.name))
+    clocks = mod.clocks
 
-    # Add extra clocks inferred from port names
-    # Mask out clocks with the attribute "CLOCK" not equal to 1
-    for name, width, bits, iodir in mod.ports:
+    for name, width, bits, iodir in mod. ports:
         port_attrs = mod.port_attrs(name)
-
-        is_clock = utils.is_clock_name(name)
-
-        # In pb_type "clock" ports can be only inputs. Clock outputs must
-        # be declared as "output".
-        if iodir == "output":
-            is_clock = False
-
-        if "CLOCK" in port_attrs:
-            is_clock = int(port_attrs["CLOCK"]) != 0
-
-        if is_clock:
-            clocks.add(name)
-        else:
-            clocks.discard(name)
+        if int(port_attrs.get("ASYNC_CLOCK", "0")) == 1:
+            clocks.append(name)
 
     make_ports(clocks, mod, pb_type_xml, "clocks")
     make_ports(clocks, mod, pb_type_xml, "inputs")
