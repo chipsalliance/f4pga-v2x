@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="DFF_COMB_ONE_CLOCK" blif_model=".subckt DFF_COMB_ONE_CLOCK" num_pb="1">
+  <input name="a" num_pins="1"/>
+  <input name="b" num_pins="1"/>
+  <input name="c" num_pins="1"/>
+  <output name="d" num_pins="1"/>
+</pb_type>
