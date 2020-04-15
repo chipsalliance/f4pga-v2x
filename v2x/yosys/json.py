@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# Copyright (C) 2020  The SymbiFlow Authors.
+#
+# Use of this source code is governed by a ISC-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/ISC
+#
+# SPDX-License-Identifier:	ISC
+
 """
 This is intended to provide a range of helper functions around the output of
 Yosys' `write_json`. Depending on the tasks, this may need to be flattened

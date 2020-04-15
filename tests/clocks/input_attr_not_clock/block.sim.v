@@ -1,4 +1,14 @@
 /*
+ * Copyright (C) 2020  The SymbiFlow Authors.
+ *
+ * Use of this source code is governed by a ISC-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/ISC
+ *
+ * SPDX-License-Identifier:	ISC
+ */
+
+/*
  * `input wire a` should be detected as a clock because it drives the flip
  * flop. However, it has the attribute CLOCK set to 0 which should force it
  * to be a regular input.

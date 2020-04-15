@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2020  The SymbiFlow Authors.
+ *
+ * Use of this source code is governed by a ISC-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/ISC
+ *
+ * SPDX-License-Identifier:	ISC
+ */
+
 module BLOCK(c1, c2, a, b, c, o1, o2);
 	input wire c1;
 	input wire c2;

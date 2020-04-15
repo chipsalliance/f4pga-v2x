@@ -1,3 +1,13 @@
+/*
+ * Copyright (C) 2020  The SymbiFlow Authors.
+ *
+ * Use of this source code is governed by a ISC-style
+ * license that can be found in the LICENSE file or at
+ * https://opensource.org/licenses/ISC
+ *
+ * SPDX-License-Identifier:	ISC
+ */
+
 `include "../dsp_combinational/dsp_combinational.sim.v"
 `include "../dsp_inout_registered/dsp_inout_registered.sim.v"
 `include "../dsp_in_registered/dsp_in_registered.sim.v"
