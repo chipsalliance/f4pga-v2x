@@ -1,12 +1,13 @@
 # Minimal makefile for Sphinx documentation
 #
 
+SHELL = /bin/bash
 MAKEDIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
 # You can set these variables from the command line.
 SPHINXOPTS      =
-SPHINXBUILD     = [ -e env/bin/activate ] && . env/bin/activate; sphinx-build
-SPHINXAUTOBUILD = [ -e env/bin/activate ] && . env/bin/activate; sphinx-autobuild
+SPHINXBUILD     = [ -e env/bin/activate ] && source env/bin/activate; sphinx-build
+SPHINXAUTOBUILD = [ -e env/bin/activate ] && source env/bin/activate; sphinx-autobuild
 SPHINXPROJ      = SymbiFlowV2X
 SOURCEDIR       = .
 BUILDDIR        = _build
@@ -45,9 +46,9 @@ env:
 	rm -rf env
 	make env/Miniconda3
 	./env/Miniconda3-latest-$(OSFLAG)-x86_64.sh -p $(PWD)/env -b -f
-	. env/bin/activate; conda config --system --add envs_dirs $(PWD)/env/envs
-	. env/bin/activate; conda config --system --add pkgs_dirs $(PWD)/env/pkgs
-	. env/bin/activate; conda env update --name base --file ./environment.yml
+	source env/bin/activate; conda config --system --add envs_dirs $(PWD)/env/envs
+	source env/bin/activate; conda config --system --add pkgs_dirs $(PWD)/env/pkgs
+	source env/bin/activate; conda env update --name base --file ./environment.yml
 
 .PHONY: env
 
