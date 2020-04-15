@@ -7,7 +7,7 @@ MAKEDIR := $(dir $(lastword $(MAKEFILE_LIST)))
 # You can set these variables from the command line.
 SPHINXOPTS      =
 SPHINXBUILD     = [ -e env/bin/activate ] && source env/bin/activate; sphinx-build
-SPHINXAUTOBUILD = [ -e env/bin/activate ] && source env/bin/activate; sphinx-autobuild
+SPHINXAUTOBUILD = [ -e env/bin/activate ] && source env/bin/activate; sphinx-autobuild --watch $(MAKEDIR)../tests
 SPHINXPROJ      = SymbiFlowV2X
 SOURCEDIR       = .
 BUILDDIR        = _build
