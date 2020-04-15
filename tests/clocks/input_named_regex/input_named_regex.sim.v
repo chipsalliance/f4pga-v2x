@@ -9,7 +9,7 @@
  */
 
 (* whitebox *)
-module BLOCK(
+module INPUT_NAMED_REGEX(
     input  wire clk,
     input  wire Clk,
     input  wire CLK,

@@ -1,5 +1,5 @@
 <models xmlns:xi="http://www.w3.org/2001/XInclude">
-  <model name="BLOCK">
+  <model name="INPUT_ATTR_NOT_CLOCK">
     <input_ports>
       <port clock="a" combinational_sink_ports="c" name="a"/>
       <port clock="a" name="b"/>
