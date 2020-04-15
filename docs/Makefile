@@ -10,7 +10,7 @@ SPHINXAUTOBUILD = [ -e env/bin/activate ] && . env/bin/activate; sphinx-autobuil
 SPHINXPROJ      = SymbiFlowV2X
 SOURCEDIR       = .
 BUILDDIR        = _build
-OSFLAG 				:=
+OSFLAG          =
 UNAME_S := $(shell uname -s)
 ifneq (, $(findstring Linux, $(UNAME_S)))
 	OSFLAG := Linux
