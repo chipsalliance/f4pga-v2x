@@ -5,6 +5,11 @@ An output wire can be set as a clock by assigning `clk` as its name.
 
 .. symbolator:: ../../../tests/clocks/output_named_clk/output_named_clk.sim.v
 
+.. verilog-diagram:: ../../../tests/clocks/output_named_clk/output_named_clk.sim.v
+   :type: netlistsvg
+   :module: BLOCK
+   :caption: tests/clocks/output_named_clk/output_named_clk.sim.v
+
 .. literalinclude:: ../../../tests/clocks/output_named_clk/output_named_clk.sim.v
    :language: verilog
 

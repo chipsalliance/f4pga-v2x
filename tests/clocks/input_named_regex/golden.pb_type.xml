@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="INPUT_NAMED_REGEX" num_pb="1">
-  <blif_model>.subckt INPUT_NAMED_REGEX</blif_model>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="BLOCK" num_pb="1">
+  <blif_model>.subckt BLOCK</blif_model>
   <clock name="CLK" num_pins="1"/>
   <clock name="Clk" num_pins="1"/>
   <clock name="clk" num_pins="1"/>

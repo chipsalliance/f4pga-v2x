@@ -1,5 +1,5 @@
 <models xmlns:xi="http://www.w3.org/2001/XInclude">
-  <model name="INPUT_NAMED_REGEX">
+  <model name="BLOCK">
     <input_ports>
       <port is_clock="1" name="CLK"/>
       <port is_clock="1" name="Clk"/>

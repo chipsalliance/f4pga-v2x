@@ -5,6 +5,11 @@ D-Flipflop with two clocks
 
 .. symbolator:: ../../../tests/clocks/dff_two_clocks/dff_two_clocks.sim.v
 
+.. verilog-diagram:: ../../../tests/clocks/dff_two_clocks/dff_two_clocks.sim.v
+   :type: netlistsvg
+   :module: BLOCK
+   :caption: tests/clocks/dff_two_clocks/dff_two_clocks.sim.v
+
 .. literalinclude:: ../../../tests/clocks/dff_two_clocks/dff_two_clocks.sim.v
    :language: verilog
 

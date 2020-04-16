@@ -5,6 +5,11 @@ Set inputs as clock by name (multiple clock inputs)
 
 .. symbolator:: ../../../tests/clocks/multiple_inputs_named_clk/multiple_inputs_named_clk.sim.v
 
+.. verilog-diagram:: ../../../tests/clocks/multiple_inputs_named_clk/multiple_inputs_named_clk.sim.v
+   :type: netlistsvg
+   :module: BLOCK
+   :caption: tests/clocks/multiple_inputs_named_clk/multiple_inputs_named_clk.sim.v
+
 .. literalinclude:: ../../../tests/clocks/multiple_inputs_named_clk/multiple_inputs_named_clk.sim.v
    :language: verilog
 

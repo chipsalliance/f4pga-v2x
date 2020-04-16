@@ -13,7 +13,7 @@
  * flop. However, it has the attribute CLOCK set to 0 which should force it
  * to be a regular input.
  */
-module INPUT_ATTR_NOT_CLOCK(a, b, c);
+module BLOCK(a, b, c);
     (* CLOCK=0 *)
     input wire a;
     input wire b;

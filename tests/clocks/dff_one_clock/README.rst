@@ -5,6 +5,11 @@ The following shows a simple D-flip flop driven by one clock. `input wire a` sho
 
 .. symbolator:: ../../../tests/clocks/dff_one_clock/dff_one_clock.sim.v
 
+.. verilog-diagram:: ../../../tests/clocks/dff_one_clock/dff_one_clock.sim.v
+   :type: netlistsvg
+   :module: BLOCK
+   :caption: tests/clocks/dff_one_clock/dff_one_clock.sim.v
+
 .. literalinclude:: ../../../tests/clocks/dff_one_clock/dff_one_clock.sim.v
    :language: verilog
 

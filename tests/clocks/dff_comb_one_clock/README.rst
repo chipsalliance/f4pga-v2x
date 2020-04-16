@@ -5,6 +5,11 @@ The following shows a combinational logic design driven by a clock. `input wire 
 
 .. symbolator:: ../../../tests/clocks/dff_comb_one_clock/dff_comb_one_clock.sim.v
 
+.. verilog-diagram:: ../../../tests/clocks/dff_comb_one_clock/dff_comb_one_clock.sim.v
+   :type: netlistsvg
+   :module: BLOCK
+   :caption: tests/clocks/dff_comb_one_clock/dff_comb_one_clock.sim.v
+
 .. literalinclude:: ../../../tests/clocks/dff_comb_one_clock/dff_comb_one_clock.sim.v
    :language: verilog
 

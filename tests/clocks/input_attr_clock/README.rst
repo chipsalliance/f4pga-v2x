@@ -5,6 +5,11 @@ The following shows that `input wire a` is given the `(* CLOCK *)` attribute.
 
 .. symbolator:: ../../../tests/clocks/input_attr_clock/input_attr_clock.sim.v
 
+.. verilog-diagram:: ../../../tests/clocks/input_attr_clock/input_attr_clock.sim.v
+   :type: netlistsvg
+   :module: BLOCK
+   :caption: tests/clocks/input_attr_clock/input_attr_clock.sim.v
+
 .. literalinclude:: ../../../tests/clocks/input_attr_clock/input_attr_clock.sim.v
    :language: verilog
 
