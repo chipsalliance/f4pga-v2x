@@ -1,6 +1,6 @@
 .. DSP Based Example Tests
 
-DSP Examples
+DSP
 ============
 
 .. toctree::

@@ -1,13 +1,14 @@
-# python-symbiflow-v2x
+# SymbiFlow Verilog to XML
 
 [![Documentation Status](https://readthedocs.org/projects/python-symbiflow-v2x/badge/?version=latest)](https://python-symbiflow-v2x.readthedocs.io/en/latest/?badge=latest) [![Build Status](https://travis-ci.com/SymbiFlow/python-symbiflow-v2x.svg?branch=master)](https://travis-ci.com/SymbiFlow/python-symbiflow-v2x)
 
-Tool for converting specialized annotated Verilog models into XML needed for
+v2x is a tool for converting specialized annotated Verilog models into XML needed for
 [Verilog to Routing flow](https://docs.verilogtorouting.org/en/latest/arch/reference/).
 
-Documentation can be found at https://python-symbiflow-v2x.readthedocs.io/en/latest/
+Documentation can be found at [https://python-symbiflow-v2x.readthedocs.io/en/latest/](https://python-symbiflow-v2x.readthedocs.io/en/latest/examples.html).
 
 ## Installation
+
 v2x can be installed from a local git repository using pip.
 
 ```
@@ -18,7 +19,7 @@ pip install .
 Alternatively, it can be installed from GitHub directly.
 
 ```
-pip install git+https://github.com/SymbiFlow/python-symbiflow-v2x.git
+pip install git+https://github.com/SymbiFlow/python-symbiflow-v2x.git#egg=python-symbiflow-v2x
 ```
 
 ## Usage
@@ -69,6 +70,7 @@ v2x --top BLOCK -o adder.pb_type.xml adder.v
 ```
 
 ## Tests
+
 The test cases are stored in tests/, and pytest can be used to run them.
 
 ```
@@ -84,6 +86,7 @@ flake8 v2x
 ```
 
 ## Documentation
+
 We use sphinx for our documentation and the files are stored in docs/. To host it locally (if you are planning to update it), you can use the Makefile inside.
 
 First, run `make env` to prepare a Conda environment that contains the necessary packages to build and host the documentation site. After that, simply run `make livehtml` which starts a local server running at port 8000 with the documentation site.
@@ -96,4 +99,7 @@ make livehtml
 
 ## Talks
 
+**VPR device models generation from Verilog with V2X - Karol Gugala - ORConf 2019**
+
 [![v2x orconf talk](https://img.youtube.com/vi/a31vH_tZLBM/0.jpg)](https://www.youtube.com/watch?v=a31vH_tZLBM)
+

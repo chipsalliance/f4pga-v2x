@@ -1,6 +1,6 @@
 .. Examples from the Verilog to Routing documentation / tutorials.
 
-Verilog to Routing Examples
+Verilog to Routing
 ===========================
 
 Primitive Block Timing Modeling Tutorial
