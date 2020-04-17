@@ -8,13 +8,20 @@ Force input as regular input by setting the CLOCK attribute
 .. verilog-diagram:: ../../../tests/clocks/input_attr_not_clock/block.sim.v
    :type: netlistsvg
    :module: BLOCK
-   :caption: tests/clocks/input_attr_not_clock/block.sim.v
+
+|
 
 .. literalinclude:: ../../../tests/clocks/input_attr_not_clock/block.sim.v
    :language: verilog
    :start-after: */
+   :caption: tests/clocks/input_attr_not_clock/block.sim.v
 
 As such, the `is_clock` attribute of the `a` port is not set.
 
 .. literalinclude:: ../../../tests/clocks/input_attr_not_clock/golden.model.xml
    :language: xml
+   :caption: tests/clocks/input_attr_not_clock/golden.model.xml
+
+.. literalinclude:: ../../../tests/clocks/input_attr_not_clock/golden.pb_type.xml
+   :language: xml
+   :caption: tests/clocks/input_attr_not_clock/golden.pb_type.xml
