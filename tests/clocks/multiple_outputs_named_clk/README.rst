@@ -12,6 +12,7 @@ Set outputs as clock by name (multiple clock outputs)
 
 .. literalinclude:: ../../../tests/clocks/multiple_outputs_named_clk/multiple_outputs_named_clk.sim.v
    :language: verilog
+   :start-after: */
 
 As such, the `is_clock` attribute of the `rdclk` and `wrclk` ports are set to 1.
 

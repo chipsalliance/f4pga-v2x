@@ -12,6 +12,7 @@ Force input as regular input by setting the CLOCK attribute
 
 .. literalinclude:: ../../../tests/clocks/input_attr_not_clock/block.sim.v
    :language: verilog
+   :start-after: */
 
 As such, the `is_clock` attribute of the `a` port is not set.
 
