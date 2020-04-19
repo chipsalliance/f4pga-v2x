@@ -44,7 +44,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx_markdown_tables',
     'symbolator_sphinx',
-    'sphinxcontrib_verilog_diagrams',
+    'sphinxcontrib_verilog_diagrams'
 ]
 
 # Add any paths that contain templates here, relative to this directory.
