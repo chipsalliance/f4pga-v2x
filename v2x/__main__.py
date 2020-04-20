@@ -34,7 +34,7 @@ def main(args):
                 args.infiles, args.includes, args.top, args.outfile))
 
 
-if __name__ == '__main__':
+def v2x():
     parser = argparse.ArgumentParser(
         description="Verilog to XML"
     )
@@ -84,3 +84,7 @@ Default value is pb_type
     )
     args = parser.parse_args()
     sys.exit(main(args))
+
+
+if __name__ == '__main__':
+    v2x()

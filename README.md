@@ -22,10 +22,10 @@ pip install git+https://github.com/SymbiFlow/python-symbiflow-v2x.git
 ```
 
 ## Usage
-After installing v2x, you can run `python -m v2x` to use it.
+After installing v2x, you can run `v2x` to use it.
 
 ```
-python -m v2x -h
+v2x -h
 usage: __main__.py [-h] [--top TOP] [--outfile OUTFILE] [--includes INCLUDES]
                    [--mode {pb_type,model}]
                    input.v [input.v ...]
@@ -53,19 +53,19 @@ optional arguments:
 For example, to generate a pb_type xml file from adder.v, run 
 
 ```
-python -m v2x -o adder.pb_type.xml adder.v
+v2x -o adder.pb_type.xml adder.v
 ```
 
 Or, to generate a model xml file, run 
 
 ```
-python -m v2x --mode model -o adder.model.xml adder.v
+v2x --mode model -o adder.model.xml adder.v
 ```
 
 v2x expects the module name to be the same as the file name. If it is different, make sure to specifiy it with the `--top` argument.
 
 ```
-python -m v2x --top BLOCK -o adder.pb_type.xml adder.v
+v2x --top BLOCK -o adder.pb_type.xml adder.v
 ```
 
 ## Tests
