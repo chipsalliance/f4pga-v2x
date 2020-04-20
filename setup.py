@@ -6,6 +6,9 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="v2x",
     version="0.0.1",
+    entry_points={
+        "console_scripts": ["v2x=v2x.__main__:v2x"]
+    },
     author="SymbiFlow Authors",
     author_email="symbiflow@lists.librecores.org",
     description="Python library for generating VPR architecture \
