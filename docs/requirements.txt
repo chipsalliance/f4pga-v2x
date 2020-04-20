@@ -13,7 +13,7 @@ sphinxcontrib-napoleon
 git+https://github.com/SymbiFlow/sphinxcontrib-markdown-symlinks.git#egg=markdown_code_symlinks
 
 # Verilog diagrams using Yosys + netlistsvg
-git+https://github.com/SymbiFlow/sphinxcontrib-verilog-diagrams.git#egg=sphinxcontrib-verilog-diagrams
+git+https://github.com/SymbiFlow/sphinxcontrib-verilog-diagrams.git@dca04723ec07209bd7be3e883e780ca9dd4f271e#egg=sphinxcontrib-verilog-diagrams
 
 # Module diagrams
 symbolator
