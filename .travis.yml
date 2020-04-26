@@ -8,6 +8,8 @@ matrix:
 install:
   - . prepareenv.sh
   - conda activate yosys-env
+  - source .github/travis/check_license.sh
+  - source .github/travis/check_python_script.sh
 
 script: tox
 
