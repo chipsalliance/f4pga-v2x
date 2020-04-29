@@ -22,7 +22,7 @@ module PARENT (CLK, I0, I1, I2, O0, O1, O2, Y);
   // assigned a different fasm prefix.
   genvar i;
   generate for (i=0; i<2; i=i+1) begin
-    (* FASM_PREFIX = "PREFIX_FOR_GATE_X;PREFIX_FOR_GATE_Y" *)
+    (* FASM_PREFIX = "PREFIX_FOR_GATE_I0;PREFIX_FOR_GATE_I1" *)
     GATE gate (I0, I1, Y[i]);
   end endgenerate
 
