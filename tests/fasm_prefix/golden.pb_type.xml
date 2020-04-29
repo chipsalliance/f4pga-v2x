@@ -12,7 +12,7 @@
     <!--old_name GATE old_num_pb 1-->
     <xi:include href="gate/gate.pb_type.xml" xpointer="xpointer(pb_type/child::node()[local-name()!='metadata'])"/>
     <metadata>
-      <meta name="fasm_prefix">PREFIX_FOR_GATE_X PREFIX_FOR_GATE_Y</meta>
+      <meta name="fasm_prefix">PREFIX_FOR_GATE_I0 PREFIX_FOR_GATE_I1</meta>
     </metadata>
   </pb_type>
   <pb_type name="ff" num_pb="1">
