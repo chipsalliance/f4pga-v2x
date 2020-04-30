@@ -125,7 +125,6 @@ class AttributeExtractor():
 
         # Module definition
         if self.state == State.MODULE_KEYWORD:
-            print("M: '{}'".format(SLgetText(prog, ctx)))
 
             text = SLgetText(prog, ctx).strip()
 
