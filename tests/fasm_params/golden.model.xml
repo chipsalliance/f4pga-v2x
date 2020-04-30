@@ -1,8 +1,8 @@
 <models xmlns:xi="http://www.w3.org/2001/XInclude">
   <model name="MODULE">
     <input_ports>
-      <port name="I1"/>
-      <port name="I2"/>
+      <port combinational_sink_ports="O" name="I1"/>
+      <port combinational_sink_ports="O" name="I2"/>
     </input_ports>
     <output_ports>
       <port name="O"/>
