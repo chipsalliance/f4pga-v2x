@@ -83,9 +83,12 @@ The following attributes are used to annotate cells with fasm metadata:
         a list of fasm features only for the given mode. Those will be attached
         to the pb_type corresponding to that mode.
 
-    - `(* FASM_PARAMS="str1=param1;str2=param2;.." *)` : A semicolon separated
-        list of fasm features and module parameters that they are to be
-        assigned with. Can only be specified for a module definition.
+    - `(* FASM *)` : When applied to a parameter makes V2X output fasm_params
+        matadata that assigns the parameter to a fasm feature with the same
+        name,
+
+    - `(* FASM="str" *)` : Same as above except that the fasm feature name
+        is explicitly given.
 
 The Verilog define "PB_TYPE" is set during generation.
 """
@@ -102,6 +105,8 @@ import lxml.etree as ET
 from .yosys import run
 from .yosys.json import YosysJSON
 from .yosys import utils as utils
+
+from .surelog import surelog
 
 from .xmlinc import xmlinc  # noqa: E402
 
@@ -185,7 +190,7 @@ def parse_fasm_attribute(attribute):
     """
 
     KNOWN_FASM_ATTRS = (
-        "FASM_PREFIX", "FASM_FEATURES", "FASM_PARAMS",
+        "FASM_PREFIX", "FASM_FEATURES",
     )
 
     # This attribute is not mode related
@@ -995,7 +1000,7 @@ def make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml):
 
 
 def make_pb_type(
-        infiles, outfile, yj, mod, mode_processing=False,
+        infiles, outfile, yj, sj, mod, mode_processing=False,
         mode_xml=None, mode_name=None
 ):
     """Build the pb_type for a given module. mod is the YosysModule object to
@@ -1008,7 +1013,29 @@ def make_pb_type(
     is_blackbox = mod.attr("blackbox", 0) != 0
 
     # Create metadata
-    metadata = metadata_from_attributes(mod.module_attrs, mode_name)
+    mod_attrs = dict(mod.module_attrs)
+    mod_attrs.update(sj.get(mod.name, {"attributes":{}})["attributes"])
+    metadata = metadata_from_attributes(mod_attrs, mode_name)
+
+    # Make fasm_params metadata, loop over parameters
+    fasm_params = []
+
+    mod_params = sj.get(mod.name, {"parameters": {}})["parameters"]
+    for param_name, param_data in mod_params.items():
+
+        # The parameter has attributes
+        for attr_name, attr_value in param_data["attributes"].items():
+            if attr_name == "FASM":
+                if attr_value is None:
+                    meta = "{p}={p}".format(p=param_name)
+                else:
+                    meta = "{f}={p}".format(p=param_name, f=attr_value)
+
+                fasm_params.append(meta)
+
+    if len(fasm_params):
+        metadata["fasm_params"] = ";".join(
+            [metadata.get("fasm_params", "")] + fasm_params)
 
     mod_pname = mod.name
     assert mod_pname == mod_pname.upper(
@@ -1106,6 +1133,13 @@ def make_pb_type(
         for mode in modes:
             smode = mode.strip()
             mode_xml = ET.SubElement(pb_type_xml, "mode", {"name": smode})
+
+            # Rerun Surelog with mode parameter.
+            # TODO: Surelog can't do that. But this should not matter as long
+            # as we are only interested in attributes on things that are
+            # not mode-specific.
+            mode_sj = dict(sj)
+
             # Rerun Yosys with mode parameter
             mode_yj = YosysJSON(
                 run.vlog_to_json(
@@ -1139,7 +1173,7 @@ def make_pb_type(
 
             # The mode has children, recurse
             else:
-                make_pb_type(infiles, outfile, mode_yj, mode_mod,
+                make_pb_type(infiles, outfile, mode_yj, mode_sj, mode_mod,
                              True, mode_xml, smode)
                 inter.update(mode_interconnects(mod, smode))
 
@@ -1187,6 +1221,8 @@ def vlog_to_pbtype(infiles, outfile, top=None):
 
     iname = os.path.basename(infiles[0])
 
+    sj = surelog.extract_attributes(infiles, ["PB_TYPE"])
+
     run.add_define("PB_TYPE")
     vjson = run.vlog_to_json(infiles, flatten=False, aig=False)
     yj = YosysJSON(vjson)
@@ -1210,7 +1246,7 @@ def vlog_to_pbtype(infiles, outfile, top=None):
 
     tmod = yj.module(top)
 
-    pb_type_xml = make_pb_type(infiles, outfile, yj, tmod)
+    pb_type_xml = make_pb_type(infiles, outfile, yj, sj, tmod)
 
     return ET.tostring(
         pb_type_xml,
