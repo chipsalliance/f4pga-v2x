@@ -3,6 +3,7 @@ channels:
   - symbiflow
 dependencies:
   - symbiflow-yosys
+  - surelog
   - pip:
     - tox
     - flake8
