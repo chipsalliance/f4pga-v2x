@@ -4,6 +4,7 @@ channels:
 dependencies:
   - python
   - symbiflow-yosys
+  - surelog
   - pip
   - pip:
     - -r requirements.txt
