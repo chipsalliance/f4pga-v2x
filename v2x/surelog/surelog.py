@@ -5,6 +5,7 @@ import tempfile
 
 # =============================================================================
 
+
 def get_verbose():
     """
     Returns true when in verbose mode
@@ -94,7 +95,8 @@ def run(params):
         emsg += "Surelog failed with exit code {}\n".format(retcode)
         emsg += "Command: '{}'\n".format(" ".join(cmd))
         emsg += "Message:\n"
-        emsg += "\n".join([" " + l for l in stderr.splitlines()])
+        emsg += "\n".join([" " + l for l in stdout.splitlines()
+            if "V2X:" not in l])
 
         raise subprocess.CalledProcessError(retcode, cmd, emsg)
 
@@ -102,5 +104,31 @@ def run(params):
     json_lines = [l for l in stdout.splitlines() if l.startswith("V2X:")]
     json_lines = [l.replace("V2X:", "") for l in json_lines]
 
-    modules = json.loads("\n".join(json_lines))
-    return modules
+    if len(json_lines) == 0:
+        return dict()
+
+    return json.loads("\n".join(json_lines))
+
+
+def extract_attributes(infiles, defines):
+    """
+    Extracts attributes from various objects/statements in Verilog file(s)
+    using Surelog.
+
+    Returns a dict indexed by module names with the data.
+    """
+
+    # Input files
+    opts = list(infiles)
+    # Defines
+    opts += ["+define+" + "+".join(["{}=1".format(d) for d in defines])]
+
+    # Run
+    try:
+        json_root = run(opts)
+    except subprocess.CalledProcessError as ex:
+        print(ex.output)
+        exit(-1)
+
+    # Return the output
+    return json_root
