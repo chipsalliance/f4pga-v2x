@@ -1,10 +1,8 @@
 sphinx_materialdesign_theme
 
 docutils
-sphinx
 sphinx-autobuild
 
-breathe
 recommonmark
 sphinx-markdown-tables
 sphinxcontrib-napoleon
