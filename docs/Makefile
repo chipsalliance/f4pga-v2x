@@ -54,9 +54,9 @@ env:
 
 # Update fuzzer / minitest markdown links.
 tests-links:
-	@mkdir -p $(MAKEDIR)/tests
-	@cd $(MAKEDIR)/tests && find -name '*.md' -delete && find -type d -empty -delete
-	@cd $(MAKEDIR)/tests && \
+	@mkdir -p $(MAKEDIR)/examples
+	@cd $(MAKEDIR)/examples && find -name '*.md' -delete && find -type d -empty -delete
+	@cd $(MAKEDIR)/examples && \
 		for I in $$(cd ../../tests/ ; find -name '*.md' | sort); do \
 			F=$$(dirname $$I); D=$$(dirname $$F); N=$$(basename $$F); \
 			S=../../tests/$$I; O=$$D/$$N.md; \
@@ -65,7 +65,7 @@ tests-links:
 			fi; \
 			ln -sf $$(realpath $$S --relative-to=$$D) $$O; \
 		done
-	@cd $(MAKEDIR)/tests && \
+	@cd $(MAKEDIR)/examples && \
 		for I in $$(cd ../../tests/ ; find -name '*.svg' -o -name '*.png' | sort); do \
 			F=$$(dirname $$I); D=$$(dirname $$F); N=$$(basename $$I); \
 			S=../../tests/$$I; O=$$D/$$N; \
