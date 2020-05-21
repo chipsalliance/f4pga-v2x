@@ -9,8 +9,8 @@
       <port name="c2" is_clock="1"/>
     </input_ports>
     <output_ports>
-      <port name="o1" clock="c1"/>
-      <port name="o2" clock="c2"/>
+      <port clock="c1" name="o1"/>
+      <port clock="c2" name="o2"/>
     </output_ports>
   </model>
 </models>
