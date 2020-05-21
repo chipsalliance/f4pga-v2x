@@ -1,5 +1,5 @@
 Set output as clock by name (clk)
-+++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++
 
 An output wire can be set as a clock by assigning ``clk`` as its name.
 

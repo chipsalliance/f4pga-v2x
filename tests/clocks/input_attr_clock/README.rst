@@ -1,5 +1,5 @@
 Manually set input as clock by setting the CLOCK attribute
-+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 The following shows that ``input wire a`` is given the ``(* CLOCK *)`` attribute.
 

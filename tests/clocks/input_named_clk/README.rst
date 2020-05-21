@@ -1,5 +1,5 @@
 Set input as clock by name (clk)
-+++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++
 
 An input wire can be set as a clock by assigning ``clk`` as its name.
 

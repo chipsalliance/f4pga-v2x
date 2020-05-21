@@ -1,5 +1,5 @@
 Set input as clock by name (regex)
-+++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++
 
 An input wire can be set as a clock by having ``clk`` in its name (case insensitive).
 

@@ -1,5 +1,5 @@
 D-Flipflop with two clocks
-+++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++
 
 ``input wire c1`` and ``input wire c2`` should be detected as clocks because they drive the flip flop.
 

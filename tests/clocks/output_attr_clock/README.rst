@@ -1,5 +1,5 @@
 Manually set output as clock by setting the CLOCK attribute
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 The following shows that ``output wire o`` is given the ``(* CLOCK *)`` attribute.
 

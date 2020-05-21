@@ -1,5 +1,5 @@
 D-Flipflop with one clock
-+++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++
 
 The following shows a simple D-flip flop driven by one clock. ``input wire a`` should be detected as a clock because it drives the flip flop.
 

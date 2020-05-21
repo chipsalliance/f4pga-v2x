@@ -1,5 +1,5 @@
 Set outputs as clock by name (multiple clock outputs)
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ``output wire rdclk`` and ``output wire wrclk`` have ``clk`` in their names, hence are recognized as clock inputs by v2x.
 
