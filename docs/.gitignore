@@ -1,5 +1,5 @@
 env
 _build
-tests/**/*.md
-tests/**/*.svg
-tests/**/*.png
+examples/**/*.md
+examples/**/*.svg
+examples/**/*.png

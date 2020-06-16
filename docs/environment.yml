@@ -14,8 +14,7 @@ dependencies:
 # ReadTheDoc dependencies
 - mock
 - pillow
-- sphinx
-- sphinx_rtd_theme
+- sphinx=2.4.4
 # Packages installed from PyPI
 - pip:
   - -r file:requirements.txt

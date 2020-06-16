@@ -1,5 +1,5 @@
-SymbiFlow Verilog to VtR XML (v2x)
-===================================
+Verilog to Routing XML file generation from Verilog (`python-symbiflow-v2x`)
+=============================================================================
 
 
 .. image:: https://readthedocs.org/projects/python-symbiflow-v2x/badge/?version=latest
