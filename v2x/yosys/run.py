@@ -110,7 +110,7 @@ def get_output(params):
         emsg += "Yosys failed with exit code {}\n".format(retcode)
         emsg += "Command: '{}'\n".format(" ".join(cmd))
         emsg += "Message:\n"
-        emsg += "\n".join([" " + l for l in stderr.splitlines()])
+        emsg += "\n".join([" " + v for v in stderr.splitlines()])
 
         raise subprocess.CalledProcessError(retcode, cmd, emsg)
 

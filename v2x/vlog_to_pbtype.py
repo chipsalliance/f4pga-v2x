@@ -383,8 +383,8 @@ def get_interconnects(yj, mod, mod_pname: str,
         else:
             return pin
 
-    for l in interconn.values():
-        l.sort(key=pin_sort)
+    for v in interconn.values():
+        v.sort(key=pin_sort)
 
     return interconn
 
@@ -452,7 +452,7 @@ def get_cellname_from_shortname(shortname, mod):
     raise NameError("No cell named {}".format(shortname))
 
 
-def get_list_name_and_length(l: List[str]) -> Tuple[str, int]:
+def get_list_name_and_length(v: List[str]) -> Tuple[str, int]:
     """
     >>> get_list_name_and_length(['i[{}]'.format(i) for i in range(10)])
     ('i', 10)
@@ -502,21 +502,21 @@ def get_list_name_and_length(l: List[str]) -> Tuple[str, int]:
     >>> get_list_name_and_length(['i[1][{}]'.format(i) for i in range(4)])
     ('i[1]', 4)
     """
-    if not l:
+    if not v:
         return True
 
-    assert '[' in l[0], "No index brackets found in item 0: {}\n{}".format(
-        l[0], l
+    assert '[' in v[0], "No index brackets found in item 0: {}\n{}".format(
+        v[0], v
     )
-    list_name = l[0][:l[0].rfind('[')]
-    sl = sorted(l, key=len)
-    for i in range(0, len(l)):
+    list_name = v[0][:v[0].rfind('[')]
+    sl = sorted(v, key=len)
+    for i in range(0, len(v)):
         expected_item = "{}[{}]".format(list_name, i)
         assert expected_item == sl[
             i], "index {} expected: {} != actual: {}\n{}".format(
                 i, expected_item, sl[i], sl
         )
-    return list_name, len(l)
+    return list_name, len(v)
 
 
 def make_ports(clocks, mod, pb_type_xml, only_type=None):
@@ -700,8 +700,8 @@ def make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml):
                 attrs["max"] = splitspec[1]
             else:
                 assert iodir == "input", \
-                    "Only input ports can have {} timing definition."
-                "Port {}, direction {}.".format(xmltype, port, iodir)
+                    ("Only input ports can have {} timing definition."
+                     "Port {}, direction {}.").format(xmltype, port, iodir)
                 attrs["value"] = splitspec[1]
             ET.SubElement(xml_parent, xmltype, attrs)
 
