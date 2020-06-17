@@ -1,17 +1,14 @@
-language: python
-
-matrix:
-  include:
-    - python: 3.7
-      env: TOXENV=py37
+language: minimal
 
 install:
-  - . prepareenv.sh
-  - conda activate yosys-env
+  - source prepareenv.sh
   - source .github/travis/check_license.sh
   - source .github/travis/check_python_script.sh
 
-script: tox
+script:
+  - conda activate yosys-env
+  - which tox
+  - tox
 
 notifications:
   email: false
