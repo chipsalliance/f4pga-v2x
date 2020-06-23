@@ -6,7 +6,7 @@ module MODULE(I1, I2, O);
 
     (* FASM *)
     parameter INIT = 0;
-    (* FASM="INVERT" *)
+    (* FASM *)
     parameter IS_SOMETHING_INVERTED = 0;
 
     assign O = I1 | I2;

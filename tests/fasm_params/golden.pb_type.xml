@@ -7,6 +7,6 @@
   <metadata>
     <meta name="fasm_params">
 INIT=INIT
-INVERT=IS_SOMETHING_INVERTED</meta>
+IS_SOMETHING_INVERTED=IS_SOMETHING_INVERTED</meta>
   </metadata>
 </pb_type>

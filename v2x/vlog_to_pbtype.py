@@ -87,9 +87,6 @@ The following attributes are used to annotate cells with fasm metadata:
         matadata that assigns the parameter to a fasm feature with the same
         name,
 
-    - `(* FASM="str" *)` : Same as above except that the fasm feature name
-        is explicitly given.
-
 The Verilog define "PB_TYPE" is set during generation.
 """
 
@@ -1040,7 +1037,8 @@ def make_pb_type(
                 if attr_value is None:
                     meta = "{p}={p}".format(p=param_name)
                 else:
-                    meta = "{f}={p}".format(p=param_name, f=attr_value)
+                    print("ERROR: The (* FASM *) attribute cannot have a value!")
+                    exit(-1)
 
                 fasm_params.append(meta)
 
