@@ -20,6 +20,14 @@ The following Verilog attributes are considered on ports:
     - `(* ASSOC_CLOCK="RDCLK" *)` : force a port's associated
                                     clock to a given value
 
+    - `(* NO_COMB=1 *)` : Forces removal of all combinational relations of an
+                          input port.
+
+    - `(* NO_COMB=0 *)` : Allows a clock port to have combinational sinks
+
+    - `(* NO_SEQ=1 *)` : Forces removal of all sequential relations of an input
+                         port.
+
 The following Verilog attributes are considered on modules:
     - `(* MODEL_NAME="model" *)` : override the name used for
     <model> and for ".subckt name" in the BLIF model. Mostly
@@ -193,7 +201,18 @@ def vlog_to_model(infiles, includes, top, outfile=None):
             clocks = run.list_clocks(infiles, top)
 
             for name, width, bits, iodir in ports:
-                nocomb = tmod.net_attr(name, "NO_COMB")
+
+                # In the end these can be:
+                # - True when != 1
+                # - False when == 0
+                # - None when it is not specified
+                no_comb = tmod.net_attr(name, "NO_COMB")
+                no_seq = tmod.net_attr(name, "NO_SEQ")
+
+                if no_comb is not None:
+                    no_comb = bool(int(no_comb))
+                if no_seq is not None:
+                    no_seq = bool(int(no_seq))
 
                 is_clock = name in clocks or utils.is_clock_name(name)
 
@@ -209,19 +228,26 @@ def vlog_to_model(infiles, includes, top, outfile=None):
                     if is_registered_path(tmod, name, sink):
                         sinks.remove(sink)
 
-                # FIXME: Check if ignoring clock for "combination_sink_ports"
-                # is a valid thing to do.
                 if is_clock:
                     attrs["is_clock"] = "1"
                 else:
                     clks = list()
-                    if len(sinks) > 0 and iodir == "input" and nocomb is None:
-                        attrs["combinational_sink_ports"] = " ".join(sinks)
                     for clk in clocks:
-                        if is_clock_assoc(infiles, top, clk, name, iodir):
+                        if is_clock_assoc(
+                           infiles, top, clk, name, iodir,
+                           prefix=select_prefix):
+
                             clks.append(clk)
-                        if clks:
+                        if clks and no_seq is not True:
                             attrs["clock"] = " ".join(clks)
+
+                # By default do not append combinational sinks to a clock port
+                # but that may be overriden by (* NO_COMB=0 *)
+                if len(sinks) > 0 and iodir == "input":
+                    if (not is_clock and no_comb is not True) or \
+                       (is_clock and no_comb is False):
+                        attrs["combinational_sink_ports"] = " ".join(sinks)
+
                 if iodir == "input":
                     ET.SubElement(inports_xml, "port", attrs)
                 elif iodir == "output":
