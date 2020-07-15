@@ -7,9 +7,8 @@ The following shows that ``output wire o`` is given the ``(* CLOCK *)`` attribut
 
 |
 
-.. literalinclude:: ../../../tests/clocks/output_attr_clock/output_attr_clock.sim.v
+.. no-license:: ../../../tests/clocks/output_attr_clock/output_attr_clock.sim.v
    :language: verilog
-   :start-after: */
    :caption: tests/clocks/output_attr_clock/output_attr_clock.sim.v
 
 As such, the ``is_clock`` attribute of the ``o`` port is set to 1.
