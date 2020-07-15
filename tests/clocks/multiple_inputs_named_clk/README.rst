@@ -7,9 +7,8 @@ Set inputs as clock by name (multiple clock inputs)
 
 |
 
-.. literalinclude:: ../../../tests/clocks/multiple_inputs_named_clk/multiple_inputs_named_clk.sim.v
+.. no-license:: ../../../tests/clocks/multiple_inputs_named_clk/multiple_inputs_named_clk.sim.v
    :language: verilog
-   :start-after: */
    :caption: tests/clocks/multiple_inputs_named_clk/multiple_inputs_named_clk.sim.v
 
 As such, the ``is_clock`` attribute of the ``rdclk`` and ``wrclk`` ports are set to 1.

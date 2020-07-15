@@ -7,9 +7,8 @@ An output wire can be set as a clock by assigning ``clk`` as its name.
 
 |
 
-.. literalinclude:: ../../../tests/clocks/output_named_clk/output_named_clk.sim.v
+.. no-license:: ../../../tests/clocks/output_named_clk/output_named_clk.sim.v
    :language: verilog
-   :start-after: */
    :caption: tests/clocks/output_named_clk/output_named_clk.sim.v
 
 As such, the ``is_clock`` attribute of the ``clk`` output port is set to 1.

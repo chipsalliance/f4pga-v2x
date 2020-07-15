@@ -7,9 +7,8 @@ An input wire can be set as a clock by having ``clk`` in its name (case insensit
 
 |
 
-.. literalinclude:: ../../../tests/clocks/input_named_regex/block.sim.v
+.. no-license:: ../../../tests/clocks/input_named_regex/block.sim.v
    :language: verilog
-   :start-after: */
    :caption: tests/clocks/input_named_regex/block.sim.v
 
 As such, the ``is_clock`` attribute of wires with a variation of ``clk`` in their name is set to 1.
