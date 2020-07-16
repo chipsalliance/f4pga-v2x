@@ -3,11 +3,8 @@
 Verilog to Routing
 ==================
 
-Primitive Block Timing Modeling Tutorial
-----------------------------------------
+The following shows some examples taken from the `Verilog to Routing documentation <https://docs.verilogtorouting.org>`_.
 
 .. toctree::
-
-  vtr/lutff-pair.md
-  vtr/full-adder.md
-  vtr/dff.md
+   vtr/primitive.rst
+   vtr/arch.rst

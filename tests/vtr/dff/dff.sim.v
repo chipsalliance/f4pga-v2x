@@ -7,6 +7,8 @@
  *
  * SPDX-License-Identifier:	ISC
  */
+`ifndef DFF
+`define DFF
 
 (* whitebox *)
 module DFF (D, CLK, Q);
@@ -57,3 +59,5 @@ module DFF (D, CLK, Q);
 `endif
 
 endmodule
+
+`endif
