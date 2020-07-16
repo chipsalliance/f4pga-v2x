@@ -35,6 +35,11 @@ import sys
 sys.path.insert(0, os.path.abspath('.'))
 from markdown_code_symlinks import LinkParser, MarkdownSymlinksDomain  # noqa
 
+from sphinx.highlighting import lexers
+from pygments.lexers.hdl import VerilogLexer
+
+lexers['verilog'] = VerilogLexer(tabsize=2)
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
