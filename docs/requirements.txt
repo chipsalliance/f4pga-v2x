@@ -14,7 +14,7 @@ git+https://github.com/SymbiFlow/sphinxcontrib-markdown-symlinks.git#egg=markdow
 sphinxcontrib-verilog-diagrams
 
 # Module diagrams
-symbolator
+git+https://github.com/SymbiFlow/symbolator.git#egg=symbolator
 
 pycairo
 # vext.gi
