@@ -201,6 +201,7 @@ def vlog_to_model(infiles, includes, top, outfile=None):
             clocks = run.list_clocks(infiles, top)
 
             for name, width, bits, iodir in ports:
+                port_attrs = tmod.port_attrs(name)
 
                 # In the end these can be:
                 # - True when != 1
@@ -216,7 +217,6 @@ def vlog_to_model(infiles, includes, top, outfile=None):
 
                 is_clock = name in clocks or utils.is_clock_name(name)
 
-                port_attrs = tmod.port_attrs(name)
                 if "CLOCK" in port_attrs:
                     is_clock = int(port_attrs["CLOCK"]) != 0
 
@@ -234,8 +234,7 @@ def vlog_to_model(infiles, includes, top, outfile=None):
                     clks = list()
                     for clk in clocks:
                         if is_clock_assoc(
-                           infiles, top, clk, name, iodir,
-                           prefix=select_prefix):
+                           infiles, top, clk, name, iodir):
 
                             clks.append(clk)
                         if clks and no_seq is not True:
