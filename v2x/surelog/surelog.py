@@ -62,7 +62,7 @@ def run(params):
 
     # Prepare the command
     listener = os.path.join(os.path.dirname(__file__), "v2x_listener.py")
-    cmd = [get_surelog()] + params +  ["-pythonlistenerfile", listener]
+    cmd = [get_surelog()] + params + ["-pythonlistenerfile", listener]
 
     if verbose:
         msg = ""
@@ -74,8 +74,8 @@ def run(params):
     with tempfile.TemporaryDirectory(prefix="surelog_") as tmp:
 
         odir_opts = ["-odir", tmp]
-        p = subprocess.Popen(cmd + odir_opts,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(cmd + odir_opts, stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
 
         # Get the output
         stdout, stderr = p.communicate()
@@ -106,14 +106,14 @@ def run(params):
         emsg += "Surelog failed with exit code {}\n".format(retcode)
         emsg += "Command: '{}'\n".format(" ".join(cmd))
         emsg += "Message:\n"
-        emsg += "\n".join([" " + l for l in stdout.splitlines()
-            if "V2X:" not in l])
+        emsg += "\n".join([" " + ln for ln in stdout.splitlines()
+                           if "V2X:" not in ln])
 
         raise subprocess.CalledProcessError(retcode, cmd, emsg)
 
     # Now parse the output
-    json_lines = [l for l in stdout.splitlines() if l.startswith("V2X:")]
-    json_lines = [l.replace("V2X:", "") for l in json_lines]
+    json_lines = [ln for ln in stdout.splitlines() if ln.startswith("V2X:")]
+    json_lines = [ln.replace("V2X:", "") for ln in json_lines]
 
     if len(json_lines) == 0:
         return dict()
