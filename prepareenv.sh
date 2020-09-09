@@ -16,4 +16,5 @@ conda config --set always_yes yes --set changeps1 no
 conda install -q setuptools
 conda update -q conda
 conda env create --file conf/environment.yml
+conda config --set env_prompt '({name})'
 conda activate yosys-env

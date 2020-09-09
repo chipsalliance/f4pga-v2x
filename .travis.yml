@@ -1,4 +1,16 @@
-language: minimal
+language: python
+
+python:
+  - 2.7
+    env: TOXENV=py27
+  - 3.4
+    env: TOXENV=py27
+  - 3.5
+    env: TOXENV=py27
+  - 3.6
+    env: TOXENV=py27
+  - 3.7
+    env: TOXENV=py27
 
 install:
   - source prepareenv.sh
