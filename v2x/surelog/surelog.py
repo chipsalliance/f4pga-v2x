@@ -33,6 +33,10 @@ def get_surelog():
         """
         Returns True if a file exists and is executable.
         """
+
+        if fpath is None:
+            return False
+
         return os.path.isfile(fpath) and os.access(fpath, os.X_OK)
 
     # The environmental variable "SURELOG" is set. It should point to the
