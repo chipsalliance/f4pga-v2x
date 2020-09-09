@@ -24,6 +24,7 @@ class State(Enum):
     MODULE_KEYWORD = 1
     MODULE = 2
 
+
 class AttributeExtractor():
     """
     This is a class that follows the Verilog parser and extracts attributes
@@ -83,11 +84,11 @@ class AttributeExtractor():
         """
 
         # Parse the attribute, split name and value
-        text = SLgetText(prog, ctx).strip()
-        
+        text = SLgetText(prog, ctx).strip()  # noqa: F821
+
         match = self.RE_ATTR.match(text)
         if match:
-            name  = match.group("name")
+            name = match.group("name")
             value = self.unquote(match.group("value"))
             self.attributes[name] = value
 
@@ -99,7 +100,7 @@ class AttributeExtractor():
         assert self.module
 
         # Parse the parameter, split name and value
-        text = SLgetText(prog, ctx).strip()
+        text = SLgetText(prog, ctx).strip()  # noqa: F821
 
         match = self.RE_PARAM.match(text)
         if match is not None:
@@ -137,7 +138,7 @@ class AttributeExtractor():
         # Module definition
         if self.state == State.MODULE_KEYWORD:
 
-            text = SLgetText(prog, ctx).strip()
+            text = SLgetText(prog, ctx).strip()  # noqa: F821
 
             # Add new module
             self.module = self.add_module(text)
@@ -152,8 +153,10 @@ extractor = AttributeExtractor()
 
 # =============================================================================
 
+
 def enterAttr_spec(prog, ctx):
     extractor.enter_attribute(prog, ctx)
+
 
 def enterParameter_declaration(prog, ctx):
     extractor.enter_parameter(prog, ctx)
@@ -162,8 +165,10 @@ def enterParameter_declaration(prog, ctx):
 def enterModule_keyword(prog, ctx):
     extractor.enter_module_keyword(prog, ctx)
 
+
 def exitModule_declaration(prog, ctx):
     extractor.exit_module(prog, ctx)
+
 
 def enterIdentifier(prog, ctx):
     extractor.enter_identifier(prog, ctx)
@@ -177,12 +182,14 @@ def exitTop_level_rule(prog, ctx):
 # TODO: Identify all hooks that are requiret to call clear_attributes() so
 # no attributes "fall through" a statement.
 
+
 def enterStatement_or_null(prog, ctx):
-    extractor.clear_attributes();
+    extractor.clear_attributes()
+
 
 def enterStatement(prog, ctx):
-    extractor.clear_attributes();
+    extractor.clear_attributes()
+
 
 def enterPort_declaration(prog, ctx):
-    extractor.clear_attributes();
-
+    extractor.clear_attributes()

@@ -1011,7 +1011,7 @@ def make_pb_type(
 
     # Create metadata
     mod_attrs = dict(mod.module_attrs)
-    mod_attrs.update(sj.get(mod.name, {"attributes":{}})["attributes"])
+    mod_attrs.update(sj.get(mod.name, {"attributes": {}})["attributes"])
     metadata = metadata_from_attributes(mod_attrs, mode_name)
 
     # Make fasm_params metadata, loop over parameters
@@ -1026,7 +1026,9 @@ def make_pb_type(
                 if attr_value is None:
                     meta = "{p}={p}".format(p=param_name)
                 else:
-                    print("ERROR: The (* FASM *) attribute cannot have a value!")
+                    print(
+                        "ERROR: The (* FASM *) attribute cannot have a value!"
+                    )
                     exit(-1)
 
                 fasm_params.append(meta)
