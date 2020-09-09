@@ -1,5 +1,6 @@
 name: yosys-env
 channels:
+  - conda-forge
   - symbiflow
 dependencies:
   - python
