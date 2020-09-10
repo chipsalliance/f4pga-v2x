@@ -184,6 +184,17 @@ def parse_fasm_attribute(attribute):
     - (None, None) if it is not a FASM attribute
     - (name, None) for FASM attribute not related to any mode
     - (name, mode name) for FASM attribute which is related to a mode
+
+    >>> parse_fasm_attribute("FASM_PREFIX")
+    ('FASM_PREFIX', None)
+    >>> parse_fasm_attribute("FASM_FEATURES")
+    ('FASM_FEATURES', None)
+    >>> parse_fasm_attribute("FASM_BLAHBLAH")
+    (None, None)
+    >>> parse_fasm_attribute("FASM_PREFIX_MYSUPERMODE")
+    ('FASM_PREFIX', 'MYSUPERMODE')
+    >>> parse_fasm_attribute("FASM_FEATURES_ABC")
+    ('FASM_FEATURES', 'ABC')
     """
 
     KNOWN_FASM_ATTRS = (
@@ -209,6 +220,15 @@ def parse_fasm_attribute(attribute):
 def metadata_from_attributes(attributes, mode=None):
     """
     Collects metadata and stores it as a dict
+
+    >>> metadata_from_attributes({"FASM_PREFIX": "PREFIX"}, mode=None)
+    {'fasm_prefix': 'PREFIX'}
+    >>> metadata_from_attributes({"FASM_PREFIX": "PREFIX"}, mode="MOD")
+    {}
+    >>> metadata_from_attributes({"FASM_PREFIX_MOD": "PREFIX"}, mode=None)
+    {'fasm_prefix': 'PREFIX'}
+    >>> metadata_from_attributes({"FASM_PREFIX_MOD": "PREFIX"}, mode="MOD")
+    {'fasm_prefix': 'PREFIX'}
     """
 
     metadata = {}
