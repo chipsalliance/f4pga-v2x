@@ -268,10 +268,14 @@ def make_mux_conn(
 ) -> ET.Element:
 
     mux_xml = ET.SubElement(ic_xml, "mux", {"name": mux_name})
-    for mux_input, driver in mux_inputs.items():
+
+    keys = sorted(list(mux_inputs.keys()))
+    for mux_input, driver in [(k, mux_inputs[k],) for k in keys]:
         create_port(mux_xml, driver, "input", metadata={'fasm_mux': mux_input})
+
     assert len(mux_outputs) == 1, mux_outputs
-    for mux_pin, sinks in mux_outputs.items():
+    keys = sorted(list(mux_outputs.keys()))
+    for mux_pin, sinks in [(k, mux_outputs[k],) for k in keys]:
         assert len(sinks) == 1, sinks
         for sink_pin, path_attr in sinks:
             create_port(mux_xml, sink_pin, "output")
