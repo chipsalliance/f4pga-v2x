@@ -39,14 +39,14 @@
       <port from="lut" name="I[3]" type="output"/>
     </direct>
     <mux name="mux">
-      <port from="lut" name="O" type="input">
-        <metadata>
-          <meta name="fasm_mux">L</meta>
-        </metadata>
-      </port>
       <port from="ff" name="Q" type="input">
         <metadata>
           <meta name="fasm_mux">F</meta>
+        </metadata>
+      </port>
+      <port from="lut" name="O" type="input">
+        <metadata>
+          <meta name="fasm_mux">L</meta>
         </metadata>
       </port>
       <port name="O" type="output"/>
