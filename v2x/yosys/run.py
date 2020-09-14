@@ -62,17 +62,43 @@ def get_yosys():
     return None
 
 
+def determine_select_prefix():
+    """
+    Older and newer versions of Yosys exhibit different behavior of the
+    'select' command regarding black/white boxes. Newer version requires a
+    prefix before some queries. This function determines whether the prefix
+    is required or not.
+    """
+
+    # Query help string of the select command
+    cmd = ["-p", "help select"]
+    stdout = get_output(cmd, no_common_args=True)
+
+    # Look for the phrase. If found then the prefix is required
+    PHRASE = "prefix the pattern with '='"
+    if PHRASE in stdout:
+        return "="
+
+    # No prefix needed
+    return ""
+
+
 def get_yosys_common_args():
     return ["-e", "wire '[^']*' is assigned in a block", "-q"]
 
 
-def get_output(params):
+def get_output(params, no_common_args=False):
     """Run Yosys with given command line parameters, and return
     stdout as a string. Raises CalledProcessError on a non-zero exit code."""
 
     verbose = get_verbose()
 
-    cmd = [get_yosys()] + get_yosys_common_args() + params
+    cmd = [get_yosys()]
+    if not no_common_args:
+        cmd += get_yosys_common_args()
+
+    cmd += params
+
     if verbose:
         msg = ""
         msg += "command".ljust(9).ljust(80, "=") + "\n"
@@ -312,7 +338,8 @@ def get_clock_assoc_signals(infiles, module, clk):
     """
     return do_select(
         infiles, module,
-        "select -list ={} %a %co* %x =i:* =o:* %u %i =a:ASSOC_CLOCK={} %u ={} %d".
+        "select -list ={} %a %co* %x =i:* =o:* %u %i =a:ASSOC_CLOCK={} %u ={} "
+        "%d".
         format(clk, clk, clk)
     )
 

@@ -910,6 +910,14 @@ def make_pb_type(
 
 
 def vlog_to_pbtype(infiles, outfile, top=None):
+
+    # Check Yosys version
+    pfx = run.determine_select_prefix()
+    if pfx != "=":
+        print("ERROR The version of Yosys found is outdated and not supported"
+              " by V2X")
+        sys.exit(-1)
+
     iname = os.path.basename(infiles[0])
 
     run.add_define("PB_TYPE")

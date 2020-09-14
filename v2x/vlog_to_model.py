@@ -90,6 +90,14 @@ def is_registered_path(tmod, pin, pout):
 
 
 def vlog_to_model(infiles, includes, top, outfile=None):
+
+    # Check Yosys version
+    pfx = run.determine_select_prefix()
+    if pfx != "=":
+        print("ERROR The version of Yosys found is outdated and not supported"
+              " by V2X")
+        sys.exit(-1)
+
     iname = os.path.basename(infiles[0])
 
     if outfile is None:
