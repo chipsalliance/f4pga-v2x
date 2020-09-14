@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="BLOCK" num_pb="1">
+  <input name="C" num_pins="1"/>
+  <input name="D" num_pins="1"/>
+  <input name="I" num_pins="4"/>
+  <input name="S" num_pins="1"/>
+  <output name="Q" num_pins="1"/>
+  <pb_type name="ff_cell" num_pb="1">
+    <!--old_name FF-->
+    <xi:include href="ff/ff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+  </pb_type>
+  <pb_type name="lut_cell" num_pb="1">
+    <!--old_name LUT-->
+    <xi:include href="lut/lut.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+  </pb_type>
+  <pb_type name="mux_cell" num_pb="1">
+    <!--old_name MUX-->
+    <xi:include href="mux/mux.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+  </pb_type>
+  <interconnect>
+    <direct>
+      <port name="C" type="input"/>
+      <port from="ff_cell" name="C" type="output"/>
+    </direct>
+    <direct>
+      <port from="mux_cell" name="O" type="input"/>
+      <port from="ff_cell" name="D" type="output"/>
+      <pack_pattern name="lut_mux_ff" type="pack">
+        <port from="mux_cell" name="O" type="input"/>
+        <port from="ff_cell" name="D" type="output"/>
+      </pack_pattern>
+      <pack_pattern name="mux_ff" type="pack">
+        <port from="mux_cell" name="O" type="input"/>
+        <port from="ff_cell" name="D" type="output"/>
+      </pack_pattern>
+    </direct>
+    <direct>
+      <port from="ff_cell" name="Q" type="input"/>
+      <port name="Q" type="output"/>
+    </direct>
+    <direct>
+      <port name="I[0]" type="input"/>
+      <port from="lut_cell" name="I[0]" type="output"/>
+    </direct>
+    <direct>
+      <port name="I[1]" type="input"/>
+      <port from="lut_cell" name="I[1]" type="output"/>
+    </direct>
+    <direct>
+      <port name="I[2]" type="input"/>
+      <port from="lut_cell" name="I[2]" type="output"/>
+    </direct>
+    <direct>
+      <port name="I[3]" type="input"/>
+      <port from="lut_cell" name="I[3]" type="output"/>
+    </direct>
+    <direct>
+      <port from="lut_cell" name="O" type="input"/>
+      <port from="mux_cell" name="I0" type="output"/>
+      <pack_pattern name="lut_mux_ff" type="pack">
+        <port from="lut_cell" name="O" type="input"/>
+        <port from="mux_cell" name="I0" type="output"/>
+      </pack_pattern>
+    </direct>
+    <direct>
+      <port name="D" type="input"/>
+      <port from="mux_cell" name="I1" type="output"/>
+    </direct>
+    <direct>
+      <port name="S" type="input"/>
+      <port from="mux_cell" name="S" type="output"/>
+    </direct>
+  </interconnect>
+</pb_type>
