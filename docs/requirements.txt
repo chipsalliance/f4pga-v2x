@@ -1,4 +1,4 @@
-git+http://github.com/SymbiFlow/sphinx_materialdesign_theme.git@master#egg=sphinx_symbiflow_theme
+git+http://github.com/SymbiFlow/sphinx_materialdesign_theme.git@66f78b9#egg=sphinx_symbiflow_theme
 
 docutils
 sphinx-autobuild
@@ -8,13 +8,13 @@ sphinx-markdown-tables
 sphinxcontrib-napoleon
 
 # Markdown cross-reference solver library
-git+https://github.com/SymbiFlow/sphinxcontrib-markdown-symlinks.git#egg=markdown_code_symlinks
+git+https://github.com/SymbiFlow/sphinxcontrib-markdown-symlinks.git@d912c75#egg=markdown_code_symlinks
 
-# Verilog diagrams using Yosys + netlistsvg
-sphinxcontrib-verilog-diagrams
+# HDL diagrams using Yosys + netlistsvg
+git+https://github.com/SymbiFlow/sphinxcontrib-hdl-diagrams.git@4bdbf70#egg=sphinxcontrib-hdl-diagrams
 
 # Module diagrams
-git+https://github.com/SymbiFlow/symbolator.git#egg=symbolator
+git+https://github.com/SymbiFlow/symbolator.git@a9b24e4#egg=symbolator
 
 pycairo
 # vext.gi

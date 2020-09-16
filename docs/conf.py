@@ -58,8 +58,11 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx_markdown_tables',
     'symbolator_sphinx',
-    'sphinxcontrib_verilog_diagrams'
+    'sphinxcontrib_hdl_diagrams'
 ]
+
+# Make sphinxcontrib_verilog_diagrams use Yosys installed in conda
+hdl_diagram_yosys = "system"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

@@ -11,10 +11,11 @@ dependencies:
 - pygobject
 - yosys
 - netlistsvg
-# ReadTheDoc dependencies
+# ReadTheDocs dependencies (installed here but also by the docs build CI)
 - mock
 - pillow
-- sphinx=2.4.4
+- sphinx
+- sphinx_rtd_theme
 # Packages installed from PyPI
 - pip:
   - -r file:requirements.txt

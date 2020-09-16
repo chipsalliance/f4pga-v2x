@@ -20,6 +20,9 @@ SPHINXPROJ      = SymbiFlowV2X
 SOURCEDIR       = .
 BUILDDIR        = _build
 OSFLAG          =
+LIVEHTML_HOST   = 127.0.0.1
+LIVEHTML_PORT   = 8000
+
 UNAME_S := $(shell uname -s)
 ifneq (, $(findstring Linux, $(UNAME_S)))
 	OSFLAG := Linux
@@ -40,7 +43,7 @@ help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 livehtml:
-	@$(SPHINXAUTOBUILD) -b html --ignore \*.swp --ignore \*~ $(SPHINXOPTS) "$(SOURCEDIR)" "$(BUILDDIR)/html"
+	@$(SPHINXAUTOBUILD) -b html --host ${LIVEHTML_HOST} --port ${LIVEHTML_PORT} --ignore \*.swp --ignore \*~ $(SPHINXOPTS) "$(SOURCEDIR)" "$(BUILDDIR)/html"
 
 .PHONY: help livehtml Makefile
 
