@@ -5,4 +5,4 @@
    :glob:
    :hidden:
 
-   examples.rst
+   examples/examples.rst

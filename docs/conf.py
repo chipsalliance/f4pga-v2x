@@ -38,6 +38,8 @@ from markdown_code_symlinks import LinkParser, MarkdownSymlinksDomain  # noqa
 from sphinx.highlighting import lexers
 from pygments.lexers.hdl import VerilogLexer
 
+from collect_examples import collect_examples
+
 lexers['verilog'] = VerilogLexer(tabsize=2)
 
 # -- General configuration ------------------------------------------------
@@ -98,7 +100,6 @@ else:
     import subprocess
     subprocess.call('git fetch origin --unshallow', cwd=docs_dir, shell=True)
     subprocess.check_call('git fetch origin --tags', cwd=docs_dir, shell=True)
-    subprocess.check_call('make links', cwd=docs_dir, shell=True)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -252,6 +253,10 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 
 
 def setup(app):
+
+    # Collect tests to form examples
+    collect_examples()
+
     github_code_repo = 'https://github.com/SymbiFlow/python-symbiflow-v2x/'
     github_code_branch = 'blob/master/'
 

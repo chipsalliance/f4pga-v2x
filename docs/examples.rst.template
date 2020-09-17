@@ -5,6 +5,3 @@ Here we have examples on how v2x converts a Verilog module to its corresponding 
 
 .. toctree::
 
-   examples/clocks.rst
-   examples/dsp.rst
-   examples/vtr-examples.rst
