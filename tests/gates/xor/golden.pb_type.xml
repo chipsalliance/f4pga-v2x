@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" num_pb="1" name="XOR">
+  <input name="A" num_pins="1"/>
+  <input name="B" num_pins="1"/>
+  <output name="Y" num_pins="1"/>
+  <pb_type num_pb="1" name="nor00">
+    <!--old_name NOR-->
+    <xi:include href="../nor/nor.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+  </pb_type>
+  <pb_type num_pb="1" name="nor10">
+    <!--old_name NOR-->
+    <xi:include href="../nor/nor.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+  </pb_type>
+  <pb_type num_pb="1" name="nor11">
+    <!--old_name NOR-->
+    <xi:include href="../nor/nor.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+  </pb_type>
+  <pb_type num_pb="1" name="nor20">
+    <!--old_name NOR-->
+    <xi:include href="../nor/nor.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+  </pb_type>
+  <pb_type num_pb="1" name="nor30">
+    <!--old_name NOR-->
+    <xi:include href="../nor/nor.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+  </pb_type>
+  <interconnect>
+    <direct>
+      <port name="A" type="input"/>
+      <port name="A" type="output" from="nor00"/>
+    </direct>
+    <direct>
+      <port name="A" type="input"/>
+      <port name="A" type="output" from="nor10"/>
+    </direct>
+    <direct>
+      <port name="B" type="input"/>
+      <port name="B" type="output" from="nor00"/>
+    </direct>
+    <direct>
+      <port name="B" type="input"/>
+      <port name="A" type="output" from="nor11"/>
+    </direct>
+    <direct>
+      <port name="Y" type="input" from="nor00"/>
+      <port name="B" type="output" from="nor10"/>
+    </direct>
+    <direct>
+      <port name="Y" type="input" from="nor00"/>
+      <port name="B" type="output" from="nor11"/>
+    </direct>
+    <direct>
+      <port name="Y" type="input" from="nor10"/>
+      <port name="A" type="output" from="nor20"/>
+    </direct>
+    <direct>
+      <port name="Y" type="input" from="nor11"/>
+      <port name="B" type="output" from="nor20"/>
+    </direct>
+    <direct>
+      <port name="Y" type="input" from="nor20"/>
+      <port name="A" type="output" from="nor30"/>
+    </direct>
+    <direct>
+      <port name="Y" type="input" from="nor20"/>
+      <port name="B" type="output" from="nor30"/>
+    </direct>
+    <direct>
+      <port name="Y" type="input" from="nor30"/>
+      <port name="Y" type="output"/>
+    </direct>
+  </interconnect>
+</pb_type>
