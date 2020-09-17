@@ -2,7 +2,7 @@ name: yosys-env
 channels:
   - symbiflow
 dependencies:
-  - yosys
+  - symbiflow-yosys
   - pip:
     - tox
     - flake8
