@@ -81,27 +81,29 @@ def make_xml_for_docs(vlog_src, output_dir):
 
         make_xml_for_docs(dep_file, dep_dir)
 
-    # Run V2X
+    # Run V2X, but only if an XML is not already provided
     vlog_mod = vlog_title.split(".")[0]
 
     model_file = os.path.join(output_dir, vlog_mod + ".model.xml")
     pbtype_file = os.path.join(output_dir, vlog_mod + ".pb_type.xml")
 
-    xml = vlog_to_model.vlog_to_model([vlog_dst], None, None, model_file)
-    with open(model_file, "w") as fp:
-        fp.write(xml)
+    if not os.path.isfile(model_file):
+        xml = vlog_to_model.vlog_to_model([vlog_dst], None, None, model_file)
+        with open(model_file, "w") as fp:
+            fp.write(xml)
 
-    xml = vtr_stylize_xml(model_file)
-    with open(model_file, "w") as fp:
-        fp.write(xml)
+        xml = vtr_stylize_xml(model_file)
+        with open(model_file, "w") as fp:
+            fp.write(xml)
 
-    xml = vlog_to_pbtype.vlog_to_pbtype([vlog_dst], pbtype_file, None)
-    with open(pbtype_file, "w") as fp:
-        fp.write(xml)
+    if not os.path.isfile(pbtype_file):
+        xml = vlog_to_pbtype.vlog_to_pbtype([vlog_dst], pbtype_file, None)
+        with open(pbtype_file, "w") as fp:
+            fp.write(xml)
 
-    xml = vtr_stylize_xml(pbtype_file)
-    with open(pbtype_file, "w") as fp:
-        fp.write(xml)
+        xml = vtr_stylize_xml(pbtype_file)
+        with open(pbtype_file, "w") as fp:
+            fp.write(xml)
 
 
 # =============================================================================

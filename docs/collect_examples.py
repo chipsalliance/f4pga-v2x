@@ -101,7 +101,7 @@ def collect_examples():
                 tests.append((d, d_name,))
 
     # Process each test
-    check_ignore = ignore_patterns("*.v", "*.xml")
+    check_ignore = ignore_patterns("*.v", "golden.*.xml")
     for test_name, test_src in tests:
 
         test_rel = os.path.relpath(test_src, tests_dir)
