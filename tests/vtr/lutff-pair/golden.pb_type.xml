@@ -3,8 +3,8 @@
   <clock name="CLK" num_pins="1"/>
   <input name="I" num_pins="4"/>
   <output name="O" num_pins="1"/>
-  <pb_type name="ff" num_pb="1">
-    <xi:include href="ff/ff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+  <pb_type name="dff" num_pb="1">
+    <xi:include href="dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
   </pb_type>
   <pb_type name="lut" num_pb="1">
     <xi:include href="lut/lut4.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
@@ -12,14 +12,14 @@
   <interconnect>
     <direct>
       <port name="CLK" type="input"/>
-      <port from="ff" name="CLK" type="output"/>
+      <port from="dff" name="CLK" type="output"/>
     </direct>
     <direct>
       <port from="lut" name="O" type="input"/>
-      <port from="ff" name="D" type="output"/>
+      <port from="dff" name="D" type="output"/>
       <pack_pattern name="LUT2FF" type="pack">
         <port from="lut" name="O" type="input"/>
-        <port from="ff" name="D" type="output"/>
+        <port from="dff" name="D" type="output"/>
       </pack_pattern>
     </direct>
     <direct>
@@ -39,7 +39,7 @@
       <port from="lut" name="I[3]" type="output"/>
     </direct>
     <mux name="mux">
-      <port from="ff" name="Q" type="input">
+      <port from="dff" name="Q" type="input">
         <metadata>
           <meta name="fasm_mux">F</meta>
         </metadata>

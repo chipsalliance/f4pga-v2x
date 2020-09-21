@@ -6,32 +6,32 @@ An example of the classical LUT with FlipFlop pair shown in |fig31|_ demonstrati
 .. |fig31| replace:: ``Figure 31 - Pack Pattern Example``
 .. _fig31: https://docs.verilogtorouting.org/en/latest/arch/reference/#id35
 
-.. image:: ../../../tests/vtr/lutff-pair/lutff-pair.png
+.. image:: lutff-pair.png
    :alt: Figure 31 from Verilog to Routing Documentation
 
 *Fig. 31 - Pack Pattern Example*
 
 |
 
-.. symbolator:: ../../../tests/vtr/lutff-pair/pair.sim.v
+.. symbolator:: pair.sim.v
 
-.. .. verilog-diagram:: ../../../tests/vtr/lutff-pair/pair.sim.v
-..    :type: netlistsvg
-..    :module: PAIR
+.. verilog-diagram:: pair.sim.v
+   :type: netlistsvg
+   :module: PAIR
 
 |
 
-.. no-license::  ../../../tests/vtr/lutff-pair/pair.sim.v
+.. no-license::  pair.sim.v
    :language: verilog
-   :caption: tests/vtr/lutff-pair/pair.sim.v
+   :caption: pair.sim.v
 
-.. no-license:: ../../../tests/vtr/lutff-pair/golden.model.xml
+.. no-license:: pair.model.xml
    :language: xml
-   :caption: tests/vtr/lutff-pair/golden.model.xml
+   :caption: pair.model.xml
 
-.. no-license:: ../../../tests/vtr/lutff-pair/golden.pb_type.xml
+.. no-license:: pair.pb_type.xml
    :language: xml
-   :caption: tests/vtr/lutff-pair/golden.pb_type.xml
+   :caption: pair.pb_type.xml
 
 Blackbox detection
 ------------------
