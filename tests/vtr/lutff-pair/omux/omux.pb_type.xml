@@ -1,0 +1,38 @@
+<pb_type name="omux" num_pb="1">
+  <metadata>
+    <meta name="type">bel</meta>
+    <meta name="subtype">routing</meta>
+  </metadata>
+  <!--
+    Generated with P
+    y
+    t
+    h
+    o
+    n
+     
+    f
+    u
+    n
+    c
+    t
+    i
+    o
+    n
+    -->
+  <input name="L" num_pins="1"/>
+  <input name="F" num_pins="1"/>
+  <output name="O" num_pins="1"/>
+  <interconnect>
+    <mux name="omux" input="omux.L omux.F" output="omux.O">
+      <metadata>
+        <meta name="type">bel</meta>
+        <meta name="subtype">routing</meta>
+        <meta key="fasm_mux">
+omux.L = omux.L
+omux.F = omux.F
+</meta>
+      </metadata>
+    </mux>
+  </interconnect>
+</pb_type>
