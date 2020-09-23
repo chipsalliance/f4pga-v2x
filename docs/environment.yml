@@ -1,16 +1,15 @@
 name: v2x-docs
 channels:
-- SymbiFlow
+- symbiflow
 - conda-forge
-- defaults
 dependencies:
 - python=3.7
 - pip
 - pycairo
 - pango
 - pygobject
-- yosys
-- netlistsvg
+- symbiflow-yosys=0.8_6021_gd8b2d1a2=20200923_144930*
+- netlistsvg=0.0_0231_g67115bc=20200921_133616
 # ReadTheDocs dependencies (installed here but also by the docs build CI)
 - mock
 - pillow
