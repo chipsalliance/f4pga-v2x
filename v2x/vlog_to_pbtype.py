@@ -787,7 +787,7 @@ def make_pb_type(
             # TODO: pb_attrs["class"] = "routing"
             pass
         elif mod_cls == "mux":
-            # TODO: ?
+            pb_attrs["blif_model"] = ".subckt " + model_name
             pass
         elif mod_cls == "flipflop":
             pb_attrs["blif_model"] = ".latch"

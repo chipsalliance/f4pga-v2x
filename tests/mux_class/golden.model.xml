@@ -1,0 +1,12 @@
+<models xmlns:xi="http://www.w3.org/2001/XInclude">
+  <model name="MUX_MODEL_NAME">
+    <input_ports>
+      <port combinational_sink_ports="O" name="I0"/>
+      <port combinational_sink_ports="O" name="I1"/>
+      <port combinational_sink_ports="O" name="S"/>
+    </input_ports>
+    <output_ports>
+      <port name="O"/>
+    </output_ports>
+  </model>
+</models>

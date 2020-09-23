@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" num_pb="1" name="MUX_CLASS">
+  <blif_model>.subckt MUX_MODEL_NAME</blif_model>
+  <input name="I0" num_pins="1"/>
+  <input name="I1" num_pins="1"/>
+  <input name="S" num_pins="1"/>
+  <output name="O" num_pins="1"/>
+  <delay_constant in_port="I0" out_port="O" max="1e-10"/>
+  <delay_constant in_port="I1" out_port="O" max="1e-10"/>
+  <delay_constant in_port="S" out_port="O" max="1e-10"/>
+</pb_type>
