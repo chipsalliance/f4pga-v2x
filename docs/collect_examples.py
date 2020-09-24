@@ -22,7 +22,7 @@ TEMPLATE_NAME = "examples.rst.template"
 INDEX_NAME = "examples.rst"
 
 
-def process_verilogs(src_dir, dst_dir):
+def process_verilog_files(src_dir, dst_dir):
     """
     Looks for Verilog models for V2X and runs make_xml_for_docs on them.
 
@@ -50,7 +50,7 @@ def process_verilogs(src_dir, dst_dir):
         d_name = os.path.join(src_dir, d)
         if os.path.isdir(d_name):
 
-            process_verilogs(
+            process_verilog_files(
                 os.path.join(src_dir, d),
                 os.path.join(dst_dir, d)
             )
@@ -112,8 +112,8 @@ def collect_examples():
         # Copy files
         copytree(test_src, test_dst, ignore=check_ignore)
 
-        # Build XMLs for verilogs        
-        process_verilogs(test_src, test_dst)
+        # Build XMLs for verilog giles
+        process_verilog_files(test_src, test_dst)
 
     # Build examples.rst
     tname = os.path.join(os.path.dirname(__file__), TEMPLATE_NAME)
