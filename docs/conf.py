@@ -253,7 +253,6 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 
 
 def setup(app):
-
     # Collect tests to form examples
     collect_examples()
 

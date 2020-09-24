@@ -133,4 +133,3 @@ def collect_examples():
 
 if __name__ == "__main__":
     collect_examples()
-
