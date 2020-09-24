@@ -12,6 +12,7 @@
 import argparse
 import os
 import shlex
+import re
 
 from v2x import vlog_to_model
 from v2x import vlog_to_pbtype
@@ -20,6 +21,9 @@ from v2x.xmlinc import xmlinc
 from vtr_xml_utils.convert import vtr_stylize_xml
 
 # =============================================================================
+
+
+MODULE_RE = re.compile(r"^module\s+(?P<module>[\w$]+)")
 
 
 def make_xml_for_docs(vlog_src, output_dir):
@@ -48,13 +52,16 @@ def make_xml_for_docs(vlog_src, output_dir):
     vlog_dst = os.path.join(output_dir, vlog_title)
 
     # Scan it for dependencies (includes), rewrite them
+    # Try also to guess the top-level module name (assuming that there is only
+    # one module per file!).
     vlog_deps = []
+    vlog_top = None
 
     with open(vlog_src, "r") as fsrc, open(vlog_dst, "w") as fdst:
         for src_line in fsrc:
+            line = src_line.strip()
 
             # Modify included file path
-            line = src_line.strip()
             if line.startswith("`include"):
                 fields = shlex.split(line)
                 assert len(fields) == 2, fields
@@ -70,6 +77,13 @@ def make_xml_for_docs(vlog_src, output_dir):
             # Pass unchanges
             else:
                 dst_line = src_line
+
+            # Detect top-level module
+            # FIXME: This is crude and assumes the syntax "module <name>...".
+            # Both the keyword and module name must be in the same line
+            match = MODULE_RE.match(line)
+            if vlog_top is None and match is not None:
+                vlog_top = match.group("module")
 
             # Write the line
             fdst.write(dst_line)
@@ -88,7 +102,7 @@ def make_xml_for_docs(vlog_src, output_dir):
     pbtype_file = os.path.join(output_dir, vlog_mod + ".pb_type.xml")
 
     if not os.path.isfile(model_file):
-        xml = vlog_to_model.vlog_to_model([vlog_dst], None, None, model_file)
+        xml = vlog_to_model.vlog_to_model([vlog_dst], None, vlog_top, model_file)
         with open(model_file, "w") as fp:
             fp.write(xml)
 
@@ -97,7 +111,7 @@ def make_xml_for_docs(vlog_src, output_dir):
             fp.write(xml)
 
     if not os.path.isfile(pbtype_file):
-        xml = vlog_to_pbtype.vlog_to_pbtype([vlog_dst], pbtype_file, None)
+        xml = vlog_to_pbtype.vlog_to_pbtype([vlog_dst], pbtype_file, vlog_top)
         with open(pbtype_file, "w") as fp:
             fp.write(xml)
 

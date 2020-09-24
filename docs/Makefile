@@ -13,6 +13,7 @@ SHELL = /bin/bash
 MAKEDIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
 # You can set these variables from the command line.
+COLLECTEXAMPLES = [ -e env/bin/activate ] && source env/bin/activate; python -c "from collect_examples import collect_examples; collect_examples()"
 SPHINXOPTS      =
 SPHINXBUILD     = [ -e env/bin/activate ] && source env/bin/activate; sphinx-build
 SPHINXAUTOBUILD = [ -e env/bin/activate ] && source env/bin/activate; sphinx-autobuild --watch $(MAKEDIR)../tests
@@ -44,6 +45,7 @@ help:
 
 livehtml:
 	rm -rf examples
+	@$(COLLECTEXAMPLES) # Do this here to prevent sphinx-autobuild from slowly detecting all the changes
 	@$(SPHINXAUTOBUILD) -b html --host ${LIVEHTML_HOST} --port ${LIVEHTML_PORT} --ignore \*.swp --ignore \*~ $(SPHINXOPTS) "$(SOURCEDIR)" "$(BUILDDIR)/html"
 
 .PHONY: help livehtml Makefile
