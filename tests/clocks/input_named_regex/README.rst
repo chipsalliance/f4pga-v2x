@@ -3,20 +3,20 @@ Set input as clock by name (regex)
 
 An input wire can be set as a clock by having ``clk`` in its name (case insensitive).
 
-.. symbolator:: ../../../tests/clocks/input_named_regex/block.sim.v
+.. symbolator:: block.sim.v
 
 |
 
-.. no-license:: ../../../tests/clocks/input_named_regex/block.sim.v
+.. no-license:: block.sim.v
    :language: verilog
    :caption: tests/clocks/input_named_regex/block.sim.v
 
 As such, the ``is_clock`` attribute of wires with a variation of ``clk`` in their name is set to 1.
 
-.. literalinclude:: ../../../tests/clocks/input_named_regex/golden.model.xml
+.. literalinclude:: block.model.xml
    :language: xml
-   :caption: tests/clocks/input_named_regex/golden.model.xml
+   :caption: block.model.xml
 
-.. literalinclude:: ../../../tests/clocks/input_named_regex/golden.pb_type.xml
+.. literalinclude:: block.pb_type.xml
    :language: xml
-   :caption: tests/clocks/input_named_regex/golden.pb_type.xml
+   :caption: block.pb_type.xml

@@ -3,24 +3,24 @@ Force input as regular input by setting the CLOCK attribute
 
 ``input wire a`` should be detected as a clock because it drives the flip flop. However, it has the attribute CLOCK set to 0 which should force it to be a regular input.
 
-.. symbolator:: ../../../tests/clocks/input_attr_not_clock/block.sim.v
+.. symbolator:: block.sim.v
 
-.. verilog-diagram:: ../../../tests/clocks/input_attr_not_clock/block.sim.v
+.. verilog-diagram:: block.sim.v
    :type: netlistsvg
    :module: BLOCK
 
 |
 
-.. no-license:: ../../../tests/clocks/input_attr_not_clock/block.sim.v
+.. no-license:: block.sim.v
    :language: verilog
    :caption: tests/clocks/input_attr_not_clock/block.sim.v
 
 As such, the ``is_clock`` attribute of the ``a`` port is not set.
 
-.. literalinclude:: ../../../tests/clocks/input_attr_not_clock/golden.model.xml
+.. literalinclude:: block.model.xml
    :language: xml
-   :caption: tests/clocks/input_attr_not_clock/golden.model.xml
+   :caption: block.model.xml
 
-.. literalinclude:: ../../../tests/clocks/input_attr_not_clock/golden.pb_type.xml
+.. literalinclude:: block.pb_type.xml
    :language: xml
-   :caption: tests/clocks/input_attr_not_clock/golden.pb_type.xml
+   :caption: block.pb_type.xml
