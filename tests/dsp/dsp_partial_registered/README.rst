@@ -1,27 +1,27 @@
 DSP-style block with only one input registered
 ++++++++++++++++++++++++++++++++++++++++++++++
 
-This uses the model from |fig60|_ and the |dsp_combinational|_ module.
+A combinational DSP block with all but one registered inputs. Modeled as a complex block. 
 
-.. symbolator::  ../../tests/dsp/dsp_partial_registered/dsp_partial_registered.sim.v
+.. symbolator:: dsp_partial_registered.sim.v
 
-.. verilog-diagram:: ../../tests/dsp/dsp_partial_registered/dsp_partial_registered.sim.v
+.. verilog-diagram:: dsp_partial_registered.sim.v
    :type: netlistsvg
    :module: DSP_PARTIAL_REGISTERED
 
 |
 
-.. no-license::  ../../tests/dsp/dsp_partial_registered/dsp_partial_registered.sim.v
+.. no-license:: dsp_partial_registered.sim.v
    :language: verilog
    :caption: tests/dsp/dsp_partial_registered/dsp_partial_registered.sim.v
 
-.. no-license:: ../../tests/dsp/dsp_partial_registered/golden.model.xml
+.. no-license:: dsp_partial_registered.model.xml
    :language: xml
-   :caption: tests/dsp/dsp_partial_registered/golden.model.xml
+   :caption: dsp_partial_registered.model.xml
 
-.. no-license:: ../../tests/dsp/dsp_partial_registered/golden.pb_type.xml
+.. no-license:: dsp_partial_registered.pb_type.xml
    :language: xml
-   :caption: tests/dsp/dsp_partial_registered/golden.pb_type.xml
+   :caption: dsp_partial_registered.pb_type.xml
 
 Detection of combinational connections
 **************************************

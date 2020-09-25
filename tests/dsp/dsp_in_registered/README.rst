@@ -1,27 +1,27 @@
 DSP-style block with all inputs registered
 ++++++++++++++++++++++++++++++++++++++++++
 
-This uses the model from |fig60|_ and the |dsp_combinational|_ module.
+A combinational DSP block with registered inputs. Modeled as a complex block. 
 
-.. symbolator::  ../../tests/dsp/dsp_in_registered/dsp_in_registered.sim.v
+.. symbolator::  dsp_in_registered.sim.v
 
-.. verilog-diagram:: ../../tests/dsp/dsp_in_registered/dsp_in_registered.sim.v
+.. verilog-diagram:: dsp_in_registered.sim.v
    :type: netlistsvg
    :module: DSP_IN_REGISTERED
 
 |
 
-.. no-license::  ../../tests/dsp/dsp_in_registered/dsp_in_registered.sim.v
+.. no-license::  dsp_in_registered.sim.v
    :language: verilog
    :caption: tests/dsp/dsp_in_registered/dsp_in_registered.sim.v
 
-.. no-license:: ../../tests/dsp/dsp_in_registered/golden.model.xml
+.. no-license:: dsp_in_registered.model.xml
    :language: xml
-   :caption: tests/dsp/dsp_in_registered/golden.model.xml
+   :caption: dsp_in_registered.model.xml
 
-.. no-license:: ../../tests/dsp/dsp_in_registered/golden.pb_type.xml
+.. no-license:: dsp_in_registered.pb_type.xml
    :language: xml
-   :caption: tests/dsp/dsp_in_registered/golden.pb_type.xml
+   :caption: dsp_in_registered.pb_type.xml
 
 Detection of combinational connections
 **************************************

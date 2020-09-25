@@ -2,27 +2,27 @@
 DSP-style block with inputs and outputs registered using separate clocks
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-This uses the model from |fig60|_ and the |dsp_combinational|_ module.
+A combinational DSP block with registered inputs and outputs. Separate clock is used for inputs and outputs. Modeled as a complex block. 
 
-.. symbolator::  ../../tests/dsp/dsp_inout_registered_dualclk/dsp_inout_registered_dualclk.sim.v
+.. symbolator::  dsp_inout_registered_dualclk.sim.v
 
-.. verilog-diagram:: ../../tests/dsp/dsp_inout_registered_dualclk/dsp_inout_registered_dualclk.sim.v
+.. verilog-diagram:: dsp_inout_registered_dualclk.sim.v
    :type: netlistsvg
    :module: DSP_INOUT_REGISTERED_DUALCLK
 
 |
 
-.. no-license::  ../../tests/dsp/dsp_inout_registered_dualclk/dsp_inout_registered_dualclk.sim.v
+.. no-license::  dsp_inout_registered_dualclk.sim.v
    :language: verilog
    :caption: tests/dsp/dsp_inout_registered_dualclk/dsp_inout_registered_dualclk.sim.v
 
-.. no-license:: ../../tests/dsp/dsp_inout_registered_dualclk/golden.model.xml
+.. no-license:: dsp_inout_registered_dualclk.model.xml
    :language: xml
-   :caption: tests/dsp/dsp_inout_registered_dualclk/golden.model.xml
+   :caption: dsp_inout_registered_dualclk.model.xml
 
-.. no-license:: ../../tests/dsp/dsp_inout_registered_dualclk/golden.pb_type.xml
+.. no-license:: dsp_inout_registered_dualclk.pb_type.xml
    :language: xml
-   :caption: tests/dsp/dsp_inout_registered_dualclk/golden.pb_type.xml
+   :caption: dsp_inout_registered_dualclk.pb_type.xml
 
 Detection of combinational connections
 **************************************

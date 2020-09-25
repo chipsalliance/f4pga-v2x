@@ -9,6 +9,9 @@ The possible modes are
 * Register on outputs (i.e. |dsp_out_registered|_).
 * Register on both inputs and outputs (with same clock) (i.e. |dsp_inout_registered|_).
 
+.. |dsp_combinational| replace:: ``dsp_combinational``
+.. _dsp_combinational: #dsp-style-block-with-only-one-input-registered
+
 .. |dsp_partial_registered| replace:: ``dsp_partial_registered``
 .. _dsp_partial_registered: #dsp-style-block-with-only-one-input-registered
 
@@ -21,25 +24,25 @@ The possible modes are
 .. |dsp_inout_registered| replace:: ``dsp_inout_registered``
 .. _dsp_inout_registered: #dsp-style-block-with-inputs-and-outputs-registered-single-clock
 
-.. symbolator::  ../../tests/dsp/dsp_modes/dsp_modes.sim.v
+.. symbolator::  dsp_modes.sim.v
 
-.. verilog-diagram:: ../../tests/dsp/dsp_modes/dsp_modes.sim.v
+.. verilog-diagram:: dsp_modes.sim.v
    :type: netlistsvg
    :module: DSP_MODES
 
 |
 
-.. no-license::  ../../tests/dsp/dsp_modes/dsp_modes.sim.v
+.. no-license::  dsp_modes.sim.v
    :language: verilog
    :caption: tests/dsp/dsp_modes/dsp_modes.sim.v
 
-.. no-license:: ../../tests/dsp/dsp_modes/golden.model.xml
+.. no-license:: dsp_modes.model.xml
    :language: xml
-   :caption: tests/dsp/dsp_modes/golden.model.xml
+   :caption: dsp_modes.model.xml
 
-.. no-license:: ../../tests/dsp/dsp_modes/golden.pb_type.xml
+.. no-license:: dsp_modes.pb_type.xml
    :language: xml
-   :caption: tests/dsp/dsp_modes/golden.pb_type.xml
+   :caption: dsp_modes.pb_type.xml
 
 Blackbox detection
 ******************
