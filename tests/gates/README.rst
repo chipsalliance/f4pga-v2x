@@ -1,9 +1,9 @@
 .. Gates
 
-These are some gates
-====================
+Basic logic gates
+=================
 
-The following shows some examples taken from the tests
+These are some basic logic gates. NOT, AND and NOR are modeled as primitives while XOR is made up of 5 NOR gates.
 
 .. toctree::
    not/README.rst

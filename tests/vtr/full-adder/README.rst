@@ -1,10 +1,10 @@
 Full Adder Example
 ++++++++++++++++++
 
-An example of the classical combinational `"full adder" <https://en.wikipedia.org/wiki/Adder_(electronics)#Full_adder>`_ circuit shown in |fig59|_.
+An example of the classical combinational `"full adder" <https://en.wikipedia.org/wiki/Adder_(electronics)#Full_adder>`_ circuit shown in |fig60|_ of the `"Combinational block" <https://docs.verilogtorouting.org/en/latest/tutorials/arch/timing_modeling/#combinational-block>`_ section in the Primitive Block Timing Modeling Tutorial of the Verilog to Routing documentation and reproduced below.
 
-.. |fig59| replace:: ``Figure 59 - Full Adder``
-.. _fig59: https://docs.verilogtorouting.org/en/latest/tutorials/arch/timing_modeling/#combinational-block
+.. |fig60| replace:: ``Figure 60 - Full Adder``
+.. _fig60: https://docs.verilogtorouting.org/en/latest/tutorials/arch/timing_modeling/#combinational-block
 
 .. image:: full-adder.svg
    :alt: Figure 59 from Verilog to Routing Documentation

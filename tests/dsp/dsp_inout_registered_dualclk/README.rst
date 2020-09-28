@@ -1,4 +1,3 @@
-
 DSP-style block with inputs and outputs registered using separate clocks
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
