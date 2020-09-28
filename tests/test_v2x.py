@@ -53,17 +53,6 @@ def prepare_files():
             name_mux='RMUX',
             name_inputs='I0,I1'
             )
-    # Generate tests/vtr/lutff-pair/omux for tests/vtr/lutff-pair
-    mux_gen(outdir=os.path.join(testdir, 'vtr/lutff-pair/omux'),
-            outfilename='omux',
-            datatype='routing',
-            width=2,
-            split_inputs=True,
-            name_output='O',
-            name_mux='omux',
-            name_inputs='L,F'
-            )
-
     # Generate dff.pb_type.xml required by various tests
     newpbfile = os.path.join(testdir, 'vtr/dff/dff.pb_type.xml')
     pbtypeout = vlog_to_pbtype.vlog_to_pbtype(
@@ -73,10 +62,10 @@ def prepare_files():
     with open(newpbfile, 'w') as model:
         model.write(pbtypeout)
 
-    # Generate ff.pb_type.xml required by various tests
-    newpbfile = os.path.join(testdir, 'vtr/lutff-pair/ff/ff.pb_type.xml')
+    # Generate dff.pb_type.xml required by various tests
+    newpbfile = os.path.join(testdir, 'vtr/lutff-pair/dff/dff.pb_type.xml')
     pbtypeout = vlog_to_pbtype.vlog_to_pbtype(
-        [os.path.join(testdir, 'vtr/lutff-pair/ff/ff.sim.v')],
+        [os.path.join(testdir, 'vtr/lutff-pair/dff/dff.sim.v')],
         newpbfile,
         'DFF')
     with open(newpbfile, 'w') as model:

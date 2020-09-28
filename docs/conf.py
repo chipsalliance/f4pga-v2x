@@ -35,6 +35,13 @@ import sys
 sys.path.insert(0, os.path.abspath('.'))
 from markdown_code_symlinks import LinkParser, MarkdownSymlinksDomain  # noqa
 
+from sphinx.highlighting import lexers
+from pygments.lexers.hdl import VerilogLexer
+
+from collect_examples import collect_examples
+
+lexers['verilog'] = VerilogLexer(tabsize=2)
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -53,8 +60,11 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx_markdown_tables',
     'symbolator_sphinx',
-    'sphinxcontrib_verilog_diagrams'
+    'sphinxcontrib_hdl_diagrams'
 ]
+
+# Make sphinxcontrib_verilog_diagrams use Yosys installed in conda
+hdl_diagram_yosys = "system"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -90,7 +100,6 @@ else:
     import subprocess
     subprocess.call('git fetch origin --unshallow', cwd=docs_dir, shell=True)
     subprocess.check_call('git fetch origin --tags', cwd=docs_dir, shell=True)
-    subprocess.check_call('make links', cwd=docs_dir, shell=True)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -244,6 +253,9 @@ intersphinx_mapping = {'https://docs.python.org/': None}
 
 
 def setup(app):
+    # Collect tests to form examples
+    collect_examples()
+
     github_code_repo = 'https://github.com/SymbiFlow/python-symbiflow-v2x/'
     github_code_branch = 'blob/master/'
 

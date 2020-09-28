@@ -13,6 +13,7 @@ SHELL = /bin/bash
 MAKEDIR := $(dir $(lastword $(MAKEFILE_LIST)))
 
 # You can set these variables from the command line.
+COLLECTEXAMPLES = [ -e env/bin/activate ] && source env/bin/activate; python -c "from collect_examples import collect_examples; collect_examples()"
 SPHINXOPTS      =
 SPHINXBUILD     = [ -e env/bin/activate ] && source env/bin/activate; sphinx-build
 SPHINXAUTOBUILD = [ -e env/bin/activate ] && source env/bin/activate; sphinx-autobuild --watch $(MAKEDIR)../tests
@@ -20,6 +21,9 @@ SPHINXPROJ      = SymbiFlowV2X
 SOURCEDIR       = .
 BUILDDIR        = _build
 OSFLAG          =
+LIVEHTML_HOST   = 127.0.0.1
+LIVEHTML_PORT   = 8000
+
 UNAME_S := $(shell uname -s)
 ifneq (, $(findstring Linux, $(UNAME_S)))
 	OSFLAG := Linux
@@ -40,7 +44,9 @@ help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 livehtml:
-	@$(SPHINXAUTOBUILD) -b html --ignore \*.swp --ignore \*~ $(SPHINXOPTS) "$(SOURCEDIR)" "$(BUILDDIR)/html"
+	rm -rf examples
+	@$(COLLECTEXAMPLES) # Do this here to prevent sphinx-autobuild from slowly detecting all the changes
+	@$(SPHINXAUTOBUILD) -b html --host ${LIVEHTML_HOST} --port ${LIVEHTML_PORT} --ignore \*.swp --ignore \*~ $(SPHINXOPTS) "$(SOURCEDIR)" "$(BUILDDIR)/html"
 
 .PHONY: help livehtml Makefile
 
@@ -60,32 +66,7 @@ env:
 
 .PHONY: env
 
-# Update fuzzer / minitest markdown links.
-tests-links:
-	@mkdir -p $(MAKEDIR)/examples
-	@cd $(MAKEDIR)/examples && find -name '*.md' -delete && find -type d -empty -delete
-	@cd $(MAKEDIR)/examples && \
-		for I in $$(cd ../../tests/ ; find -name '*.md' | sort); do \
-			F=$$(dirname $$I); D=$$(dirname $$F); N=$$(basename $$F); \
-			S=../../tests/$$I; O=$$D/$$N.md; \
-			if [ ! -d $$D ]; then \
-				mkdir -p $$D; \
-			fi; \
-			ln -sf $$(realpath $$S --relative-to=$$D) $$O; \
-		done
-	@cd $(MAKEDIR)/examples && \
-		for I in $$(cd ../../tests/ ; find -name '*.svg' -o -name '*.png' | sort); do \
-			F=$$(dirname $$I); D=$$(dirname $$F); N=$$(basename $$I); \
-			S=../../tests/$$I; O=$$D/$$N; \
-			ln -sf $$(realpath $$S --relative-to=$$D) $$O; \
-		done
-
-links: tests-links
-	@true
-
-.PHONY: tests-links links
-
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-%: Makefile links
+%: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)

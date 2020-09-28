@@ -146,7 +146,7 @@ parser.add_argument(
 )
 
 
-def mux_gen(argv='Python function',
+def mux_gen(argv=('Python function', ),
             width=8,
             data_width=1,
             datatype='logic',
