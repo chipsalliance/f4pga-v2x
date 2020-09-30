@@ -226,7 +226,7 @@ def metadata_from_attributes(attributes, mode=None):
     >>> metadata_from_attributes({"FASM_PREFIX": "PREFIX"}, mode="MOD")
     {}
     >>> metadata_from_attributes({"FASM_PREFIX_MOD": "PREFIX"}, mode=None)
-    {'fasm_prefix': 'PREFIX'}
+    {}
     >>> metadata_from_attributes({"FASM_PREFIX_MOD": "PREFIX"}, mode="MOD")
     {'fasm_prefix': 'PREFIX'}
     """
@@ -243,6 +243,9 @@ def metadata_from_attributes(attributes, mode=None):
 
         # Filter out if not for this mode
         if mode is not None and attr_mode != mode:
+            continue
+
+        if mode is None and attr_mode is not None:
             continue
 
         # Store
