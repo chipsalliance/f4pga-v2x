@@ -271,7 +271,8 @@ def make_mux_conn(
 
     keys = sorted(list(mux_inputs.keys()))
     for mux_input, driver in [(k, mux_inputs[k],) for k in keys]:
-        create_port(mux_xml, driver, "input", metadata={'fasm_mux': mux_input})
+        metadata = {'fasm_mux': '{}.{}'.format(mux_name, mux_input)}
+        create_port(mux_xml, driver, "input", metadata=metadata)
 
     assert len(mux_outputs) == 1, mux_outputs
     keys = sorted(list(mux_outputs.keys()))
