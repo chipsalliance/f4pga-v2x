@@ -41,12 +41,12 @@
     <mux name="mux">
       <port from="dff" name="Q" type="input">
         <metadata>
-          <meta name="fasm_mux">F</meta>
+          <meta name="fasm_mux">mux.F</meta>
         </metadata>
       </port>
       <port from="lut" name="O" type="input">
         <metadata>
-          <meta name="fasm_mux">L</meta>
+          <meta name="fasm_mux">mux.L</meta>
         </metadata>
       </port>
       <port name="O" type="output"/>

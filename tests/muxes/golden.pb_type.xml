@@ -30,12 +30,12 @@
     <mux name="mux1">
       <port from="lboxa" name="O" type="input">
         <metadata>
-          <meta name="fasm_mux">I0</meta>
+          <meta name="fasm_mux">mux1.I0</meta>
         </metadata>
       </port>
       <port from="lboxb" name="O" type="input">
         <metadata>
-          <meta name="fasm_mux">I1</meta>
+          <meta name="fasm_mux">mux1.I1</meta>
         </metadata>
       </port>
       <port name="o1" type="output"/>
@@ -47,12 +47,12 @@
     <mux name="mux2">
       <port from="lboxa" name="O" type="input">
         <metadata>
-          <meta name="fasm_mux">I0</meta>
+          <meta name="fasm_mux">mux2.I0</meta>
         </metadata>
       </port>
       <port from="lboxc" name="O" type="input">
         <metadata>
-          <meta name="fasm_mux">I1</meta>
+          <meta name="fasm_mux">mux2.I1</meta>
         </metadata>
       </port>
       <port name="o2" type="output"/>
