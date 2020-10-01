@@ -1,28 +1,20 @@
 Forced non-sequential relations to an input
 +++++++++++++++++++++++++++++++++++++++++++
 
-There are cases when a primitive needs to have different input/output port relations that it can be inferred from its internal behavioral model. This is due to the way that VPR requires primitives to be modelled.
+This is a case when a macro block consisting of a LUT and an FF is to be modeled in VPR as a single primitive. The block has two outputs: the first one sources at the LUT directly and the second one passes through an external register:
 
-V2X allows forcing certain inputs to have no sequential relations to any outputs. Such an input port need to be annotated using the `(* NO_SEQ *)` attribute.
+.. image:: lut_ff_macro.svg
 
-This example shows a LOGIC cell macro primitive that models a whole LOGIC cell of Quicklogic EOS S3 FPGA architecture. The primitive is defined according to `VTR documentation <https://docs.verilogtorouting.org/en/latest/tutorials/arch/timing_modeling/#sequential-block-with-internal-paths-and-combinational-input>`_.
-
-.. symbolator:: logic_macro.sim.v
-
-.. verilog-diagram:: logic_macro.sim.v
-   :type: netlistsvg
-   :module: LOGIC_MACRO
-
-.. no-license:: logic_macro.sim.v
+.. no-license:: lut_ff_macro.sim.v
    :language: verilog
-   :caption: tests/no_seq/logic_macro.sim.v
+   :caption: tests/no_seq/lut_ff_macro.sim.v
 
-Input ports annotated with the `(* NO_SEQ *)` attribute are combinationaly related to TZ and CZ outputs and sequentially related to the QZ output. According to the VPR documentation there should be no clock relation to them defined in the pb_type XML and this is what the `(* NO_SEQ *)` attribute ensures.
+Since relation of LUT inputs is combinational for one output and sequential for another they have to be defined in a special way as required by VPR (see `VTR documentation <https://docs.verilogtorouting.org/en/latest/tutorials/arch/timing_modeling/#sequential-block-with-internal-paths-and-combinational-input>`_). Due to the presence of the output register all sequential annotations are moved to the output port. Hence LUT inputs must not mention any clock signal. This can be achieved in V2X by specifying the `(* NO_SEQ *)` attribute on them. The attribute prevents V2X from annotating input ports with any clock relations.
 
-.. literalinclude:: logic_macro.model.xml
+.. literalinclude:: lut_ff_macro.model.xml
    :language: xml
-   :caption: logic_macro.model.xml
+   :caption: lut_ff_macro.model.xml
 
-.. literalinclude:: logic_macro.pb_type.xml
+.. literalinclude:: lut_ff_macro.pb_type.xml
    :language: xml
-   :caption: logic_macro.pb_type.xml
+   :caption: lut_ff_macro.pb_type.xml
