@@ -15,11 +15,11 @@
 module GMUX (IP, IC, IS0, IZ);
 
     // 1st clock input
-    (* CLOCK, NO_COMB=0 *)
+    (* CLOCK *)
     input  wire IP;
 
     // 2nd clock input
-    (* CLOCK, NO_COMB=0 *)
+    (* CLOCK *)
     input  wire IC;
 
     // Select input
@@ -29,6 +29,7 @@ module GMUX (IP, IC, IS0, IZ);
     (* DELAY_CONST_IP="1e-10" *)
     (* DELAY_CONST_IC="2e-10" *)
     (* DELAY_CONST_IS0="3e-10" *)
+    (* COMB_INCLUDE_CLOCKS *)
     output wire IZ;
 
 

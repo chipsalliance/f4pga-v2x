@@ -1,11 +1,12 @@
 Clock multiplexing primitive
 ++++++++++++++++++++++++++++
 
-This is an example of modeling a clock mux/buffer which has both clock inputs and clock outputs.
+This is an example of modeling a clock mux/buffer which utilizes both clock inputs and clock outputs.
 
-According to the "Primitive Block Timing Modeling Tutorial" section "Clock Buffers & Muxes" of the `VTR documentation <https://docs.verilogtorouting.org/en/latest/tutorials/arch/timing_modeling/#clock-muxes>`_, a clock buffer or a clock mux has to have its outputs(s) as combinational sinks of clock input(s). This contradicts with how regular sequential blocks (like flip-flops) have to be modeled.
+By default, clocks are excluded from the combinational sink list. IE They do not have `combinational_sink_ports` property associated with them. However, clock multiplexers violate this rule as their input clocks do not drive any sequential logic. They are passed to output(s) instead. VPR requires `Clock buffers & muxes <https://docs.verilogtorouting.org/en/latest/tutorials/arch/timing_modeling/#clock-muxes>`_ to be defined in this way.
 
-V2X provides the attribute `(* NO_COMB *)` that when specified on a clock port and given explicitly the value of 0 will prevent it from getting combinational_sink annotations in XML.
+
+V2X provides the attribute `(* COMB_INCLUDE_CLOCKS *)` that when specified on an output port makes appear on the `combinational_sink_ports` list of its related input port(s) even if it is marked as a clock input.
 
 .. symbolator:: gmux.sim.v
 
@@ -17,7 +18,7 @@ V2X provides the attribute `(* NO_COMB *)` that when specified on a clock port a
    :language: verilog
    :caption: tests/clock_mux/gmux.sim.v
 
-In this example the `(* NO_COMB *)` attribute is used on clock inputs IP and IC so they don't get any combinational_sink tags.
+In this example the `(* COMB_INCLUDE_CLOCKS *)` attribute is set on the `IZ` output making it appear in combinational sinks lists of its associated clock input ports.
 
 .. literalinclude:: gmux.model.xml
    :language: xml

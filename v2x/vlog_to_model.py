@@ -20,13 +20,15 @@ The following Verilog attributes are considered on ports:
     - `(* ASSOC_CLOCK="RDCLK" *)` : force a port's associated
                                     clock to a given value
 
-    - `(* NO_COMB=1 *)` : Forces removal of all combinational relations of an
-                          input port.
+    - `(* COMB_INCLUDE_CLOCKS *)` : When specified on a clock input port
+                                    allows it to have combinational relations
+                                    with other ports.
 
-    - `(* NO_COMB=0 *)` : Allows a clock port to have combinational sinks
+    - `(* NO_COMB *)` : Forces removal of all combinational relations of an
+                        input port.
 
-    - `(* NO_SEQ=1 *)` : Forces removal of all sequential relations of an input
-                         port.
+    - `(* NO_SEQ *)` : Forces removal of all sequential relations of an input
+                       port.
 
 The following Verilog attributes are considered on modules:
     - `(* MODEL_NAME="model" *)` : override the name used for
@@ -203,18 +205,6 @@ def vlog_to_model(infiles, includes, top, outfile=None):
             for name, width, bits, iodir in ports:
                 port_attrs = tmod.port_attrs(name)
 
-                # In the end these can be:
-                # - True when != 1
-                # - False when == 0
-                # - None when it is not specified
-                no_comb = tmod.net_attr(name, "NO_COMB")
-                no_seq = tmod.net_attr(name, "NO_SEQ")
-
-                if no_comb is not None:
-                    no_comb = bool(int(no_comb))
-                if no_seq is not None:
-                    no_seq = bool(int(no_seq))
-
                 is_clock = name in clocks or utils.is_clock_name(name)
 
                 if "CLOCK" in port_attrs:
@@ -230,6 +220,14 @@ def vlog_to_model(infiles, includes, top, outfile=None):
 
                 if is_clock:
                     attrs["is_clock"] = "1"
+
+                    # Remove comb sinks that do not have "COMB_INCLUDE_CLOCKS"
+                    # attribute
+                    for sink in sinks:
+                        sink_attrs = tmod.port_attrs(sink)
+                        if int(sink_attrs.get("COMB_INCLUDE_CLOCKS", 0)) == 0:
+                            sinks.remove(sink)
+
                 else:
                     clks = list()
                     for clk in clocks:
@@ -237,16 +235,12 @@ def vlog_to_model(infiles, includes, top, outfile=None):
                            infiles, top, clk, name, iodir):
 
                             clks.append(clk)
-                        if clks and no_seq is not True:
+                        if clks and int(port_attrs.get("NO_SEQ", 0)) == 0:
                             attrs["clock"] = " ".join(clks)
 
-                # By default do not append combinational sinks to a clock port
-                # but that may be overriden by (* NO_COMB=0 *)
-                if len(sinks) > 0 and iodir == "input":
-                    if (not is_clock and no_comb is not True) or \
-                       (is_clock and no_comb is False):
-                        attrs["combinational_sink_ports"] = " ".join(sinks)
-
+                if len(sinks) > 0 and iodir == "input" and \
+                   int(port_attrs.get("NO_COMB", 0)) == 0:
+                    attrs["combinational_sink_ports"] = " ".join(sinks)
                 if iodir == "input":
                     ET.SubElement(inports_xml, "port", attrs)
                 elif iodir == "output":
