@@ -11,15 +11,16 @@
 `include "./gate/gate.sim.v"
 
 (* FASM_FEATURES="IN_USE" *)
-(* FASM_FEATURES_MODE_B="SEL_MODE_B;ENABLE_SOMETHING_B" *)
 (* FASM_FEATURES_MODE_A="SEL_MODE_A;ENABLE_SOMETHING_A" *)
+(* FASM_FEATURES_MODE_B="SEL_MODE_B;ENABLE_SOMETHING_B" *)
 (* MODES="MODE_A;MODE_B;MODE_C" *)
 module MODULE(I0, I1, O);
+
+  parameter MODE = "MODE_A";
+
   input  wire I0;
   input  wire I1;
   output wire O;
-
-  parameter MODE = "";
 
   generate if (MODE == "MODE_A") begin
     GATE gate (I1, I0, O);
