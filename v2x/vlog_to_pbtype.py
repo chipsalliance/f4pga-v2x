@@ -770,8 +770,6 @@ def make_pb_type(
 
     # Process type and class of module
     model_name = mod.attr("MODEL_NAME", mod.name)
-    assert model_name == model_name.upper(
-    ), "Model name should be uppercase. {}".format(model_name)
     mod_cls = mod.CLASS
     if mod_cls is not None:
         if mod_cls == "input":
