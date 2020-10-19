@@ -32,7 +32,6 @@ module GMUX (IP, IC, IS0, IZ);
     (* COMB_INCLUDE_CLOCKS *)
     output wire IZ;
 
-
     // Behavioral model:
     assign IZ = IS0 ? IC : IP;
 
