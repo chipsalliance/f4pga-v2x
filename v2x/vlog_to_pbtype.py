@@ -629,12 +629,25 @@ def make_container_pb(
     for (driver_cell, driver_pin), sinks in interconn.items():
         if driver_cell in routing_cells:
             continue
-        for (sink_cell, sink_pin), path_attr in sinks:
-            if sink_cell in routing_cells:
-                continue
+
+        non_routing_sinks = [(sink, path_attr) for sink, path_attr in sinks
+                             if sink[0] not in routing_cells]
+
+        is_forking = len(non_routing_sinks) > 1
+
+        for (sink_cell, sink_pin), path_attr in non_routing_sinks:
+            attrs = dict(**path_attr)
+
+            # If a net forks remove pack pattern annotations from the branch
+            # that goes to an output port of the pb_type
+            if is_forking and sink_cell is None:
+                for a in ["pack", "PACK"]:
+                    if a in attrs:
+                        del attrs[a]
+
             make_direct_conn(
                 ic_xml, (normalize_pb_name(driver_cell), driver_pin),
-                (normalize_pb_name(sink_cell), sink_pin), path_attr
+                (normalize_pb_name(sink_cell), sink_pin), attrs
             )
 
     # Generate the mux interconnects
