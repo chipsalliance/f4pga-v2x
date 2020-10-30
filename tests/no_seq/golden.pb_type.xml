@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" num_pb="1" name="LUT_FF_MACRO">
+  <blif_model>.subckt LUT_FF_MACRO</blif_model>
+  <clock name="CLK" num_pins="1"/>
+  <input name="I0" num_pins="1"/>
+  <input name="I1" num_pins="1"/>
+  <input name="I2" num_pins="1"/>
+  <input name="I3" num_pins="1"/>
+  <output name="QZ" num_pins="1"/>
+  <output name="Z" num_pins="1"/>
+  <T_setup port="QZ" clock="CLK" value="1e-10"/>
+  <T_hold port="QZ" clock="CLK" value="1e-10"/>
+  <T_clock_to_Q port="QZ" clock="CLK" max="1e-10"/>
+  <delay_constant in_port="I0" out_port="QZ" max="2e-10"/>
+  <delay_constant in_port="I1" out_port="QZ" max="2e-10"/>
+  <delay_constant in_port="I2" out_port="QZ" max="2e-10"/>
+  <delay_constant in_port="I3" out_port="QZ" max="2e-10"/>
+  <delay_constant in_port="I0" out_port="Z" max="1e-10"/>
+  <delay_constant in_port="I1" out_port="Z" max="1e-10"/>
+  <delay_constant in_port="I2" out_port="Z" max="1e-10"/>
+  <delay_constant in_port="I3" out_port="Z" max="1e-10"/>
+</pb_type>

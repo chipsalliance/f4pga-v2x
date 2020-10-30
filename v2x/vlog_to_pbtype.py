@@ -704,9 +704,6 @@ def make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml):
                         port, iodir)
                 attrs["max"] = splitspec[1]
             else:
-                assert iodir == "input", \
-                    ("Only input ports can have {} timing definition."
-                     "Port {}, direction {}.").format(xmltype, port, iodir)
                 attrs["value"] = splitspec[1]
             ET.SubElement(xml_parent, xmltype, attrs)
 

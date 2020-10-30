@@ -1,0 +1,15 @@
+<models xmlns:xi="http://www.w3.org/2001/XInclude">
+  <model name="LUT_FF_MACRO">
+    <input_ports>
+      <port name="CLK" is_clock="1"/>
+      <port name="I0" combinational_sink_ports="QZ Z"/>
+      <port name="I1" combinational_sink_ports="QZ Z"/>
+      <port name="I2" combinational_sink_ports="QZ Z"/>
+      <port name="I3" combinational_sink_ports="QZ Z"/>
+    </input_ports>
+    <output_ports>
+      <port name="QZ" clock="CLK"/>
+      <port name="Z"/>
+    </output_ports>
+  </model>
+</models>
