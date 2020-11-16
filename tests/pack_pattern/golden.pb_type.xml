@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" num_pb="1" name="PACK_PATTERN">
+  <clock name="CLK" num_pins="1"/>
+  <input name="LUT_IN" num_pins="4"/>
+  <output name="DFF_OUT" num_pins="1"/>
+  <output name="LUT_OUT" num_pins="1"/>
+  <pb_type num_pb="1" name="dff">
+    <!--old_name DFF-->
+    <xi:include href="dff/dff.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+  </pb_type>
+  <pb_type num_pb="1" name="lut">
+    <!--old_name LUT4-->
+    <xi:include href="lut/lut4.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
+  </pb_type>
+  <interconnect>
+    <direct>
+      <port name="CLK" type="input"/>
+      <port name="CLK" type="output" from="dff"/>
+    </direct>
+    <direct>
+      <port name="O" type="input" from="lut"/>
+      <port name="LUT_OUT" type="output"/>
+    </direct>
+    <direct>
+      <port name="O" type="input" from="lut"/>
+      <port name="D" type="output" from="dff"/>
+      <pack_pattern name="00000000000000000000000000000001" type="pack">
+        <port name="O" type="input" from="lut"/>
+        <port name="D" type="output" from="dff"/>
+      </pack_pattern>
+    </direct>
+    <direct>
+      <port name="Q" type="input" from="dff"/>
+      <port name="DFF_OUT" type="output"/>
+    </direct>
+    <direct>
+      <port name="LUT_IN[0]" type="input"/>
+      <port name="I[0]" type="output" from="lut"/>
+    </direct>
+    <direct>
+      <port name="LUT_IN[1]" type="input"/>
+      <port name="I[1]" type="output" from="lut"/>
+    </direct>
+    <direct>
+      <port name="LUT_IN[2]" type="input"/>
+      <port name="I[2]" type="output" from="lut"/>
+    </direct>
+    <direct>
+      <port name="LUT_IN[3]" type="input"/>
+      <port name="I[3]" type="output" from="lut"/>
+    </direct>
+  </interconnect>
+</pb_type>

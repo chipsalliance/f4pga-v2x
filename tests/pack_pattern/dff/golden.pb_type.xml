@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" num_pb="1" name="DFF">
+  <blif_model>.subckt DFF</blif_model>
+  <clock name="CLK" num_pins="1"/>
+  <input name="D" num_pins="1"/>
+  <output name="Q" num_pins="1"/>
+  <T_setup port="D" clock="CLK" value="10e-12"/>
+  <T_hold port="D" clock="CLK" value="10e-12"/>
+  <T_clock_to_Q port="Q" clock="CLK" max="10e-12"/>
+</pb_type>
