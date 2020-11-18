@@ -226,8 +226,9 @@ def net_and_pin_attrs(yj, mod, driver: CellPin, sink: CellPin, netid: int):
         potential_attrs.append(filter_src(smod.port_attrs(sink_pin)))
 
     net_attrs = filter_src(mod.net_attrs_by_netid(netid))
-    copy_attrs(net_attrs, potential_attrs)
-    return net_attrs
+    net_attrs_norm = {k.lower(): v for k, v in net_attrs.items()}
+    copy_attrs(net_attrs_norm, potential_attrs)
+    return net_attrs_norm
 
 
 def make_direct_conn(
@@ -641,9 +642,9 @@ def make_container_pb(
             # If a net forks remove pack pattern annotations from the branch
             # that goes to an output port of the pb_type
             if is_forking and sink_cell is None:
-                for a in ["pack", "PACK"]:
-                    if a in attrs:
-                        del attrs[a]
+
+                if "pack" in attrs:
+                    del attrs["pack"]
 
             make_direct_conn(
                 ic_xml, (normalize_pb_name(driver_cell), driver_pin),
