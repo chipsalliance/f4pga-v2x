@@ -1,5 +1,5 @@
-Pack pattern annotation example
-+++++++++++++++++++++++++++++++
+Multiple pack pattern annotation example
+++++++++++++++++++++++++++++++++++++++++
 
 VPR requires that connections between primitives that need to be packed together be annotated with pack patterns. Moreover, a single connection may have multiple pack pattern annotations.
 
