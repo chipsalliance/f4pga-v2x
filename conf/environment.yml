@@ -1,8 +1,10 @@
 name: yosys-env
 channels:
+  - conda-forge
   - symbiflow
 dependencies:
   - symbiflow-yosys
+  - surelog
   - pip:
     - tox
     - flake8

@@ -1,0 +1,11 @@
+<models xmlns:xi="http://www.w3.org/2001/XInclude">
+  <model name="GATE">
+    <input_ports>
+      <port name="I1"/>
+      <port name="I2"/>
+    </input_ports>
+    <output_ports>
+      <port name="O"/>
+    </output_ports>
+  </model>
+</models>

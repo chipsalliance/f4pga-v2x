@@ -1,0 +1,11 @@
+<models xmlns:xi="http://www.w3.org/2001/XInclude">
+  <model name="FF">
+    <input_ports>
+      <port is_clock="1" name="CLK"/>
+      <port name="D"/>
+    </input_ports>
+    <output_ports>
+      <port name="Q"/>
+    </output_ports>
+  </model>
+</models>
