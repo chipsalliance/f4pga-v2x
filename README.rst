@@ -14,7 +14,7 @@ Verilog to Routing XML file generation from Verilog (`python-symbiflow-v2x`)
 v2x is a tool for converting specialized annotated Verilog models into XML needed for
 `Verilog to Routing flow <https://docs.verilogtorouting.org/en/latest/arch/reference/>`_.
 
-Documentation can be found at `https://python-symbiflow-v2x.readthedocs.io/en/latest/ <https://python-symbiflow-v2x.readthedocs.io/en/latest/examples.html>`_.
+Documentation can be found at `https://python-symbiflow-v2x.readthedocs.io/en/latest/ <https://python-symbiflow-v2x.readthedocs.io/en/latest/>`_.
 
 Installation
 ------------
