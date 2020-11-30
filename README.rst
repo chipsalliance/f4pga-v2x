@@ -5,7 +5,7 @@ Verilog to Routing XML file generation from Verilog (`python-symbiflow-v2x`)
 .. image:: https://readthedocs.org/projects/python-symbiflow-v2x/badge/?version=latest
    :target: https://python-symbiflow-v2x.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
- 
+
 .. image:: https://travis-ci.com/SymbiFlow/python-symbiflow-v2x.svg?branch=master
    :target: https://travis-ci.com/SymbiFlow/python-symbiflow-v2x
    :alt: Build Status
@@ -63,13 +63,13 @@ After installing v2x, you can run ``v2x`` to use it.
                            Output file type, possible values are: pb_type and
                            model. Default value is pb_type
 
-For example, to generate a pb_type xml file from adder.v, run 
+For example, to generate a pb_type xml file from adder.v, run
 
 .. code-block::
 
    v2x -o adder.pb_type.xml adder.v
 
-Or, to generate a model xml file, run 
+Or, to generate a model xml file, run
 
 .. code-block::
 
