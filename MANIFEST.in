@@ -1,4 +1,5 @@
 exclude .readthedocs.yml
+exclude environment.yml
 exclude tox.ini
 exclude *.swp
 prune conf
