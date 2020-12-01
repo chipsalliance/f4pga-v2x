@@ -18,6 +18,7 @@ jobs:
         cat environment.yml
         # FIXME: #65 - Replace with `make-env`
         ./prepareenv.sh
+
     - name: Test
       run: |
         source "$HOME/miniconda/etc/profile.d/conda.sh"
@@ -26,3 +27,9 @@ jobs:
         python --version
         which tox
         TOXENV="$(echo py${{ matrix.python-version }} | sed -e's/\.//g')" tox
+    - name: Upload test results
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results-${{ matrix.python-version }}
+        path: junit/test-results-${{ matrix.python-version }}.xml
+      if: ${{ always() }}
