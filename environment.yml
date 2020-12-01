@@ -2,6 +2,7 @@ name: yosys-env
 channels:
   - symbiflow
 dependencies:
+  - python
   - symbiflow-yosys
   - pip:
     - tox
