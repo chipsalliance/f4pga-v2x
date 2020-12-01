@@ -1,0 +1,28 @@
+name: CI tests
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup
+      run: |
+        sed -i -e's/- python/- python=${{ matrix.python-version }}/' environment.yml
+        cat environment.yml
+        # FIXME: #65 - Replace with `make-env`
+        ./prepareenv.sh
+    - name: Test
+      run: |
+        source "$HOME/miniconda/etc/profile.d/conda.sh"
+        conda activate yosys-env
+        which python
+        python --version
+        which tox
+        TOXENV="$(echo py${{ matrix.python-version }} | sed -e's/\.//g')" tox
