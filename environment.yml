@@ -4,6 +4,7 @@ channels:
 dependencies:
   - python
   - symbiflow-yosys
+  - pip
   - pip:
     - tox
     - flake8
