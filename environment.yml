@@ -6,5 +6,4 @@ dependencies:
   - symbiflow-yosys
   - pip
   - pip:
-    - tox
-    - flake8
+    - -r requirements.txt
