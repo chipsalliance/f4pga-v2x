@@ -25,7 +25,7 @@ FILES_TO_CHECK=`find . \
     \( -not -path "*/src/*" \) \
     \( -not -path "*/third_party/*" \) \
     \( -not -path "*/*/__init__.py" \) \
-    \( -not -path "./miniconda.sh" \)`
+    \( -not -path "./miniconda.sh" \) | sort`
 
 for file in $FILES_TO_CHECK; do
     echo "Checking $file"
