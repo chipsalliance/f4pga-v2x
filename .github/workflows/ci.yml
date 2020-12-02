@@ -8,9 +8,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Licenses
-      run: ./.github/travis/check_license.sh
+      run: ./.github/ci/check_license.sh
     - name: Python Script Headers
-      run: ./.github/travis/check_python_script.sh
+      run: ./.github/ci/check_python_script.sh
 
   Tests:
     runs-on: ubuntu-latest
