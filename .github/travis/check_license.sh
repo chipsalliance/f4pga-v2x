@@ -17,8 +17,12 @@ echo
 ERROR_FILES=""
 FILES_TO_CHECK=`find . \
     -type f \( -name '*.sh' -o -name '*.py' -o -name 'Makefile' -o -name '*.v' \) \
-    \( -not -path "*/.*/*" -not -path "*/third_party/*" -not -path "*/env/*" \) \
-    \( -not -path "*/src/*" -not -path "*/*/__init__.py" \) \
+    \( -not -path "*/.*/*" \) \
+    \( -not -path "*/build/*" \) \
+    \( -not -path "*/env/*" \) \
+    \( -not -path "*/src/*" \) \
+    \( -not -path "*/third_party/*" \) \
+    \( -not -path "*/*/__init__.py" \) \
     \( -not -path "./miniconda.sh" \)`
 
 for file in $FILES_TO_CHECK; do
