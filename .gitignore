@@ -18,6 +18,7 @@ lib/
 lib64/
 parts/
 sdist/
+src/
 var/
 wheels/
 *.egg-info/
@@ -104,3 +105,7 @@ venv.bak/
 .mypy_cache/
 
 *.sw*
+
+miniconda.sh
+junit
+docs/tests
