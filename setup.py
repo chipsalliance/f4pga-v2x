@@ -25,7 +25,7 @@ setuptools.setup(
     description="Python library for generating VPR architecture \
                 description files from Verilog models.",
     long_description=long_description,
-    long_description_content_type="text/markdown",
+    long_description_content_type="text/x-rst",
     url="https://github.com/SymbiFlow/python-symbiflow-v2x",
     packages=setuptools.find_packages(),
     install_requires=[

@@ -1,0 +1,44 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  Checks:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Licenses
+      run: ./.github/ci/check_license.sh
+    - name: Python Script Headers
+      run: ./.github/ci/check_python_script.sh
+
+  Tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup
+      run: |
+        sed -i -e's/- python/- python=${{ matrix.python-version }}/' environment.yml
+        cat environment.yml
+        # FIXME: #65 - Replace with `make-env`
+        ./prepareenv.sh
+
+    - name: Test
+      run: |
+        source "$HOME/miniconda/etc/profile.d/conda.sh"
+        conda activate yosys-env
+        which python
+        python --version
+        which tox
+        TOXENV="$(echo py${{ matrix.python-version }} | sed -e's/\.//g')" tox
+    - name: Upload test results
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-results-${{ matrix.python-version }}
+        path: junit/python${{ matrix.python-version }}-test-results.xml
+      if: ${{ always() }}
