@@ -7,7 +7,7 @@ python:
 
 install:
   - source prepareenv.sh
-  - source .github/travis/check_license.sh
+  - ./.github/travis/check_license.sh
   - source .github/travis/check_python_script.sh
 
 script:
