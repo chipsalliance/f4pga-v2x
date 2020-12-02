@@ -30,12 +30,7 @@ jobs:
 
     - name: Test
       run: |
-        source "$HOME/miniconda/etc/profile.d/conda.sh"
-        conda activate yosys-env
-        which python
-        python --version
-        which tox
-        TOXENV="$(echo py${{ matrix.python-version }} | sed -e's/\.//g')" tox
+        TOXENV="$(echo py${{ matrix.python-version }} | sed -e's/\.//g')" .github/ci/test.sh
     - name: Upload test results
       uses: actions/upload-artifact@v2
       with:
