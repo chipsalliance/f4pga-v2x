@@ -12,12 +12,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Setup
       run: |
         sed -i -e's/- python/- python=${{ matrix.python-version }}/' environment.yml
         cat environment.yml
         # FIXME: #65 - Replace with `make-env`
         ./prepareenv.sh
+
+    - name: Check
+      run: |
+        ./.github/travis/check_license.sh
+        ./.github/travis/check_python_script.sh
 
     - name: Test
       run: |
