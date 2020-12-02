@@ -39,6 +39,13 @@ if [ ! -z "$ERROR_FILES" ]; then
     exit 1
 fi
 
+THIRD_PARTY_DIRS=$(shopt -s nullglob; echo third_party/*)
+ERROR_NO_LICENSE=""
+
+if [ -z "$THIRD_PARTY_DIRS" ]; then
+	exit 0
+fi
+
 echo
 echo "==========================="
 echo "Check third party LICENSE"
@@ -52,9 +59,6 @@ function check_if_submodule {
         fi
     done
 }
-
-THIRD_PARTY_DIRS=`ls -d third_party/*`
-ERROR_NO_LICENSE=""
 
 for dir in $THIRD_PARTY_DIRS; do
     # Checks if we are not in a submodule
