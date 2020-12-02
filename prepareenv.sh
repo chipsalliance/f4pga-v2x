@@ -18,3 +18,4 @@ conda update -q conda
 conda env create --file environment.yml
 conda config --set env_prompt '({name})'
 conda activate yosys-env
+python -mpip install  --upgrade pip

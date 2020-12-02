@@ -1,7 +1,5 @@
 docutils
-lxml
-pyjson
 pylint
 tox
-
--e git://github.com/SymbiFlow/vtr-xml-utils#egg=vtr-xml-utils
+git+git://github.com/SymbiFlow/vtr-xml-utils#egg=vtr-xml-utils
+-e .
