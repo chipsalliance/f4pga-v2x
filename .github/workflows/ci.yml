@@ -3,21 +3,21 @@ name: CI
 on: [push, pull_request]
 
 jobs:
+
+
   Checks:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Licenses
-      run: ./.github/ci/check_license.sh
-    - name: Python Script Headers
-      run: ./.github/ci/check_python_script.sh
+
+    - uses: symbiflow/actions/checks@main
+
 
   Tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
-
     steps:
     - uses: actions/checkout@v2
 
@@ -30,10 +30,11 @@ jobs:
 
     - name: Test
       run: |
-        TOXENV="$(echo py${{ matrix.python-version }} | sed -e's/\.//g')" .github/ci/test.sh
+        TOXENV="$(echo py${{ matrix.python-version }} | sed -e's/\.//g')" .github/test.sh
+
     - name: Upload test results
       uses: actions/upload-artifact@v2
       with:
         name: test-results-${{ matrix.python-version }}
         path: junit/python${{ matrix.python-version }}-test-results.xml
-      if: ${{ always() }}
+      if: always()
