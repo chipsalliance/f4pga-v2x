@@ -21,3 +21,6 @@ pycairo
 
 # V2X
 -e ../
+
+# XML utils
+git+https://github.com/SymbiFlow/vtr-xml-utils.git#egg=vtr-xml-utils
