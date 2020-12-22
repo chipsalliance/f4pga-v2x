@@ -53,6 +53,10 @@ The following are allowed on nets within modules
     - `(* carry = ADDER *)` : specify carry chain pack_pattern associated
                               with this wire
 
+    - `(* PACK = "<name1>[;<name2>[..]]" *)` : List of semicolon-separated
+                                               pack pattern names to be used
+                                               for a wire.
+
 The following are allowed on ports:
     - `(* CLOCK *)` or `(* CLOCK=1 *)` : force a given port to be a clock
 
@@ -238,16 +242,18 @@ def make_direct_conn(
     create_port(dir_xml, driver, "input")
     create_port(dir_xml, sink, "output")
 
-    pack_name = path_attr.get('pack', False)
-    if pack_name:
-        pp_xml = ET.SubElement(
-            dir_xml, 'pack_pattern', {
-                'name': pack_name,
-                'type': 'pack'
-            }
-        )
-        create_port(pp_xml, driver, "input")
-        create_port(pp_xml, sink, "output")
+    # Pack patterns
+    pack = path_attr.get('pack', path_attr.get('PACK', None))
+    if pack is not None:
+        for pack_name in pack.split(";"):
+            pp_xml = ET.SubElement(
+                dir_xml, 'pack_pattern', {
+                    'name': pack_name,
+                    'type': 'pack'
+                }
+            )
+            create_port(pp_xml, driver, "input")
+            create_port(pp_xml, sink, "output")
 
     carry_name = path_attr.get('carry', None)
     if carry_name:
