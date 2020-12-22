@@ -1,9 +1,11 @@
 name: yosys-env
 channels:
+  - conda-forge
   - symbiflow
 dependencies:
   - python
   - symbiflow-yosys
+  - surelog
   - pip
   - pip:
     - -r requirements.txt

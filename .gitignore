@@ -109,3 +109,4 @@ venv.bak/
 miniconda.sh
 junit
 docs/tests
+conda.tmp.yml

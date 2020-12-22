@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="MODULE" num_pb="1">
+  <input name="I0" num_pins="1"/>
+  <input name="I1" num_pins="1"/>
+  <output name="O" num_pins="1"/>
+  <mode name="MODE_A">
+    <pb_type name="MODE_A" num_pb="1">
+      <input name="I0" num_pins="1"/>
+      <input name="I1" num_pins="1"/>
+      <output name="O" num_pins="1"/>
+      <pb_type blif_model=".subckt GATE" name="gate" num_pb="1">
+        <input name="I1" num_pins="1"/>
+        <input name="I2" num_pins="1"/>
+        <output name="O" num_pins="1"/>
+      </pb_type>
+      <interconnect>
+        <direct input="gate.O" name="MODE_A-O" output="MODE_A.O"/>
+        <direct input="MODE_A.I1" name="gate-I1" output="gate.I1"/>
+        <direct input="MODE_A.I0" name="gate-I2" output="gate.I2"/>
+      </interconnect>
+      <metadata>
+        <meta name="fasm_features">SEL_MODE_A
+ENABLE_SOMETHING_A</meta>
+      </metadata>
+    </pb_type>
+    <interconnect>
+      <direct input="MODULE.I0" name="MODE_A-I0" output="MODE_A.I0"/>
+      <direct input="MODULE.I1" name="MODE_A-I1" output="MODE_A.I1"/>
+      <direct input="MODE_A.O" name="MODULE-O" output="MODULE.O"/>
+    </interconnect>
+  </mode>
+  <mode name="MODE_B">
+    <pb_type name="MODE_B" num_pb="1">
+      <input name="I0" num_pins="1"/>
+      <input name="I1" num_pins="1"/>
+      <output name="O" num_pins="1"/>
+      <pb_type blif_model=".subckt GATE" name="gate" num_pb="1">
+        <input name="I1" num_pins="1"/>
+        <input name="I2" num_pins="1"/>
+        <output name="O" num_pins="1"/>
+      </pb_type>
+      <interconnect>
+        <direct input="gate.O" name="MODE_B-O" output="MODE_B.O"/>
+        <direct input="MODE_B.I0" name="gate-I1" output="gate.I1"/>
+        <direct input="MODE_B.I1" name="gate-I2" output="gate.I2"/>
+      </interconnect>
+      <metadata>
+        <meta name="fasm_features">SEL_MODE_B
+ENABLE_SOMETHING_B</meta>
+      </metadata>
+    </pb_type>
+    <interconnect>
+      <direct input="MODULE.I0" name="MODE_B-I0" output="MODE_B.I0"/>
+      <direct input="MODULE.I1" name="MODE_B-I1" output="MODE_B.I1"/>
+      <direct input="MODE_B.O" name="MODULE-O" output="MODULE.O"/>
+    </interconnect>
+  </mode>
+  <mode name="MODE_C">
+    <interconnect>
+      <direct input="MODULE.I0" name="MODULE-O" output="MODULE.O"/>
+    </interconnect>
+  </mode>
+  <metadata>
+    <meta name="fasm_features">IN_USE</meta>
+  </metadata>
+</pb_type>

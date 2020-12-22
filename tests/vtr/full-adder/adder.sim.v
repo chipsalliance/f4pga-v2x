@@ -8,6 +8,7 @@
  * SPDX-License-Identifier:	ISC
  */
 
+`timescale 1ps/1ps
 (* whitebox *)
 module ADDER (
 	a, b, cin,
@@ -35,10 +36,9 @@ module ADDER (
 
 	// Timing parameters, not supported by Yosys at the moment.
 `ifndef YOSYS
-	`timescale 1ps/1ps
 	specify
-		specparam T1 300;
-		specparam T2 10;
+		specparam T1 = 300;
+		specparam T2 = 10;
 		// (input->output) min:typ:max
 
 		(a => sum) 	= T1;

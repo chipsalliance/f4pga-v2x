@@ -66,6 +66,27 @@ The following are allowed on ports:
     - `(* carry = ADDER *)` : specify carry chain pack_pattern associated
                               with this port
 
+The following attributes are used to annotate cells with fasm metadata:
+    - `(* FASM_PREFIX="prefix" *)` : Sets the fasm prefix of a cell instance.
+        Cannot be set on a module definition!
+
+    - `(* FASM_PREFIX="prefix1;prefix2;..." *) : Same as FASM_PREFIX but used
+        for cells inside `generate` statements. Each instance of a cell will be
+        assigned one prefix from the semicolon separated list. The number of
+        prefixes in the list must match the cell instance count!
+
+    - `(* FASM_FEATURES="str1;str2;..." *)` : Specifies a list of fasm features
+        for the given module. Has to be provided at a module definition.
+        Multiple features have to be separated by semicolon.
+
+    - `*( FASM_FEATURES_{mode}="str1;str2;..." *)` : Same as above but defines
+        a list of fasm features only for the given mode. Those will be attached
+        to the pb_type corresponding to that mode.
+
+    - `(* FASM *)` : When applied to a parameter makes V2X output fasm_params
+        matadata that assigns the parameter to a fasm feature with the same
+        name,
+
 The Verilog define "PB_TYPE" is set during generation.
 """
 
@@ -81,6 +102,8 @@ import lxml.etree as ET
 from .yosys import run
 from .yosys.json import YosysJSON
 from .yosys import utils as utils
+
+from .surelog import surelog
 
 from .xmlinc import xmlinc  # noqa: E402
 
@@ -155,6 +178,189 @@ PinName = str
 CellPin = Tuple[CellName, PinName]
 
 
+def parse_fasm_attribute(attribute):
+    """
+    Parses a FASM attribute name and returns:
+    - (None, None) if it is not a FASM attribute
+    - (name, None) for FASM attribute not related to any mode
+    - (name, mode name) for FASM attribute which is related to a mode
+
+    >>> parse_fasm_attribute("FASM_PREFIX")
+    ('FASM_PREFIX', None)
+    >>> parse_fasm_attribute("FASM_FEATURES")
+    ('FASM_FEATURES', None)
+    >>> parse_fasm_attribute("FASM_BLAHBLAH")
+    (None, None)
+    >>> parse_fasm_attribute("FASM_PREFIX_MYSUPERMODE")
+    ('FASM_PREFIX', 'MYSUPERMODE')
+    >>> parse_fasm_attribute("FASM_FEATURES_ABC")
+    ('FASM_FEATURES', 'ABC')
+    """
+
+    KNOWN_FASM_ATTRS = (
+        "FASM_PREFIX", "FASM_FEATURES",
+    )
+
+    # This attribute is not mode related
+    if attribute in KNOWN_FASM_ATTRS:
+        return attribute, None
+
+    # Build a regex
+    regex = "^({})_([A-Z0-9_]+)".format("|".join(KNOWN_FASM_ATTRS))
+
+    # Try matching
+    match = re.match(regex, attribute)
+    if not match:
+        return None, None
+
+    # Extract metadata name and mode name
+    return match.group(1), match.group(2)
+
+
+def metadata_from_attributes(attributes, mode=None):
+    """
+    Collects metadata and stores it as a dict
+
+    >>> metadata_from_attributes({"FASM_PREFIX": "PREFIX"}, mode=None)
+    {'fasm_prefix': 'PREFIX'}
+    >>> metadata_from_attributes({"FASM_PREFIX": "PREFIX"}, mode="MOD")
+    {}
+    >>> metadata_from_attributes({"FASM_PREFIX_MOD": "PREFIX"}, mode=None)
+    {}
+    >>> metadata_from_attributes({"FASM_PREFIX_MOD": "PREFIX"}, mode="MOD")
+    {'fasm_prefix': 'PREFIX'}
+    """
+
+    metadata = {}
+
+    # Process attributes
+    for attr, value in attributes.items():
+
+        # Parse attribute name
+        attr_name, attr_mode = parse_fasm_attribute(attr)
+        if attr_name is None:
+            continue
+
+        # Filter out if not for this mode
+        if mode is not None and attr_mode != mode:
+            continue
+
+        if mode is None and attr_mode is not None:
+            continue
+
+        # Store
+        metadata[attr_name.lower()] = value
+
+    return metadata
+
+
+def metadata_from_incl_xml(incl_xml):
+    """
+    Retrieves metadata from the XML <metadata> tag and stores it in a dict
+    """
+
+    if incl_xml is None:
+        return dict()
+
+    return {tag.get("name"): tag.text for tag in incl_xml.findall("meta")}
+
+
+def metadata_to_xml(xml_parent, metadata):
+    """
+    Formats the XML metadata tag using data from a dict
+    """
+
+    if len(metadata) == 0:
+        return None
+
+    metadata_xml = ET.SubElement(xml_parent, "metadata")
+    for key, value in metadata.items():
+        value = str(value)
+
+        # Replace semicolons with newlines if any.
+        if ";" in value:
+            value = value.replace(";", "\n")
+
+        meta_xml = ET.SubElement(metadata_xml, "meta", name=key)
+        meta_xml.text = value
+
+    return metadata_xml
+
+
+def update_metadata(metadata, new_metadata, concatenate_keys=()):
+    """
+    Updates one dictionary with elements from another.
+    """
+
+    for key, value in new_metadata.items():
+
+        # New key
+        if key not in metadata:
+            metadata[key] = value
+
+        # Existing key
+        else:
+
+            # Concatenate
+            if key in concatenate_keys:
+
+                # When concatenating non-strings convert the result to string
+                if not isinstance(metadata[key], str):
+                    metadata[key] = str(metadata[key])
+
+                metadata[key] += " " + str(value)
+
+            # Do not merge, throw an error
+            elif metadata[key] != value:
+                print("ERROR: metadata conflict (!): '{}'='{}' vs '{}'"
+                      .format(key, metadata[key], value))
+                exit(-1)
+
+    return metadata
+
+
+def sanity_check_child_metadata(metadata):
+    """
+    Checks if metadata specified on a child pb_type is sane.
+    """
+
+    not_allowed_keys = ("fasm_params", "fasm_lut", )
+    for key in metadata.keys():
+        if key in not_allowed_keys:
+            print("ERROR: metadata '{}' is not allowed for module instances"
+                  .format(key))
+            exit(-1)
+
+
+def sanity_check_parent_metadata(metadata):
+    """
+    Checks if metadata specified on a parent pb_type is sane.
+    """
+
+    not_allowed_keys = ("fasm_prefix", )
+    for key in metadata.keys():
+        if key in not_allowed_keys:
+            print("ERROR: metadata '{}' is not allowed for module definition"
+                  .format(key))
+            exit(-1)
+
+
+def get_lut_bits(module):
+    """
+    Returns number of LUT address bits given a LUT module
+    """
+
+    # Find the "lut_in" port
+    for port in module.ports:
+        port_name = port[0]
+        port_dir = port[3]
+        if port_name == "lut_in" and port_dir == "input":
+            port_width = port[1]
+            return int(port_width)
+
+    return None
+
+
 def create_port(
         dir_xml: ET.Element, cell_pin: CellPin, direction: str, metadata=None
 ) -> ET.Element:
@@ -193,12 +399,12 @@ def copy_attrs(dst, srcs):
             raise ValueError('{} values: {}'.format(attr, [avalue] + avalues))
 
         if attr in dst:
-            assert avalue == dst[attr]
-            raise ValueError(
-                '{} on net has value {} but pins have {}'.format(
-                    attr, dst[attr], avalue
+            if avalue != dst[attr]:
+                raise ValueError(
+                    '{} on net has value {} but pins have {}'.format(
+                        attr, dst[attr], avalue
+                    )
                 )
-            )
         dst[attr] = avalue
 
 
@@ -306,7 +512,7 @@ def get_interconnects(yj, mod, mod_pname: str,
     # Cell connections
     for cname, ctype in mod.cells:
         pb_name = strip_name(cname)
-        assert pb_name in valid_names
+        assert pb_name in valid_names, (pb_name, valid_names)
         if pb_name == mod_pname:
             pb_name = None
 
@@ -423,6 +629,8 @@ def get_children(yj, mod) -> Tuple[ChildrenDict, ChildrenDict]:
     routing = dict()
     children = dict()
     for cname, ctype in mod.cells:
+        cattrs = mod.cell_attrs(cname)
+
         # We currently special case routing muxes
         cell = yj.module(ctype)
         if cell.CLASS == "routing":
@@ -439,13 +647,13 @@ def get_children(yj, mod) -> Tuple[ChildrenDict, ChildrenDict]:
             existing. Type: {}, existing: {}".format(
                 cname, cname_prefix, ctype, children[cname_prefix]
         )
-        d[cname_prefix][-1].append(strip_name(cname))
+        d[cname_prefix][-1].append((strip_name(cname), cattrs,))
 
     for d in (routing, children):
         for _, l in children.values():
             if len(l) > 1:
-                l.sort()
-                _, _ = get_list_name_and_length(l)
+                l.sort(key=lambda t: t[0])
+#                _, _ = get_list_name_and_length(l)
 
     return routing, children
 
@@ -563,7 +771,7 @@ def make_container_pb(
 ):
     # Containers have to include children
     # ------------------------------------------------------------
-    for child_prefix, (child_type, children_names) in children.items():
+    for child_prefix, (child_type, children_data) in children.items():
         # Work out were the child pb_type file can be found
         module_file = yj.get_module_file(child_type)
         module_path = os.path.dirname(module_file)
@@ -580,20 +788,21 @@ def make_container_pb(
             xml_inc = ET.fromstring(inc_xml.read().encode('utf-8'))
             inc_attrib = xml_inc.attrib
             normalized_name = normalize_pb_name(child_prefix)
-            num_pb = str(len(children_names))
+            num_pb = str(len(children_data))
             if normalized_name != inc_attrib['name']:
                 comment_str += "old_name {}".format(inc_attrib['name'])
                 inc_attrib['name'] = normalize_pb_name(child_prefix)
                 include_as_is = False
             if num_pb != inc_attrib['num_pb']:
                 comment_str += " old_num_pb {}".format(inc_attrib['num_pb'])
-                inc_attrib['num_pb'] = str(len(children_names))
+                inc_attrib['num_pb'] = str(len(children_data))
                 include_as_is = False
+            inc_metadata_xml = xml_inc.find("metadata")
 
         xptr = None
         parent_xml = pb_type_xml
         if include_as_is is not True:
-            xptr = "xpointer(pb_type/child::node())"
+            xptr = "xpointer(pb_type/child::node()[local-name()!='metadata'])"
             parent_xml = ET.SubElement(pb_type_xml, 'pb_type', inc_attrib)
             parent_xml.append(ET.Comment(comment_str))
 
@@ -601,18 +810,78 @@ def make_container_pb(
             parent=parent_xml, href=pb_type_path, outfile=outfile, xptr=xptr
         )
 
+        # Get metadata from the included XML
+        incl_medatata = metadata_from_incl_xml(inc_metadata_xml)
+
+        # We have only one child of that type
+        if len(children_data) == 1:
+            child_attrs = children_data[0][1]
+
+            # Get & check
+            attr_metadata = metadata_from_attributes(child_attrs, None)
+            sanity_check_child_metadata(attr_metadata)
+
+            # Merge
+            metadata = update_metadata(attr_metadata, incl_medatata)
+
+        # Multiple children of the same type (array)
+        else:
+
+            metadata = {}
+            fasm_prefix_count = 0
+
+            # Merge the metadata
+            children_attrs = [d[1] for d in children_data]
+            for i, child_attrs in enumerate(children_attrs):
+
+                # Get & check
+                attr_metadata = metadata_from_attributes(child_attrs, None)
+                sanity_check_child_metadata(attr_metadata)
+
+                # Check if the prefix count for the cell array equals its
+                # count. Isolate fasm_prefix for the correct child index and
+                # use it.
+                if "fasm_prefix" in attr_metadata:
+                    fasm_prefixes = attr_metadata["fasm_prefix"].split(";")
+                    if len(fasm_prefixes) != len(children_data):
+                        print("ERROR: Number of fasm prefixes for cell array "
+                              "must match its count!")
+                        exit(-1)
+                    attr_metadata["fasm_prefix"] = fasm_prefixes[i]
+
+                # Merge
+                metadata = update_metadata(
+                    metadata,
+                    attr_metadata, ("fasm_prefix"))
+
+                # Count occurrences of the "fasm_prefix" key
+                fasm_prefix_count += 1
+
+            # Error, not all of the child instances have the "fasm_prefix"
+            if fasm_prefix_count > 0 and \
+               fasm_prefix_count != len(children_data):
+                print("ERROR: The FASM_PREFIX attribute must be set on "
+                      "all instances of given module type")
+                exit(-1)
+
+            # Merge included metadata
+            metadata = update_metadata(metadata, incl_medatata)
+
+        # Write the metadata
+        metadata_to_xml(parent_xml, metadata)
+
     # Contains need interconnect to their children
     # ------------------------------------------------------------
     # Work out valid names for cells to sanity check the interconnects.
     valid_names = [mod_pname]
 
     routing_cells = []
-    for _, routing_names in routing.values():
-        routing_cells.extend(routing_names)
+    for _, children_data in routing.values():
+        routing_cells.extend([c[0] for c in children_data])
     valid_names.extend(routing_cells)
 
-    for _, children_names in children.values():
-        valid_names.extend(children_names)
+    for _, children_data in children.values():
+        valid_names.extend([c[0] for c in children_data])
 
     # Extract the interconnect from the module
     interconn = get_interconnects(yj, mod, mod_pname, valid_names)
@@ -672,7 +941,7 @@ Currently muxes can only drive a single output.""".format(
                 ", ".join("{}.{}".format(*pin) for pin, path_attr in sinks)
             )
             for (sink_cell, sink_pin), path_attr in sinks:
-                assert sink_cell not in routing_names, """\
+                assert sink_cell not in routing_cells, """\
 Mux {}.{} is trying to drive mux input pin {}.{}""".format(
                     mux_cell, mux_output_pin, sink_cell, sink_pin
                 )
@@ -682,7 +951,7 @@ Mux {}.{} is trying to drive mux input pin {}.{}""".format(
             for (sink_cell, mux_pin), path_attr in sinks:
                 if sink_cell != mux_cell:
                     continue
-                assert driver_cell not in routing_names, \
+                assert driver_cell not in routing_cells, \
                     "Mux {}.{} is trying to drive mux {}.{}".format(
                         driver_cell, driver_pin, mux_cell, sink_pin
                     )
@@ -762,7 +1031,7 @@ def make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml):
 
 
 def make_pb_type(
-        infiles, outfile, yj, mod, mode_processing=False,
+        infiles, outfile, yj, sj, mod, mode_processing=False,
         mode_xml=None, mode_name=None
 ):
     """Build the pb_type for a given module. mod is the YosysModule object to
@@ -771,6 +1040,37 @@ def make_pb_type(
     modes = mod.attr("MODES", None)
     if modes is not None:
         modes = modes.split(";")
+
+    is_blackbox = mod.attr("blackbox", 0) != 0
+
+    # Create metadata
+    mod_attrs = dict(mod.module_attrs)
+    mod_attrs.update(sj.get(mod.name, {"attributes": {}})["attributes"])
+    metadata = metadata_from_attributes(mod_attrs, mode_name)
+
+    # Make fasm_params metadata, loop over parameters
+    fasm_params = []
+
+    mod_params = sj.get(mod.name, {"parameters": {}})["parameters"]
+    for param_name, param_data in mod_params.items():
+
+        # The parameter has attributes
+        for attr_name, attr_value in param_data["attributes"].items():
+            if attr_name == "FASM":
+                if attr_value is None:
+                    meta = "{p}={p}".format(p=param_name)
+                else:
+                    print(
+                        "ERROR: The (* FASM *) attribute cannot have a value!"
+                    )
+                    exit(-1)
+
+                fasm_params.append(meta)
+
+    if len(fasm_params):
+        metadata["fasm_params"] = ";".join(
+            [metadata.get("fasm_params", "")] + fasm_params)
+
     mod_pname = mod.name
     assert mod_pname == mod_pname.upper(
     ), "pb_type name should be all uppercase. {}".format(mod_pname)
@@ -867,6 +1167,13 @@ def make_pb_type(
         for mode in modes:
             smode = mode.strip()
             mode_xml = ET.SubElement(pb_type_xml, "mode", {"name": smode})
+
+            # Rerun Surelog with mode parameter.
+            # TODO: Surelog can't do that. But this should not matter as long
+            # as we are only interested in attributes on things that are
+            # not mode-specific.
+            mode_sj = dict(sj)
+
             # Rerun Yosys with mode parameter
             mode_yj = YosysJSON(
                 run.vlog_to_json(
@@ -887,9 +1194,20 @@ def make_pb_type(
                 inter.update(get_interconnects(
                     mode_yj, mode_mod, smode, [smode]))
 
+                # Check if we have metadata. Metadata cannot be appended to the
+                # "mode" tag.
+                mode_metadata = metadata_from_attributes(
+                    mode_mod.module_attrs,
+                    smode)
+
+                if len(mode_metadata):
+                    print("ERROR: Cannot assign metadata to a mode without "
+                          "children cells")
+                    exit(-1)
+
             # The mode has children, recurse
             else:
-                make_pb_type(infiles, outfile, mode_yj, mode_mod,
+                make_pb_type(infiles, outfile, mode_yj, mode_sj, mode_mod,
                              True, mode_xml, smode)
                 inter.update(mode_interconnects(mod, smode))
 
@@ -918,6 +1236,11 @@ def make_pb_type(
         else:
             make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml)
 
+    # Check the metadata
+    sanity_check_parent_metadata(metadata)
+    # Write it
+    metadata_to_xml(pb_type_xml, metadata)
+
     return pb_type_xml
 
 
@@ -931,6 +1254,8 @@ def vlog_to_pbtype(infiles, outfile, top=None):
         sys.exit(-1)
 
     iname = os.path.basename(infiles[0])
+
+    sj = surelog.extract_attributes(infiles, ["PB_TYPE"])
 
     run.add_define("PB_TYPE")
     vjson = run.vlog_to_json(infiles, flatten=False, aig=False)
@@ -955,7 +1280,7 @@ def vlog_to_pbtype(infiles, outfile, top=None):
 
     tmod = yj.module(top)
 
-    pb_type_xml = make_pb_type(infiles, outfile, yj, tmod)
+    pb_type_xml = make_pb_type(infiles, outfile, yj, sj, tmod)
 
     return ET.tostring(
         pb_type_xml,
