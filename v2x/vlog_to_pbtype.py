@@ -77,6 +77,8 @@ from .yosys import run
 from .yosys.json import YosysJSON
 from .yosys import utils as utils
 
+from .utils.util import PbTypeNode
+
 from .xmlinc import xmlinc  # noqa: E402
 
 
@@ -98,6 +100,25 @@ def normalize_pb_name(pb_name):
         ) + index.group(0).replace('[', '_').replace(']', '')
 
     return normalized_name
+
+
+def normalize_cell_name(cell_name):
+    """ Some pb_type names generatedby the tool
+        are illegal in VPR. This function converts them to
+        legal ones e.g:
+
+        output_dffs_gen[0].q_out_ff -> output_dffs_gen_q_out_ff_0
+    """
+    normalized_cell_name = normalize_pb_name(cell_name)
+
+    if normalized_cell_name is None:
+        return None
+
+    index = re.search(r'(\[[0-9]+\])', normalized_cell_name)
+    if index is not None:
+        normalized_cell_name = normalized_cell_name.replace(index.group(0), "")
+
+    return normalized_cell_name
 
 
 def is_mod_blackbox(mod):
@@ -590,7 +611,6 @@ def mark_all_paths(interconnects):
             pack_pattern_list = marked_cells.get((sink_cell, sink_pin), None)
 
             if pack_pattern_list is None:
-                print(sink_cell, sink_pin)
                 continue
 
             if drv_cell is None:
@@ -605,6 +625,7 @@ def make_container_pb(
 ):
     # Containers have to include children
     # ------------------------------------------------------------
+    children_pb_nodes = dict()
     for child_prefix, (child_type, children_names) in children.items():
         # Work out were the child pb_type file can be found
         module_file = yj.get_module_file(child_type)
@@ -623,6 +644,11 @@ def make_container_pb(
             inc_attrib = xml_inc.attrib
             normalized_name = normalize_pb_name(child_prefix)
             num_pb = str(len(children_names))
+
+            pb_node = PbTypeNode(normalized_name, "{}.pb_type.xml".format(module_prefix), module_path)
+            pb_node.populate_children()
+            children_pb_nodes[normalized_name] = pb_node
+
             if normalized_name != inc_attrib['name']:
                 comment_str += "old_name {}".format(inc_attrib['name'])
                 inc_attrib['name'] = normalize_pb_name(child_prefix)
@@ -690,9 +716,30 @@ def make_container_pb(
                 if "pack" in attrs:
                     del attrs["pack"]
 
+            if "pack" in path_attr:
+                pack_patterns = path_attr["pack"].split(";")
+                new_patterns = list()
+                for pack_pattern in pack_patterns:
+                    driver_pb_name = normalize_cell_name(driver_cell)
+                    sink_pb_name = normalize_cell_name(sink_cell)
+                    driver_pb_node = children_pb_nodes[driver_pb_name]
+                    sink_pb_node = children_pb_nodes[sink_pb_name]
+
+                    driver_pb_node.find_paths_from_pin(driver_pin, pack_pattern)
+                    sink_pb_node.find_paths_from_pin(sink_pin, pack_pattern)
+
+                    if sink_pb_node.get_paths(pack_pattern) and driver_pb_node.get_paths(pack_pattern):
+                        new_patterns += driver_pb_node.create_pack_patterns(sink_pb_node, pack_pattern)
+
+                if new_patterns:
+                    attrs["pack"] = ";".join(new_patterns)
+
+            normalized_driver_cell = normalize_pb_name(driver_cell)
+            normalized_sink_cell = normalize_pb_name(sink_cell)
+
             make_direct_conn(
-                ic_xml, (normalize_pb_name(driver_cell), driver_pin),
-                (normalize_pb_name(sink_cell), sink_pin), attrs
+                ic_xml, (normalized_driver_cell, driver_pin),
+                (normalized_sink_cell, sink_pin), attrs
             )
 
     # Generate the mux interconnects
