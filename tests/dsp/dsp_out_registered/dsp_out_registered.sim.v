@@ -22,7 +22,6 @@ module DSP_OUT_REGISTERED (clk, a, b, m, out);
 	output wire [DATA_WIDTH-1:0] out;
 
 	/* Combinational logic */
-	(* pack="DSP-DFF" *)
 	wire [DATA_WIDTH-1:0] c_out;
 	DSP_COMBINATIONAL comb (.a(a), .b(b), .m(m), .out(c_out));
 

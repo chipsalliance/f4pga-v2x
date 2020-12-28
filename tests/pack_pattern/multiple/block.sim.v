@@ -21,7 +21,6 @@ module BLOCK (
 );
 
     // LUT
-    (* PACK="lut_mux_ff" *)
     wire lut_out;
 
     LUT lut_cell (
@@ -30,7 +29,6 @@ module BLOCK (
     );
 
     // Mux
-    (* PACK="lut_mux_ff;mux_ff" *)
     wire mux_out;
 
     MUX mux_cell (

@@ -18,14 +18,12 @@ module CBLOCK (
 	COUT
 );
 	input wire [3:0] I;
-	(* carry="C" *)
 	input wire CIN;
 
 	(* DELAY_MATRIX_I="30e-12 30e-12 30e-12 30e-12" *)
 	(* DELAY_CONST_CIN="30e-12" *)
 	output wire O;
 
-	(* carry="C" *)
 	(* DELAY_MATRIX_I="30e-12 30e-12 30e-12 30e-12" *)
 	(* DELAY_CONST_CIN="30e-12" *)
 	output wire COUT;

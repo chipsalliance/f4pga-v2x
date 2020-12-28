@@ -1,80 +1,74 @@
 <?xml version='1.0' encoding='utf-8'?>
-<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" name="CARRY" num_pb="1">
+<pb_type xmlns:xi="http://www.w3.org/2001/XInclude" num_pb="1" name="CARRY">
   <input name="CIN" num_pins="1"/>
   <input name="I0" num_pins="4"/>
   <input name="I1" num_pins="4"/>
   <output name="COUT" num_pins="1"/>
   <output name="O0" num_pins="1"/>
   <output name="O1" num_pins="1"/>
-  <pb_type name="cblock0" num_pb="1">
+  <pb_type num_pb="1" name="cblock0">
+    <!--old_name CBLOCK-->
     <xi:include href="cblock/cblock.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
   </pb_type>
-  <pb_type name="cblock1" num_pb="1">
+  <pb_type num_pb="1" name="cblock1">
+    <!--old_name CBLOCK-->
     <xi:include href="cblock/cblock.pb_type.xml" xpointer="xpointer(pb_type/child::node())"/>
   </pb_type>
   <interconnect>
     <direct>
       <port name="CIN" type="input"/>
-      <port from="cblock0" name="CIN" type="output"/>
-      <pack_pattern name="C" type="carry">
-        <port name="CIN" type="input"/>
-        <port from="cblock0" name="CIN" type="output"/>
-      </pack_pattern>
+      <port name="CIN" type="output" from="cblock0"/>
     </direct>
     <direct>
       <port name="I0[0]" type="input"/>
-      <port from="cblock0" name="I[0]" type="output"/>
+      <port name="I[0]" type="output" from="cblock0"/>
     </direct>
     <direct>
       <port name="I0[1]" type="input"/>
-      <port from="cblock0" name="I[1]" type="output"/>
+      <port name="I[1]" type="output" from="cblock0"/>
     </direct>
     <direct>
       <port name="I0[2]" type="input"/>
-      <port from="cblock0" name="I[2]" type="output"/>
+      <port name="I[2]" type="output" from="cblock0"/>
     </direct>
     <direct>
       <port name="I0[3]" type="input"/>
-      <port from="cblock0" name="I[3]" type="output"/>
+      <port name="I[3]" type="output" from="cblock0"/>
     </direct>
     <direct>
-      <port from="cblock0" name="O" type="input"/>
+      <port name="O" type="input" from="cblock0"/>
       <port name="O0" type="output"/>
     </direct>
     <direct>
-      <port from="cblock0" name="COUT" type="input"/>
-      <port from="cblock1" name="CIN" type="output"/>
-      <pack_pattern name="C" type="carry">
-        <port from="cblock0" name="COUT" type="input"/>
-        <port from="cblock1" name="CIN" type="output"/>
+      <port name="COUT" type="input" from="cblock0"/>
+      <port name="CIN" type="output" from="cblock1"/>
+      <pack_pattern name="cblock0-COUT-cblock1-CIN" type="pack">
+        <port name="COUT" type="input" from="cblock0"/>
+        <port name="CIN" type="output" from="cblock1"/>
       </pack_pattern>
     </direct>
     <direct>
       <port name="I1[0]" type="input"/>
-      <port from="cblock1" name="I[0]" type="output"/>
+      <port name="I[0]" type="output" from="cblock1"/>
     </direct>
     <direct>
       <port name="I1[1]" type="input"/>
-      <port from="cblock1" name="I[1]" type="output"/>
+      <port name="I[1]" type="output" from="cblock1"/>
     </direct>
     <direct>
       <port name="I1[2]" type="input"/>
-      <port from="cblock1" name="I[2]" type="output"/>
+      <port name="I[2]" type="output" from="cblock1"/>
     </direct>
     <direct>
       <port name="I1[3]" type="input"/>
-      <port from="cblock1" name="I[3]" type="output"/>
+      <port name="I[3]" type="output" from="cblock1"/>
     </direct>
     <direct>
-      <port from="cblock1" name="COUT" type="input"/>
+      <port name="COUT" type="input" from="cblock1"/>
       <port name="COUT" type="output"/>
-      <pack_pattern name="C" type="carry">
-        <port from="cblock1" name="COUT" type="input"/>
-        <port name="COUT" type="output"/>
-      </pack_pattern>
     </direct>
     <direct>
-      <port from="cblock1" name="O" type="input"/>
+      <port name="O" type="input" from="cblock1"/>
       <port name="O1" type="output"/>
     </direct>
   </interconnect>

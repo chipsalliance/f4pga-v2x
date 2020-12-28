@@ -17,7 +17,7 @@
     <direct>
       <port from="lut" name="O" type="input"/>
       <port from="dff" name="D" type="output"/>
-      <pack_pattern name="LUT2FF" type="pack">
+      <pack_pattern name="lut-O-dff-D-mux-F" type="pack">
         <port from="lut" name="O" type="input"/>
         <port from="dff" name="D" type="output"/>
       </pack_pattern>

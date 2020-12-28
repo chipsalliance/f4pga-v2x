@@ -22,7 +22,6 @@ module PAIR (
 
 	output wire O;
 
-	(* pack="LUT2FF" *)
 	wire lut_out;
 
 	LUT4 lut (.I(I), .O(lut_out));
