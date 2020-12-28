@@ -50,13 +50,6 @@ The following are allowed on nets within modules
         format columns specify inputs bits and rows specify output bits.
         This should be applied to the output.
 
-    - `(* carry = ADDER *)` : specify carry chain pack_pattern associated
-                              with this wire
-
-    - `(* PACK = "<name1>[;<name2>[..]]" *)` : List of semicolon-separated
-                                               pack pattern names to be used
-                                               for a wire.
-
 The following are allowed on ports:
     - `(* CLOCK *)` or `(* CLOCK=1 *)` : force a given port to be a clock
 
@@ -67,8 +60,6 @@ The following are allowed on ports:
 
     - `(* PORT_CLASS="clock" *)` : specify the VPR "port_class"
 
-    - `(* carry = ADDER *)` : specify carry chain pack_pattern associated
-                              with this port
 
 The Verilog define "PB_TYPE" is set during generation.
 """
@@ -255,17 +246,6 @@ def make_direct_conn(
             create_port(pp_xml, driver, "input")
             create_port(pp_xml, sink, "output")
 
-    carry_name = path_attr.get('carry', None)
-    if carry_name:
-        pp_xml = ET.SubElement(
-            dir_xml, 'pack_pattern', {
-                'name': carry_name,
-                'type': 'carry'
-            }
-        )
-        create_port(pp_xml, driver, "input")
-        create_port(pp_xml, sink, "output")
-
     return dir_xml
 
 
@@ -277,7 +257,7 @@ def make_mux_conn(
     mux_xml = ET.SubElement(ic_xml, "mux", {"name": mux_name})
 
     keys = sorted(list(mux_inputs.keys()))
-    for mux_input, driver in [(k, mux_inputs[k],) for k in keys]:
+    for mux_input, (driver, _) in [(k, mux_inputs[k],) for k in keys]:
         metadata = {'fasm_mux': '{}.{}'.format(mux_name, mux_input)}
         create_port(mux_xml, driver, "input", metadata=metadata)
 
@@ -384,9 +364,6 @@ def get_interconnects(yj, mod, mod_pname: str,
                         key = (None, inp_name)
                         val = ((None, out_name), {})
                         interconn[key].append(val)
-
-    import pprint
-    pprint.pprint(list(interconn.values()))
 
     def pin_sort(p):
         pin, attr = p
@@ -554,14 +531,73 @@ def make_ports(clocks, mod, pb_type_xml, only_type=None):
 
         port_attrs = mod.port_attrs(name)
 
-        carry_name = port_attrs.get('carry', None)
-        if carry_name:
-            ET.SubElement(
-                port_xml, 'pack_pattern', {
-                    'name': carry_name,
-                    'type': 'carry'
-                }
-            )
+
+def mark_all_paths(interconnects):
+
+    def find_path(paths, driver_cell):
+        for path in paths:
+            cell, _ = path[0]
+            if cell == driver_cell:
+                return path[1:]
+
+    def all_paths_found(paths, driver_cells):
+        for path in paths:
+            driver_cell, _ = path[-1]
+            if driver_cell in driver_cells:
+                return False
+
+        return True
+
+    paths = list()
+    driver_cells = set()
+
+    for (drv_cell, drv_pin), sink_list in interconnects.items():
+        if drv_cell is None:
+            continue
+
+        for (sink_cell, sink_pin), attrs in sink_list:
+            if sink_cell is None:
+                continue
+
+            driver_cells.add(drv_cell)
+            paths.append([(drv_cell, drv_pin), (sink_cell, sink_pin)])
+
+    while not all_paths_found(paths, driver_cells):
+        new_paths = paths
+        for path in paths:
+            cell, _ = path[-1]
+            if cell in driver_cells:
+                new_path = path + find_path(paths, cell)
+                new_paths.append(new_path)
+                new_paths.remove(path)
+
+        paths = new_paths
+
+    marked_cells = dict()
+    for path in paths:
+        cells, pins = zip(*path)
+        pack_patterns = [x for y in zip(cells, pins) for x in y]
+        pack_pattern = "-".join(pack_patterns)
+
+        for (cell, pin) in path:
+            if (cell, pin) not in marked_cells:
+                marked_cells[(cell, pin)] = list()
+
+            marked_cells[(cell, pin)].append(pack_pattern)
+
+    for (drv_cell, drv_pin), sink_list in interconnects.items():
+        for idx, ((sink_cell, sink_pin), attrs) in enumerate(sink_list):
+            pack_pattern_list = marked_cells.get((sink_cell, sink_pin), None)
+
+            if pack_pattern_list is None:
+                print(sink_cell, sink_pin)
+                continue
+
+            if drv_cell is None:
+                continue
+
+            attrs["pack"] = ";".join(pack_pattern_list)
+            interconnects[(drv_cell, drv_pin)][idx] = ((sink_cell, sink_pin), attrs)
 
 
 def make_container_pb(
@@ -622,6 +658,8 @@ def make_container_pb(
 
     # Extract the interconnect from the module
     interconn = get_interconnects(yj, mod, mod_pname, valid_names)
+    mark_all_paths(interconn)
+
     import pprint
     print(mod_pname)
     print("--")
@@ -698,7 +736,7 @@ Pin {}.{} is trying to drive mux pin {}.{} (already driving by {}.{})\
                     driver_cell, driver_pin, mux_cell, mux_pin,
                     *mux_inputs[sink_pin]
                 )
-                mux_inputs[mux_pin] = (driver_cell, driver_pin)
+                mux_inputs[mux_pin] = ((driver_cell, driver_pin), path_attr)
 
         make_mux_conn(ic_xml, mux_cell, mux_inputs, mux_outputs)
 
