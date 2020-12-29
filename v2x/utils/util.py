@@ -29,7 +29,12 @@ class PbTypeNode:
                 return
 
             for elem_name, elem_href in elem_set:
-                new_pb_type = PbTypeNode(elem_name, elem_href, self.base_path, self.level + 1)
+                new_pb_type = PbTypeNode(
+                    elem_name,
+                    elem_href,
+                    self.base_path,
+                    self.level + 1
+                )
                 new_pb_type.populate_children()
                 self.children.add(new_pb_type)
 
@@ -45,24 +50,27 @@ class PbTypeNode:
     def find_paths_from_pin(self, pin_name, pattern):
 
         def connection(direct):
-            input_port = direct.xpath("port[@type='input']")[0]
-            output_port = direct.xpath("port[@type='output']")[0]
+            in_port = direct.xpath("port[@type='input']")[0]
+            out_port = direct.xpath("port[@type='output']")[0]
 
-            input_name = input_port.attrib["name"]
-            output_name = output_port.attrib["name"]
+            in_name = in_port.attrib["name"]
+            out_name = out_port.attrib["name"]
 
-            input_cell_name = input_port.attrib.get("from", None)
-            output_cell_name = output_port.attrib.get("from", None)
+            in_cell_name = in_port.attrib.get("from", None)
+            out_cell_name = out_port.attrib.get("from", None)
 
-            return (input_cell_name, output_cell_name,  input_name, output_name)
-
+            return (in_cell_name, out_cell_name, in_name, out_name)
 
         def recurse_search(xml, path):
-            input_cell_name, output_cell_name, input_name, output_name = path[-1]
+            in_cell_name, out_cell_name, in_name, out_name = path[-1]
 
             next = None
-            if output_cell_name == xml.attrib["name"]:
-                next = xml.xpath("pb_type/interconnect/direct/port[@type='input' and @name='{}']".format(output_name))
+            if out_cell_name == xml.attrib["name"]:
+                xml_path = "pb_type/interconnect/direct/port"
+                next = xml.xpath(
+                    "{}[@type='input' and @name='{}']"
+                    .format(xml_path, out_name)
+                )
 
             if not next:
                 return
@@ -82,14 +90,15 @@ class PbTypeNode:
             if root_pb_type_xml is None:
                 return
 
-            elem_set = set()
-
             paths = list()
             # Determine connection between
             for mode in root_pb_type_xml.xpath("mode"):
                 path = list()
 
-                first = mode.xpath("interconnect/direct/port[@name='{}' and not(@from)]".format(pin_name))
+                xml_path = "interconnect/direct/port"
+                first = mode.xpath(
+                    "{}[@name='{}' and not(@from)]".format(xml_path, pin_name)
+                )
                 assert len(first) == 1
                 first = first[0].getparent()
                 result = connection(first)
@@ -97,8 +106,11 @@ class PbTypeNode:
 
                 recurse_search(mode, path)
 
-                input_cell_name, output_cell_name, input_name, output_name = path[-1]
-                last = mode.xpath("interconnect/direct/port[@name='{}' and @from='{}']".format(output_name, mode.attrib["name"]))
+                in_cell_name, out_cell_name, in_name, out_name = path[-1]
+                last = mode.xpath(
+                    "{}[@name='{}' and @from='{}']"
+                    .format(xml_path, out_name, mode.attrib["name"])
+                )
 
                 if len(last) == 1:
                     last = last[0].getparent()
@@ -113,6 +125,11 @@ class PbTypeNode:
         paths = self.paths.get(pattern, [])
 
         return paths
+
+    def has_paths(self, pattern):
+        paths = self.paths.get(pattern, [])
+
+        return True if paths else False
 
     def add_pack_patterns(self, path, pattern):
         def create_port(xml, cell_name, pin_name, direction):
@@ -141,7 +158,10 @@ class PbTypeNode:
                 else:
                     assert False
 
-                port = pb_type_xml.xpath("//port[@type='{}' and @name='{}' and @from='{}']".format(direction, pin_name, cell_name))
+                port = pb_type_xml.xpath(
+                    "//port[@type='{}' and @name='{}' and @from='{}']"
+                    .format(direction, pin_name, cell_name)
+                )
                 port = port[0]
                 direct_xml = port.getparent()
 
@@ -158,7 +178,6 @@ class PbTypeNode:
                 )
                 create_port(pp_xml, in_cell, in_pin, "input")
                 create_port(pp_xml, out_cell, out_pin, "output")
-
 
             pb_type_xml_string = ET.tostring(
                 pb_type_xml,
@@ -186,5 +205,3 @@ class PbTypeNode:
                 pack_patterns.add(pack_pattern)
 
         return pack_patterns
-
-
