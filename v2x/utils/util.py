@@ -14,6 +14,14 @@ import lxml.etree as ET
 
 
 class PbTypeNode:
+    """
+    This is a utility class to manage pre-generated pb_types XMLs
+
+    Its current functionalities are:
+        - discover all the pb type hierarchy starting from the initial
+          pb_type.
+        - discover direct connection paths to add pack patterns at posteriori
+    """
 
     def __init__(self, name, href, base_path, level=0):
         self.name = name
@@ -24,6 +32,10 @@ class PbTypeNode:
         self.paths = dict()
 
     def populate_children(self):
+        """
+        This function is used to discover all the children iteratively until
+        the leaf pb_types.
+        """
 
         with open(os.path.join(self.base_path, self.href), 'r') as href_file:
             href_xml = ET.fromstring(href_file.read().encode('utf-8'))
@@ -50,6 +62,9 @@ class PbTypeNode:
                 self.children.add(new_pb_type)
 
     def print_tree(self):
+        """
+        This is a utility function to print all the pb_type hierarchy.
+        """
         padding = ""
         for level in range(self.level):
             padding += "\t"
@@ -59,8 +74,20 @@ class PbTypeNode:
             child.print_tree()
 
     def find_paths_from_pin(self, pin_name, pattern):
+        """
+        This function is used to discover the paths from a given pb_type
+        pin to be able to add a pack pattern to all the direct interconnects
+        in the path.
+
+        The path is saved under a `pattern` key, which identifies the pack
+        pattern to add to that path.
+        """
 
         def connection(direct):
+            """
+            This function returns the port connections of a direct XML
+            instance.
+            """
             in_port = direct.xpath("port[@type='input']")[0]
             out_port = direct.xpath("port[@type='output']")[0]
 
@@ -73,6 +100,10 @@ class PbTypeNode:
             return (in_cell_name, out_cell_name, in_name, out_name)
 
         def recurse_search(xml, path):
+            """
+            This function recursively iterates to find the path from
+            the first top-level direct.
+            """
             in_cell_name, out_cell_name, in_name, out_name = path[-1]
 
             next = None
@@ -133,17 +164,33 @@ class PbTypeNode:
             self.paths[pattern] = paths
 
     def get_paths(self, pattern):
+        """
+        This function returns the paths for a given pack pattern.
+        """
         paths = self.paths.get(pattern, [])
 
         return paths
 
     def has_paths(self, pattern):
+        """
+        This function returns a boolean depending whether, for
+        a given pack pattern, there are paths available.
+        """
         paths = self.paths.get(pattern, [])
 
         return True if paths else False
 
     def add_pack_patterns(self, path, pattern):
+        """
+        This function adds the pack patterns to all the directs
+        in a given path.
+        """
+
         def create_port(xml, cell_name, pin_name, direction):
+            """
+            This function generates a port XML tag for the
+            pack pattern tag.
+            """
             port = dict()
             if cell_name:
                 port['from'] = cell_name
@@ -201,6 +248,20 @@ class PbTypeNode:
             href_file.write(pb_type_xml_string)
 
     def create_pack_patterns(self, other_pb_type_node, pattern):
+        """
+        This function iterates through all the paths of the current
+        pb_type and the adjacent pb_type passed as argument.
+
+        Given that a pack pattern may traverse two siblings,
+        we need to assign the same pack pattern to both of them.
+
+        With this function, each possible path combination is
+        generated for two siblings and the pack patterns added
+        to both of the pre-generated pb_type XMLs
+        """
+
+        assert self.has_paths() and other_pb_type_node.has_paths()
+
         this_paths = self.paths[pattern]
         other_paths = other_pb_type_node.get_paths(pattern)
 
