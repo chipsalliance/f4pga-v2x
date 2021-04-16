@@ -21,6 +21,9 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+from collect_examples import collect_examples
+from pygments.lexers.hdl import VerilogLexer
+from sphinx.highlighting import lexers
 import re
 
 # Markdown support
@@ -35,10 +38,6 @@ import sys
 sys.path.insert(0, os.path.abspath('.'))
 from markdown_code_symlinks import LinkParser, MarkdownSymlinksDomain  # noqa
 
-from sphinx.highlighting import lexers
-from pygments.lexers.hdl import VerilogLexer
-
-from collect_examples import collect_examples
 
 lexers['verilog'] = VerilogLexer(tabsize=2)
 
@@ -140,54 +139,20 @@ html_theme = 'sphinx_symbiflow_theme'
 # documentation.
 #
 html_theme_options = {
-    # Specify a list of menu in Header.
-    # Tuples forms:
-    #  ('Name', 'external url or path of pages in the document',
-    #   boolean, 'icon name')
-    #
-    # Third argument:
-    # True indicates an external link.
-    # False indicates path of pages in the document.
-    #
-    # Fourth argument:
-    # Specify the icon name.
-    # For details see link.
-    # https://material.io/icons/
-    'header_links': [
-        ('Home', 'index', False, 'home'),
-        ("GitHub", "https://github.com/SymbiFlow/python-symbiflow-v2x",
-         True, 'link'),
-    ],
-
     # Customize css colors.
     # For details see link.
     # https://getmdl.io/customize/index.html
     #
-    # Values: amber, blue, brown, cyan deep_orange, deep_purple, green, grey,
-    #         indigo, light_blue, light_green, lime, orange, pink, purple, red,
-    #         teal, yellow
-    # (Default: indigo)
-    'primary_color': 'deep_purple',
-    # Values: Same as primary_color. (Default: pink)
-    'accent_color': 'purple',
+    # Primary colors:
+    # red, pink, purple, deep-purple, indigo, blue, light-blue, cyan,
+    # teal, green, light-green, lime, yellow, amber, orange, deep-orange,
+    # brown, grey, blue-grey, white
+    'color_primary': 'deep-purple',
 
-    # Customize layout.
-    # For details see link.
-    # https://getmdl.io/components/index.html#layout-section
-    'fixed_drawer': True,
-    'fixed_header': True,
-    'header_waterfall': True,
-    'header_scroll': False,
-
-    # Render title in header.
-    # Values: True, False (Default: False)
-    'show_header_title': False,
-    # Render title in drawer.
-    # Values: True, False (Default: True)
-    'show_drawer_title': True,
-    # Render footer.
-    # Values: True, False (Default: True)
-    'show_footer': True
+    # Accent colors:
+    # red, pink, purple, deep-purple, indigo, blue, light-blue, cyan,
+    # teal, green, light-green, lime, yellow, amber, orange, deep-orange
+    'color_accent': 'indigo'
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
