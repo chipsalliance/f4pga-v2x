@@ -43,26 +43,74 @@
     <direct>
       <port name="Y" type="input" from="nor00"/>
       <port name="B" type="output" from="nor10"/>
+      <pack_pattern name="nor00-Y-nor10-B-nor20-A-nor30-A" type="pack">
+        <port name="Y" type="input" from="nor00"/>
+        <port name="B" type="output" from="nor10"/>
+      </pack_pattern>
     </direct>
     <direct>
       <port name="Y" type="input" from="nor00"/>
       <port name="B" type="output" from="nor11"/>
+      <pack_pattern name="nor00-Y-nor11-B-nor20-B-nor30-A" type="pack">
+        <port name="Y" type="input" from="nor00"/>
+        <port name="B" type="output" from="nor11"/>
+      </pack_pattern>
     </direct>
     <direct>
       <port name="Y" type="input" from="nor10"/>
       <port name="A" type="output" from="nor20"/>
+      <pack_pattern name="nor10-Y-nor20-A-nor30-A" type="pack">
+        <port name="Y" type="input" from="nor10"/>
+        <port name="A" type="output" from="nor20"/>
+      </pack_pattern>
+      <pack_pattern name="nor00-Y-nor10-B-nor20-A-nor30-A" type="pack">
+        <port name="Y" type="input" from="nor10"/>
+        <port name="A" type="output" from="nor20"/>
+      </pack_pattern>
     </direct>
     <direct>
       <port name="Y" type="input" from="nor11"/>
       <port name="B" type="output" from="nor20"/>
+      <pack_pattern name="nor00-Y-nor11-B-nor20-B-nor30-A" type="pack">
+        <port name="Y" type="input" from="nor11"/>
+        <port name="B" type="output" from="nor20"/>
+      </pack_pattern>
+      <pack_pattern name="nor11-Y-nor20-B-nor30-A" type="pack">
+        <port name="Y" type="input" from="nor11"/>
+        <port name="B" type="output" from="nor20"/>
+      </pack_pattern>
     </direct>
     <direct>
       <port name="Y" type="input" from="nor20"/>
       <port name="A" type="output" from="nor30"/>
+      <pack_pattern name="nor20-Y-nor30-A" type="pack">
+        <port name="Y" type="input" from="nor20"/>
+        <port name="A" type="output" from="nor30"/>
+      </pack_pattern>
+      <pack_pattern name="nor10-Y-nor20-A-nor30-A" type="pack">
+        <port name="Y" type="input" from="nor20"/>
+        <port name="A" type="output" from="nor30"/>
+      </pack_pattern>
+      <pack_pattern name="nor00-Y-nor10-B-nor20-A-nor30-A" type="pack">
+        <port name="Y" type="input" from="nor20"/>
+        <port name="A" type="output" from="nor30"/>
+      </pack_pattern>
+      <pack_pattern name="nor00-Y-nor11-B-nor20-B-nor30-A" type="pack">
+        <port name="Y" type="input" from="nor20"/>
+        <port name="A" type="output" from="nor30"/>
+      </pack_pattern>
+      <pack_pattern name="nor11-Y-nor20-B-nor30-A" type="pack">
+        <port name="Y" type="input" from="nor20"/>
+        <port name="A" type="output" from="nor30"/>
+      </pack_pattern>
     </direct>
     <direct>
       <port name="Y" type="input" from="nor20"/>
       <port name="B" type="output" from="nor30"/>
+      <pack_pattern name="nor20-Y-nor30-B" type="pack">
+        <port name="Y" type="input" from="nor20"/>
+        <port name="B" type="output" from="nor30"/>
+      </pack_pattern>
     </direct>
     <direct>
       <port name="Y" type="input" from="nor30"/>

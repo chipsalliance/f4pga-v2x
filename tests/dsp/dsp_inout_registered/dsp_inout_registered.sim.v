@@ -22,11 +22,8 @@ module DSP_INOUT_REGISTERED (clk, a, b, m, out);
 	output wire [DATA_WIDTH-1:0] out;
 
 	/* Input registers */
-	(* pack = "DFF-DSP" *)
 	wire [DATA_WIDTH/2-1:0] q_a;
-	(* pack = "DFF-DSP" *)
 	wire [DATA_WIDTH/2-1:0] q_b;
-	(* pack = "DFF-DSP" *)
 	wire q_m;
 
 	genvar i;
@@ -37,7 +34,6 @@ module DSP_INOUT_REGISTERED (clk, a, b, m, out);
 	DFF m_ff(.D(m), .Q(q_m), .CLK(clk));
 
 	/* Combinational logic */
-	(* pack = "DFF-DSP" *)
 	wire [DATA_WIDTH-1:0] c_out;
 	DSP_COMBINATIONAL comb (.a(q_a), .b(q_b), .m(q_m), .out(c_out));
 

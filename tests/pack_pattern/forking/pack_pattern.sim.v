@@ -23,7 +23,6 @@ module PACK_PATTERN (
     output wire LUT_OUT;
     output wire DFF_OUT;
 
-    (* pack *)
     wire w;
 
     LUT4 lut (.I(LUT_IN), .O(w));

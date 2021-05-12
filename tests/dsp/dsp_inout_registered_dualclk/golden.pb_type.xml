@@ -50,7 +50,7 @@
     <direct>
       <port name="Q" type="input" from="input_dffs_gen_q_a_ff_0"/>
       <port name="a[0]" type="output" from="comb"/>
-      <pack_pattern name="DFF-DSP" type="pack">
+      <pack_pattern name="input_dffs_gen[0].q_a_ff-Q-comb-a[0]-output_dffs_gen[0].q_out_ff-D" type="pack">
         <port name="Q" type="input" from="input_dffs_gen_q_a_ff_0"/>
         <port name="a[0]" type="output" from="comb"/>
       </pack_pattern>
@@ -58,7 +58,7 @@
     <direct>
       <port name="Q" type="input" from="input_dffs_gen_q_a_ff_1"/>
       <port name="a[1]" type="output" from="comb"/>
-      <pack_pattern name="DFF-DSP" type="pack">
+      <pack_pattern name="input_dffs_gen[1].q_a_ff-Q-comb-a[1]-output_dffs_gen[0].q_out_ff-D" type="pack">
         <port name="Q" type="input" from="input_dffs_gen_q_a_ff_1"/>
         <port name="a[1]" type="output" from="comb"/>
       </pack_pattern>
@@ -66,7 +66,7 @@
     <direct>
       <port name="Q" type="input" from="input_dffs_gen_q_b_ff_0"/>
       <port name="b[0]" type="output" from="comb"/>
-      <pack_pattern name="DFF-DSP" type="pack">
+      <pack_pattern name="input_dffs_gen[0].q_b_ff-Q-comb-b[0]-output_dffs_gen[0].q_out_ff-D" type="pack">
         <port name="Q" type="input" from="input_dffs_gen_q_b_ff_0"/>
         <port name="b[0]" type="output" from="comb"/>
       </pack_pattern>
@@ -74,7 +74,7 @@
     <direct>
       <port name="Q" type="input" from="input_dffs_gen_q_b_ff_1"/>
       <port name="b[1]" type="output" from="comb"/>
-      <pack_pattern name="DFF-DSP" type="pack">
+      <pack_pattern name="input_dffs_gen[1].q_b_ff-Q-comb-b[1]-output_dffs_gen[0].q_out_ff-D" type="pack">
         <port name="Q" type="input" from="input_dffs_gen_q_b_ff_1"/>
         <port name="b[1]" type="output" from="comb"/>
       </pack_pattern>
@@ -82,7 +82,7 @@
     <direct>
       <port name="Q" type="input" from="m_ff"/>
       <port name="m" type="output" from="comb"/>
-      <pack_pattern name="DFF-DSP" type="pack">
+      <pack_pattern name="m_ff-Q-comb-m-output_dffs_gen[0].q_out_ff-D" type="pack">
         <port name="Q" type="input" from="m_ff"/>
         <port name="m" type="output" from="comb"/>
       </pack_pattern>
@@ -146,7 +146,27 @@
     <direct>
       <port name="out[0]" type="input" from="comb"/>
       <port name="D" type="output" from="output_dffs_gen_q_out_ff_0"/>
-      <pack_pattern name="DFF-DSP" type="pack">
+      <pack_pattern name="comb-out[0]-output_dffs_gen[0].q_out_ff-D" type="pack">
+        <port name="out[0]" type="input" from="comb"/>
+        <port name="D" type="output" from="output_dffs_gen_q_out_ff_0"/>
+      </pack_pattern>
+      <pack_pattern name="input_dffs_gen[0].q_a_ff-Q-comb-a[0]-output_dffs_gen[0].q_out_ff-D" type="pack">
+        <port name="out[0]" type="input" from="comb"/>
+        <port name="D" type="output" from="output_dffs_gen_q_out_ff_0"/>
+      </pack_pattern>
+      <pack_pattern name="input_dffs_gen[0].q_b_ff-Q-comb-b[0]-output_dffs_gen[0].q_out_ff-D" type="pack">
+        <port name="out[0]" type="input" from="comb"/>
+        <port name="D" type="output" from="output_dffs_gen_q_out_ff_0"/>
+      </pack_pattern>
+      <pack_pattern name="m_ff-Q-comb-m-output_dffs_gen[0].q_out_ff-D" type="pack">
+        <port name="out[0]" type="input" from="comb"/>
+        <port name="D" type="output" from="output_dffs_gen_q_out_ff_0"/>
+      </pack_pattern>
+      <pack_pattern name="input_dffs_gen[1].q_a_ff-Q-comb-a[1]-output_dffs_gen[0].q_out_ff-D" type="pack">
+        <port name="out[0]" type="input" from="comb"/>
+        <port name="D" type="output" from="output_dffs_gen_q_out_ff_0"/>
+      </pack_pattern>
+      <pack_pattern name="input_dffs_gen[1].q_b_ff-Q-comb-b[1]-output_dffs_gen[0].q_out_ff-D" type="pack">
         <port name="out[0]" type="input" from="comb"/>
         <port name="D" type="output" from="output_dffs_gen_q_out_ff_0"/>
       </pack_pattern>
@@ -158,7 +178,7 @@
     <direct>
       <port name="out[1]" type="input" from="comb"/>
       <port name="D" type="output" from="output_dffs_gen_q_out_ff_1"/>
-      <pack_pattern name="DFF-DSP" type="pack">
+      <pack_pattern name="comb-out[1]-output_dffs_gen[1].q_out_ff-D" type="pack">
         <port name="out[1]" type="input" from="comb"/>
         <port name="D" type="output" from="output_dffs_gen_q_out_ff_1"/>
       </pack_pattern>
@@ -170,7 +190,7 @@
     <direct>
       <port name="out[2]" type="input" from="comb"/>
       <port name="D" type="output" from="output_dffs_gen_q_out_ff_2"/>
-      <pack_pattern name="DFF-DSP" type="pack">
+      <pack_pattern name="comb-out[2]-output_dffs_gen[2].q_out_ff-D" type="pack">
         <port name="out[2]" type="input" from="comb"/>
         <port name="D" type="output" from="output_dffs_gen_q_out_ff_2"/>
       </pack_pattern>
@@ -182,7 +202,7 @@
     <direct>
       <port name="out[3]" type="input" from="comb"/>
       <port name="D" type="output" from="output_dffs_gen_q_out_ff_3"/>
-      <pack_pattern name="DFF-DSP" type="pack">
+      <pack_pattern name="comb-out[3]-output_dffs_gen[3].q_out_ff-D" type="pack">
         <port name="out[3]" type="input" from="comb"/>
         <port name="D" type="output" from="output_dffs_gen_q_out_ff_3"/>
       </pack_pattern>

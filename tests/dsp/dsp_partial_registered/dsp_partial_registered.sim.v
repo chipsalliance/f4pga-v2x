@@ -22,9 +22,7 @@ module DSP_PARTIAL_REGISTERED (clk, a, b, m, out);
 	output wire [DATA_WIDTH-1:0] out;
 
 	/* Input registers */
-	(* pack="DFF-DSP" *)
 	wire [DATA_WIDTH/2-1:0] q_a;
-	(* pack="DFF-DSP" *)
 	wire [DATA_WIDTH/2-1:0] q_b;
 
 	genvar i;

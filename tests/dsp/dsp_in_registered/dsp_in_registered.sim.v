@@ -22,11 +22,8 @@ module DSP_IN_REGISTERED (clk, a, b, m, out);
 	output wire [DATA_WIDTH-1:0] out;
 
 	/* Input registers */
-	(* pack="DFF2DSP" *)
 	wire [DATA_WIDTH/2-1:0] q_a;
-	(* pack="DFF2DSP" *)
 	wire [DATA_WIDTH/2-1:0] q_b;
-	(* pack="DFF2DSP" *)
 	wire q_m;
 
 	genvar i;
