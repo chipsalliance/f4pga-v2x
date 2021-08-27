@@ -11,3 +11,4 @@ pytest
 pytest-runner
 readme_renderer
 tox
+yapf==0.24.0
