@@ -22,3 +22,6 @@ jobs:
     - uses: actions/checkout@v2
 
     - uses: SymbiFlow/actions/checks@main
+      with:
+        exclude_directory: |
+          - tests
