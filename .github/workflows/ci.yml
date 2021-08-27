@@ -6,12 +6,9 @@
 #
 # SPDX-License-Identifier: ISC
 
-name: CI
-
 on: [push, pull_request]
 
 jobs:
-
 
   Checks:
     runs-on: ubuntu-latest
@@ -20,7 +17,12 @@ jobs:
       with:
         submodules: recursive
 
-    - uses: symbiflow/actions/checks@main
+    - uses: SymbiFlow/actions/checks@main
+      with:
+        exclude_directory: |
+          - tests
+          - .git
+          - third_party
 
 
   Tests:
