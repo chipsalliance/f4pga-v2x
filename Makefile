@@ -12,7 +12,7 @@ TOP_DIR := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 REQUIREMENTS_FILE ?= requirements.txt
 ENVIRONMENT_FILE ?= environment.yml
 
-TOXPYTHON ?=
+TOXENV ?=
 
 V2X_PYTHON_SRCS = $(shell find v2x -name "*py")
 
@@ -24,7 +24,7 @@ format: $(V2X_PYTHON_SRCS)
 	$(IN_CONDA_ENV) yapf -i ${V2X_PYTHON_SRCS} setup.py
 
 test-py:
-	$(IN_CONDA_ENV) TOXENV=$(TOXPYTHON) tox
+	$(IN_CONDA_ENV) TOXENV=$(TOXENV) tox
 
 .PHONY: env build test-py
 
