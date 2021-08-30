@@ -1,20 +1,30 @@
+# Copyright (C) 2021  The SymbiFlow Authors.
+#
+# Use of this source code is governed by a ISC-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/ISC
+#
+# SPDX-License-Identifier: ISC
+
 name: v2x-docs
 channels:
-- symbiflow
-- conda-forge
+  - defaults
+  - litex-hub
+  - conda-forge
 dependencies:
-- python=3.7
-- pip
-- pycairo
-- pango
-- pygobject
-- symbiflow-yosys
-- netlistsvg
-# ReadTheDocs dependencies (installed here but also by the docs build CI)
-- mock
-- pillow
-- sphinx
-- sphinx_rtd_theme
-# Packages installed from PyPI
-- pip:
-  - -r file:requirements.txt
+  - litex-hub::symbiflow-yosys
+  - python=3.7
+  - pip
+  - pycairo
+  - pango
+  - pygobject
+  - netlistsvg
+  - nodejs
+  # ReadTheDocs dependencies (installed here but also by the docs build CI)
+  - mock
+  - pillow
+  - Sphinx=3.3.0
+  - sphinx_rtd_theme
+  # Packages installed from PyPI
+  - pip:
+    - -r requirements.txt

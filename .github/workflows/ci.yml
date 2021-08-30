@@ -1,16 +1,28 @@
-name: CI
+# Copyright (C) 2021  The Symbiflow Authors.
+#
+# Use of this source code is governed by a ISC-style
+# license that can be found in the LICENSE file or at
+# https://opensource.org/licenses/ISC
+#
+# SPDX-License-Identifier: ISC
 
 on: [push, pull_request]
 
 jobs:
 
-
   Checks:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: recursive
 
-    - uses: symbiflow/actions/checks@main
+    - uses: SymbiFlow/actions/checks@main
+      with:
+        exclude_directory: |
+          - tests
+          - .git
+          - third_party
 
 
   Tests:
@@ -20,17 +32,18 @@ jobs:
         python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
     - uses: actions/checkout@v2
+      with:
+        submodules: recursive
 
     - name: Setup
       run: |
         sed -i -e's/- python/- python=${{ matrix.python-version }}/' environment.yml
         cat environment.yml
-        # FIXME: #65 - Replace with `make-env`
-        ./prepareenv.sh
+        make env
 
     - name: Test
       run: |
-        TOXENV="$(echo py${{ matrix.python-version }} | sed -e's/\.//g')" .github/test.sh
+        TOXENV="$(echo py${{ matrix.python-version }} | sed -e's/\.//g')" make test-py
 
     - name: Upload test results
       uses: actions/upload-artifact@v2

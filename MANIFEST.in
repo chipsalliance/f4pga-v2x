@@ -1,7 +1,9 @@
 exclude .readthedocs.yml
+exclude .gitmodules
 exclude environment.yml
 exclude tox.ini
 exclude *.swp
+exclude Makefile
 prune conf
 prune third_party
 
