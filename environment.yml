@@ -11,7 +11,7 @@ channels:
   - defaults
   - litex-hub
 dependencies:
-  - litex-hub::symbiflow-yosys
+  - litex-hub::yosys=0.9_5007_g2116c585
   - python
   - pip
   - pip:
