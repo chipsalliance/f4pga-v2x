@@ -58,7 +58,6 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'sphinx_markdown_tables',
-    'symbolator_sphinx',
     'sphinxcontrib_hdl_diagrams'
 ]
 
