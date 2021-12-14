@@ -13,9 +13,6 @@ git+https://github.com/SymbiFlow/sphinxcontrib-markdown-symlinks.git@master#egg=
 # HDL diagrams using Yosys + netlistsvg
 git+https://github.com/SymbiFlow/sphinxcontrib-hdl-diagrams.git@master#egg=sphinxcontrib-hdl-diagrams
 
-# Module diagrams
-git+https://github.com/SymbiFlow/symbolator.git@master#egg=symbolator
-
 pycairo
 # vext.gi
 

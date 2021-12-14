@@ -12,7 +12,7 @@ channels:
   - litex-hub
   - conda-forge
 dependencies:
-  - litex-hub::symbiflow-yosys
+  - litex-hub::yosys=0.9_5007_g2116c585
   - python=3.7
   - pip
   - pycairo
