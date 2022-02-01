@@ -8,7 +8,6 @@
 # https://opensource.org/licenses/ISC
 #
 # SPDX-License-Identifier:	ISC
-
 """
 Generate MUX.
 
@@ -30,54 +29,46 @@ from .lib.asserts import assert_eq
 parser = argparse.ArgumentParser(
     description='Generate a MUX wrapper.',
     fromfile_prefix_chars='@',
-    prefix_chars='-~'
-)
+    prefix_chars='-~')
 
 parser.add_argument(
     '--verbose',
     '--no-verbose',
     action=ActionStoreBool,
     default=os.environ.get('V', '') == '1',
-    help="Print lots of information about the generation."
-)
+    help="Print lots of information about the generation.")
 
 parser.add_argument('--width', type=int, default=8, help="Width of the MUX.")
 
 parser.add_argument(
-    '--data-width', type=int, default=1, help="data width of the MUX."
-)
+    '--data-width', type=int, default=1, help="data width of the MUX.")
 
 parser.add_argument(
     '--type',
     choices=['logic', 'routing'],
     default='logic',
-    help="Type of MUX."
-)
+    help="Type of MUX.")
 
 parser.add_argument(
     '--split-inputs',
     action=ActionStoreBool,
     default=False,
-    help="Split the inputs into separate signals"
-)
+    help="Split the inputs into separate signals")
 
 parser.add_argument(
     '--split-selects',
     action=ActionStoreBool,
     default=False,
-    help="Split the selects into separate signals"
-)
+    help="Split the selects into separate signals")
 
 parser.add_argument(
-    '--name-mux', type=str, default='MUX', help="Name of the mux."
-)
+    '--name-mux', type=str, default='MUX', help="Name of the mux.")
 
 parser.add_argument(
     '--name-input',
     type=str,
     default='I',
-    help="Name of the input values for the mux."
-)
+    help="Name of the input values for the mux.")
 
 parser.name_inputs = parser.add_argument(
     '--name-inputs',
@@ -92,15 +83,13 @@ parser.add_argument(
     '--name-output',
     type=str,
     default='O',
-    help="Name of the output value for the mux."
-)
+    help="Name of the output value for the mux.")
 
 parser.add_argument(
     '--name-select',
     type=str,
     default='S',
-    help="Name of the select parameter for the mux."
-)
+    help="Name of the select parameter for the mux.")
 
 parser.name_selects = parser.add_argument(
     '--name-selects',
@@ -108,8 +97,7 @@ parser.name_selects = parser.add_argument(
     default=None,
     help=  # noqa: E251
     "Comma deliminator list for the name of each select to the mux " +
-    "(implies --split-selects)."
-)
+    "(implies --split-selects).")
 
 parser.add_argument(
     '--order',
@@ -118,54 +106,48 @@ parser.add_argument(
     default='iso',
     help=  # noqa: E251
     """Order of the arguments for the MUX.
-(i - Inputs, o - Output, s - Select)"""
-)
+(i - Inputs, o - Output, s - Select)""")
 
 parser.add_argument(
     '--outdir',
     default=None,
-    help="""Directory to output generated content too."""
-)
+    help="""Directory to output generated content too.""")
 
 parser.add_argument(
     '--outfilename',
     default=None,
-    help="""Filename to output generated content too."""
-)
+    help="""Filename to output generated content too.""")
 
 parser.add_argument(
-    '--comment', default=None, help="""Add some type of comment to the mux."""
-)
+    '--comment', default=None, help="""Add some type of comment to the mux.""")
 
 parser.add_argument(
-    '--num_pb', default=1, help="""Set the num_pb for the mux."""
-)
+    '--num_pb', default=1, help="""Set the num_pb for the mux.""")
 
 parser.add_argument(
-    '--subckt', default=None, help="""Override the subcircuit name."""
-)
+    '--subckt', default=None, help="""Override the subcircuit name.""")
 
 
-def mux_gen(argv=('Python function', ),
-            width=8,
-            data_width=1,
-            datatype='logic',
-            split_inputs=False,
-            split_selects=False,
-            name_mux='MUX',
-            name_input='I',
-            name_inputs=None,
-            name_output='O',
-            name_select='S',
-            name_selects=None,
-            order='iso',
-            outdir=None,
-            outfilename=None,
-            comment=None,
-            num_pb=1,
-            subckt=None,
-            verbose=False
-            ):
+def mux_gen(
+        argv=('Python function', ),
+        width=8,
+        data_width=1,
+        datatype='logic',
+        split_inputs=False,
+        split_selects=False,
+        name_mux='MUX',
+        name_input='I',
+        name_inputs=None,
+        name_output='O',
+        name_select='S',
+        name_selects=None,
+        order='iso',
+        outdir=None,
+        outfilename=None,
+        comment=None,
+        num_pb=1,
+        subckt=None,
+        verbose=False):
     def output_block(name, s):
         if verbose:
             print()
@@ -195,8 +177,7 @@ def mux_gen(argv=('Python function', ),
 
     if data_width > 1 and not split_inputs:
         assert False, "data_width(%d) > 1 requires using split_inputs" % (
-            data_width
-        )
+            data_width)
 
     name_input_default = 'I'
     name_inputs_default = None
@@ -209,14 +190,11 @@ def mux_gen(argv=('Python function', ),
         split_inputs = True
 
         names = name_inputs.split(',')
-        assert len(names) == width, "%s input names, but %s needed." % (
-            names, width
-        )
+        assert len(
+            names) == width, "%s input names, but %s needed." % (names, width)
         name_inputs = names
     elif split_inputs:
-        name_inputs = [
-            name_input + str(i) for i in range(width)
-        ]
+        name_inputs = [name_input + str(i) for i in range(width)]
         name_inputs_default = name_inputs
         assert_eq(name_inputs_default, name_inputs)
 
@@ -227,13 +205,10 @@ def mux_gen(argv=('Python function', ),
 
         names = name_selects.split(',')
         assert len(names) == width_bits, (
-            "%s select names, but %s needed." % (names, width_bits)
-        )
+            "%s select names, but %s needed." % (names, width_bits))
         name_selects = names
     elif split_selects:
-        name_selects = [
-            name_select + str(i) for i in range(width_bits)
-        ]
+        name_selects = [name_select + str(i) for i in range(width_bits)]
         name_selects.default = name_selects
         assert_eq(name_selects_default, name_selects)
 
@@ -266,44 +241,33 @@ Generated with %s
             if split_inputs:
                 port_names.extend(
                     mux_lib.ModulePort(
-                        mux_lib.MuxPinType.INPUT, name_inputs[j], 1,
-                        '[%i]' % j, data_width
-                    ) for j in range(width)
-                )
+                        mux_lib.MuxPinType.INPUT, name_inputs[j], 1, '[%i]' %
+                        j, data_width) for j in range(width))
             else:
                 # verilog range bounds are inclusive and convention is
                 # [<width-1>:0]
                 port_names.append(
                     mux_lib.ModulePort(
                         mux_lib.MuxPinType.INPUT, name_input, width,
-                        '[%i:0]' % (width - 1)
-                    )
-                )
+                        '[%i:0]' % (width - 1)))
         elif i == 's':
             if split_selects:
                 port_names.extend(
                     mux_lib.ModulePort(
-                        mux_lib.MuxPinType.SELECT, name_selects[j], 1,
-                        '[%i]' % j
-                    ) for j in range(width_bits)
-                )
+                        mux_lib.MuxPinType.SELECT, name_selects[j], 1, '[%i]' %
+                        j) for j in range(width_bits))
             else:
                 # verilog range bounds are inclusive and convention is
                 # [<width-1>:0]
                 assert name_select is not None
                 port_names.append(
                     mux_lib.ModulePort(
-                        mux_lib.MuxPinType.SELECT, name_select,
-                        width_bits, '[%i:0]' % (width_bits - 1)
-                    )
-                )
+                        mux_lib.MuxPinType.SELECT, name_select, width_bits,
+                        '[%i:0]' % (width_bits - 1)))
         elif i == 'o':
             port_names.append(
                 mux_lib.ModulePort(
-                    mux_lib.MuxPinType.OUTPUT, name_output, 1, '',
-                    data_width
-                )
-            )
+                    mux_lib.MuxPinType.OUTPUT, name_output, 1, '', data_width))
 
     # ------------------------------------------------------------------------
     # Generate the techmap Verilog module
@@ -314,8 +278,8 @@ Generated with %s
         with open(techmap_pathname, "w") as f:
             module_args = []
             for port in port_names:
-                if (datatype == 'routing' and
-                        port.pin_type == mux_lib.MuxPinType.SELECT):
+                if (datatype == 'routing'
+                        and port.pin_type == mux_lib.MuxPinType.SELECT):
                     continue
                 module_args.append(port.name)
 
@@ -325,8 +289,7 @@ Generated with %s
 
             f.write(
                 "module %s(%s);\n" %
-                (name_mux.upper(), ", ".join(module_args))
-            )
+                (name_mux.upper(), ", ".join(module_args)))
             f.write('\tparameter MODE = "";\n')
 
             modes = [
@@ -347,9 +310,8 @@ Generated with %s
             f.write('\tgenerate\n')
             for i, mode in enumerate(modes):
                 f.write(
-                    '\t\t%s ( MODE == "%s" )\n' %
-                    (('if', 'else if')[i > 0], mode)
-                )
+                    '\t\t%s ( MODE == "%s" )\n' % (
+                        ('if', 'else if')[i > 0], mode))
                 f.write('\t\tbegin\n')
                 f.write('\t\t\tassign %s = %s;\n' % (outputs[0], mode))
                 f.write('\t\tend\n')
@@ -367,8 +329,8 @@ Generated with %s
     with open(sim_pathname, "w") as f:
         module_args = []
         for port in port_names:
-            if (datatype == 'routing' and
-                    port.pin_type == mux_lib.MuxPinType.SELECT):
+            if (datatype == 'routing'
+                    and port.pin_type == mux_lib.MuxPinType.SELECT):
                 continue
             module_args.append(port.name)
 
@@ -389,8 +351,7 @@ Generated with %s
                     width,
                     '',
                     width,
-                )
-            )
+                ))
         f.write("\n")
         f.write('(* CLASS="%s" *)\n' % mux_class)
 
@@ -412,16 +373,14 @@ Generated with %s
 
         f.write('(* whitebox *)\n')
         f.write(
-            "module %s(%s);\n" %
-            (name_mux.upper(), ", ".join(module_args))
-        )
+            "module %s(%s);\n" % (name_mux.upper(), ", ".join(module_args)))
         previous_type = None
         for port in port_names:
             if previous_type != port.pin_type:
                 f.write("\n")
                 previous_type = port.pin_type
-            if (datatype == 'routing' and
-                    port.pin_type == mux_lib.MuxPinType.SELECT):
+            if (datatype == 'routing'
+                    and port.pin_type == mux_lib.MuxPinType.SELECT):
                 f.write('\tparameter MODE = "";\n')
             else:
                 f.write(port.getDefinition())
@@ -429,9 +388,7 @@ Generated with %s
         f.write("\n")
         if data_width > 1:
             f.write('\tgenvar\tii;\n')
-            f.write(
-                '\tfor(ii=0; ii<%d; ii++) begin: bitmux\n' % (data_width)
-            )
+            f.write('\tfor(ii=0; ii<%d; ii++) begin: bitmux\n' % (data_width))
 
         if datatype == 'logic':
             f.write('\tMUX%s mux (\n' % width)
@@ -482,19 +439,18 @@ Generated with %s
             f.write('\tgenerate\n')
             for i, mode in enumerate(modes):
                 f.write(
-                    '\t\t%s ( MODE == "%s" )\n' %
-                    (('if', 'else if')[i > 0], mode)
-                )
+                    '\t\t%s ( MODE == "%s" )\n' % (
+                        ('if', 'else if')[i > 0], mode))
                 f.write('\t\tbegin:SELECT_%s\n' % mode)
                 f.write('\t\t\tassign %s = %s;\n' % (outputs[0], mode))
                 f.write('\t\tend\n')
             f.write('\t\telse\n')
             f.write('\t\tbegin\n')
             f.write(
-                ('\t\t\t//$error("%s: Invalid routing value %%s ' +
-                    '(options are: %s)", MODE);\n')
-                % (name_mux, ", ".join(modes))
-            )
+                (
+                    '\t\t\t//$error("%s: Invalid routing value %%s ' +
+                    '(options are: %s)", MODE);\n') %
+                (name_mux, ", ".join(modes)))
             f.write('\t\tend\n')
             f.write('\tendgenerate\n')
 
@@ -532,14 +488,13 @@ Generated with %s
                 ET.SubElement(
                     input_ports, 'port', {
                         'name':
-                            port.name,
+                        port.name,
                         'combinational_sink_ports':
-                            ' '.join(
-                                port.name for port in port_names if
-                                port.pin_type in (mux_lib.MuxPinType.OUTPUT, )
-                            ),
-                    }
-                )
+                        ' '.join(
+                            port.name
+                            for port in port_names
+                            if port.pin_type in (mux_lib.MuxPinType.OUTPUT, )),
+                    })
             elif port.pin_type in (mux_lib.MuxPinType.OUTPUT, ):
                 ET.SubElement(output_ports, 'port', {'name': port.name})
 
@@ -575,26 +530,27 @@ Generated with %s
 def main(argv):
     args = parser.parse_args()
 
-    mux_gen(argv=argv,
-            width=args.width,
-            data_width=args.data_width,
-            datatype=args.type,
-            split_inputs=args.split_inputs,
-            split_selects=args.split_selects,
-            name_mux=args.name_mux,
-            name_input=args.name_input,
-            name_inputs=args.name_inputs,
-            name_output=args.name_output,
-            name_select=args.name_select,
-            name_selects=args.name_selects,
-            order=args.order,
-            outdir=args.outdir,
-            outfilename=args.outfilename,
-            comment=args.comment,
-            num_pb=args.num_pb,
-            subckt=args.subckt,
-            verbose=args.verbose,
-            )
+    mux_gen(
+        argv=argv,
+        width=args.width,
+        data_width=args.data_width,
+        datatype=args.type,
+        split_inputs=args.split_inputs,
+        split_selects=args.split_selects,
+        name_mux=args.name_mux,
+        name_input=args.name_input,
+        name_inputs=args.name_inputs,
+        name_output=args.name_output,
+        name_select=args.name_select,
+        name_selects=args.name_selects,
+        order=args.order,
+        outdir=args.outdir,
+        outfilename=args.outfilename,
+        comment=args.comment,
+        num_pb=args.num_pb,
+        subckt=args.subckt,
+        verbose=args.verbose,
+    )
 
 
 if __name__ == "__main__":

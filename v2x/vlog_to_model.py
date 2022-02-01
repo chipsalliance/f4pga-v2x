@@ -8,7 +8,6 @@
 # https://opensource.org/licenses/ISC
 #
 # SPDX-License-Identifier:	ISC
-
 """
 Convert a Verilog simulation model to a VPR `model.xml`
 
@@ -60,14 +59,10 @@ def is_clock_assoc(infiles, module, clk, port, direction):
     -------
     is_clock_assoc: bool
     """
-    clock_assoc_signals = run.get_clock_assoc_signals(
-        infiles, module, clk
-    )
+    clock_assoc_signals = run.get_clock_assoc_signals(infiles, module, clk)
 
     if direction == "input":
-        assoc_outputs = run.get_related_output_for_input(
-            infiles, module, port
-        )
+        assoc_outputs = run.get_related_output_for_input(infiles, module, port)
         for out in assoc_outputs:
             if out in clock_assoc_signals:
                 return True
@@ -104,8 +99,9 @@ def vlog_to_model(infiles, includes, top, outfile=None):
     # Check Yosys version
     pfx = run.determine_select_prefix()
     if pfx != "=":
-        print("ERROR The version of Yosys found is outdated and not supported"
-              " by V2X")
+        print(
+            "ERROR The version of Yosys found is outdated and not supported"
+            " by V2X")
         sys.exit(-1)
 
     iname = os.path.basename(infiles[0])
@@ -133,8 +129,7 @@ def vlog_to_model(infiles, includes, top, outfile=None):
                 print(
                     """\
     ERROR file name not of format %.sim.v ({}), cannot detect top level.
-    Manually specify the top level module using --top"""
-                ).format(iname)
+    Manually specify the top level module using --top""").format(iname)
                 sys.exit(1)
 
     assert top is not None
@@ -143,8 +138,7 @@ def vlog_to_model(infiles, includes, top, outfile=None):
         print(
             """\
     ERROR: more than one module in design, cannot detect top level.
-    Manually specify the top level module using --top"""
-        )
+    Manually specify the top level module using --top""")
         sys.exit(1)
 
     tmod = yj.top_module
@@ -173,19 +167,15 @@ def vlog_to_model(infiles, includes, top, outfile=None):
             if wm:
                 model_path = "{}/{}.model.xml".format(
                     module_path,
-                    wm.group(1).lower()
-                )
+                    wm.group(1).lower())
             else:
                 assert False, "included Verilog file name {} does \
-                        not follow pattern %%.sim.v".format(
-                    module_basename
-                )
+                        not follow pattern %%.sim.v".format(module_basename)
             xmlinc.include_xml(
                 parent=models_xml,
                 href=model_path,
                 outfile=outfile,
-                xptr="xpointer(models/child::node())"
-            )
+                xptr="xpointer(models/child::node())")
     else:
         # Is a leaf model
         topname = tmod.attr("MODEL_NAME", top)
@@ -231,8 +221,7 @@ def vlog_to_model(infiles, includes, top, outfile=None):
                 else:
                     clks = list()
                     for clk in clocks:
-                        if is_clock_assoc(
-                           infiles, top, clk, name, iodir):
+                        if is_clock_assoc(infiles, top, clk, name, iodir):
 
                             clks.append(clk)
                         if clks and int(port_attrs.get("NO_SEQ", 0)) == 0:
@@ -250,7 +239,7 @@ def vlog_to_model(infiles, includes, top, outfile=None):
                                   in VPR models"
 
     if len(models_xml) == 0:
-        models_xml.insert(0,
-                          ET.Comment("this file is intentionally left blank"))
+        models_xml.insert(
+            0, ET.Comment("this file is intentionally left blank"))
 
     return ET.tostring(models_xml, pretty_print=True).decode('utf-8')
