@@ -271,8 +271,7 @@ Generated with %s
                     ) for j in range(width)
                 )
             else:
-                # verilog range bounds are inclusive and convention is
-                # [<width-1>:0]
+                # verilog range bounds are inclusive and convention is [<width-1>:0]
                 port_names.append(
                     mux_lib.ModulePort(
                         mux_lib.MuxPinType.INPUT, name_input, width,
