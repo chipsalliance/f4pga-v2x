@@ -179,8 +179,7 @@ def commands(commands, infiles=[]):
     infiles : list of input files
     """
     commands = "read_verilog {} {} {}; ".format(
-        get_defines(), get_includes(), " ".join(infiles)
-    ) + commands
+        get_defines(), get_includes(), " ".join(infiles)) + commands
     params = ["-p", commands]
     return get_output(params)
 
@@ -198,8 +197,7 @@ def script(script, infiles=[]):
 
 
 def vlog_to_json(
-        infiles, flatten=False, aig=False, mode=None, module_with_mode=None
-):
+        infiles, flatten=False, aig=False, mode=None, module_with_mode=None):
     """
     Convert Verilog to a JSON representation using Yosys
 
@@ -309,8 +307,7 @@ def get_combinational_sinks(infiles, module, innet):
     innet: Name of input net to find sinks of
     """
     return do_select(
-        infiles, module, "={} %co* =o:* %i ={} %d".format(innet, innet)
-    )
+        infiles, module, "={} %co* =o:* %i ={} %d".format(innet, innet))
 
 
 def list_clocks(infiles, module):
@@ -323,8 +320,7 @@ def list_clocks(infiles, module):
     """
     return do_select(
         infiles, module,
-        "=c:* %x:+[CLK]:+[clk]:+[clock]:+[CLOCK] =c:* %d =x:* %i"
-    )
+        "=c:* %x:+[CLK]:+[clk]:+[clock]:+[CLOCK] =c:* %d =x:* %i")
 
 
 def get_clock_assoc_signals(infiles, module, clk):
@@ -339,9 +335,7 @@ def get_clock_assoc_signals(infiles, module, clk):
     return do_select(
         infiles, module,
         "select -list ={} %a %co* %x =i:* =o:* %u %i =a:ASSOC_CLOCK={} %u ={} "
-        "%d".
-        format(clk, clk, clk)
-    )
+        "%d".format(clk, clk, clk))
 
 
 # Find things which affect the given output
@@ -364,8 +358,7 @@ def get_related_output_for_input(infiles, module, signal):
     clk: Name of clock to find associated signals
     """
     return do_select(
-        infiles, module, "select -list =w:*{} %a %co* =o:* %i".format(signal)
-    )
+        infiles, module, "select -list =w:*{} %a %co* =o:* %i".format(signal))
 
 
 def get_related_inputs_for_input(infiles, module, signal):
@@ -379,7 +372,6 @@ def get_related_inputs_for_input(infiles, module, signal):
     """
     return [
         x for x in do_select(
-            infiles, module,
-            "select -list =w:*{} %a %co* %x =i:* %i".format(signal)
-        ) if x != signal
+            infiles, module, "select -list =w:*{} %a %co* %x =i:* %i".format(
+                signal)) if x != signal
     ]

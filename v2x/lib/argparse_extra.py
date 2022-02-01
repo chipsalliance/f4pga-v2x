@@ -71,8 +71,7 @@ class ActionStoreBool(argparse.Action):
             default=None,
             required=False,
             help=None,
-            metavar=None
-    ):
+            metavar=None):
         self.orig_option_strings = option_strings
         new_option_strings = []
         for s in option_strings:
@@ -90,8 +89,7 @@ class ActionStoreBool(argparse.Action):
             choices=None,
             required=required,
             help=help,
-            metavar=metavar
-        )
+            metavar=metavar)
 
     def value(self, s):
         if not s:
@@ -113,8 +111,7 @@ class ActionStoreBool(argparse.Action):
 
     def __repr__(self):
         return "ActionStoreBool({}, {})".format(
-            self.orig_option_strings, self.default
-        )
+            self.orig_option_strings, self.default)
 
 
 if __name__ == "__main__":

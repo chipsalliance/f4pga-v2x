@@ -8,7 +8,6 @@
 # https://opensource.org/licenses/ISC
 #
 # SPDX-License-Identifier:	ISC
-
 """\
 Convert a Verilog simulation model to a VPR `pb_type.xml`
 
@@ -99,8 +98,8 @@ def normalize_pb_name(pb_name):
     normalized_name = pb_name.replace('.', '_')
     if index is not None:
         normalized_name = normalized_name.replace(
-            index.group(0), ""
-        ) + index.group(0).replace('[', '_').replace(']', '')
+            index.group(0), "") + index.group(0).replace('[', '_').replace(
+                ']', '')
 
     return normalized_name
 
@@ -124,8 +123,7 @@ def is_mod_blackbox(mod):
 
 # $genblock$/vlog/tests/multiple_instance/multiple_instance.sim.v:12$64[57].\comb
 GENBLOCK_REGEX = re.compile(
-    "^\\$genblock\\$.*:[0-9]+\\$[0-9]+\\[(.*)\\]\\.\\\\(.*)"
-)
+    "^\\$genblock\\$.*:[0-9]+\\$[0-9]+\\[(.*)\\]\\.\\\\(.*)")
 
 
 def strip_name(name: str, include_index=True) -> str:
@@ -156,8 +154,8 @@ CellPin = Tuple[CellName, PinName]
 
 
 def create_port(
-        dir_xml: ET.Element, cell_pin: CellPin, direction: str, metadata=None
-) -> ET.Element:
+        dir_xml: ET.Element, cell_pin: CellPin, direction: str,
+        metadata=None) -> ET.Element:
     cell_name, pin_name = cell_pin
     port = dict()
     port['name'] = pin_name
@@ -196,9 +194,7 @@ def copy_attrs(dst, srcs):
             assert avalue == dst[attr]
             raise ValueError(
                 '{} on net has value {} but pins have {}'.format(
-                    attr, dst[attr], avalue
-                )
-            )
+                    attr, dst[attr], avalue))
         dst[attr] = avalue
 
 
@@ -232,8 +228,8 @@ def net_and_pin_attrs(yj, mod, driver: CellPin, sink: CellPin, netid: int):
 
 
 def make_direct_conn(
-        ic_xml: ET.Element, driver: CellPin, sink: CellPin, path_attr: dict
-) -> ET.Element:
+        ic_xml: ET.Element, driver: CellPin, sink: CellPin,
+        path_attr: dict) -> ET.Element:
     dir_xml = ET.SubElement(ic_xml, 'direct')
     create_port(dir_xml, driver, "input")
     create_port(dir_xml, sink, "output")
@@ -244,8 +240,7 @@ def make_direct_conn(
             dir_xml, 'pack_pattern', {
                 'name': pack_name,
                 'type': 'pack'
-            }
-        )
+            })
         create_port(pp_xml, driver, "input")
         create_port(pp_xml, sink, "output")
 
@@ -255,8 +250,7 @@ def make_direct_conn(
             dir_xml, 'pack_pattern', {
                 'name': carry_name,
                 'type': 'carry'
-            }
-        )
+            })
         create_port(pp_xml, driver, "input")
         create_port(pp_xml, sink, "output")
 
@@ -265,19 +259,24 @@ def make_direct_conn(
 
 def make_mux_conn(
         ic_xml: ET.Element, mux_name: str, mux_inputs: Dict[CellPin, CellPin],
-        mux_outputs: Dict[CellPin, List[CellPin]]
-) -> ET.Element:
+        mux_outputs: Dict[CellPin, List[CellPin]]) -> ET.Element:
 
     mux_xml = ET.SubElement(ic_xml, "mux", {"name": mux_name})
 
     keys = sorted(list(mux_inputs.keys()))
-    for mux_input, driver in [(k, mux_inputs[k],) for k in keys]:
+    for mux_input, driver in [(
+            k,
+            mux_inputs[k],
+    ) for k in keys]:
         metadata = {'fasm_mux': '{}.{}'.format(mux_name, mux_input)}
         create_port(mux_xml, driver, "input", metadata=metadata)
 
     assert len(mux_outputs) == 1, mux_outputs
     keys = sorted(list(mux_outputs.keys()))
-    for mux_pin, sinks in [(k, mux_outputs[k],) for k in keys]:
+    for mux_pin, sinks in [(
+            k,
+            mux_outputs[k],
+    ) for k in keys]:
         assert len(sinks) == 1, sinks
         for sink_pin, path_attr in sinks:
             create_port(mux_xml, sink_pin, "output")
@@ -316,25 +315,20 @@ def get_interconnects(yj, mod, mod_pname: str,
             drvs = mod.net_drivers(net)
             assert len(drvs) > 0, (
                 "ERROR: pin {}.{} has no driver, \
-                interconnect will be missing\n{}"
-                .format(cname, pin, mod)
-            )
+                interconnect will be missing\n{}".format(cname, pin, mod))
             assert len(drvs) < 2, (
                 "ERROR: pin {}.{} has multiple drivers, \
-                interconnect will be overspecified"
-                .format(cname, pin)
-            )
+                interconnect will be overspecified".format(cname, pin))
             for drv_cell, drv_pin in drvs:
                 net_attr = net_and_pin_attrs(
-                    yj, mod, (drv_cell, drv_pin), (pb_name, pin), net
-                )
+                    yj, mod, (drv_cell, drv_pin), (pb_name, pin), net)
 
                 drv_cell_name = strip_name(drv_cell)
                 assert drv_cell_name in valid_names
                 if drv_cell_name == mod_pname:
                     drv_cell_name = None
-                interconn[(drv_cell_name,
-                           drv_pin)].append(((pb_name, pin), net_attr))
+                interconn[(drv_cell_name, drv_pin)].append(
+                    ((pb_name, pin), net_attr))
 
         # Only consider outputs from cell to top level IO.
         # Inputs to other cells will be dealt with in those cells.
@@ -345,8 +339,7 @@ def get_interconnects(yj, mod, mod_pname: str,
                 if sink_cell != mod.name:
                     continue
                 net_attr = net_and_pin_attrs(
-                    yj, mod, (pb_name, pin), (None, sink_pin), net
-                )
+                    yj, mod, (pb_name, pin), (None, sink_pin), net)
                 interconn[(pb_name, pin)].append(((None, sink_pin), net_attr))
 
     # Passthrough connections. Get ports along with connections
@@ -409,9 +402,21 @@ def mode_interconnects(mod, mode_name) -> Dict[CellPin, List[CellPin]]:
     interconn = {}
     for name, width, bits, iodir in mod.ports:
         if iodir == "input":
-            interconn[(None, name)] = [((mode_name, name,), {},)]
+            interconn[(None, name)] = [(
+                (
+                    mode_name,
+                    name,
+                ),
+                {},
+            )]
         else:
-            interconn[(mode_name, name)] = [((None, name,), {},)]
+            interconn[(mode_name, name)] = [(
+                (
+                    None,
+                    name,
+                ),
+                {},
+            )]
     return interconn
 
 
@@ -512,16 +517,14 @@ def get_list_name_and_length(v: List[str]) -> Tuple[str, int]:
         return True
 
     assert '[' in v[0], "No index brackets found in item 0: {}\n{}".format(
-        v[0], v
-    )
+        v[0], v)
     list_name = v[0][:v[0].rfind('[')]
     sl = sorted(v, key=len)
     for i in range(0, len(v)):
         expected_item = "{}[{}]".format(list_name, i)
         assert expected_item == sl[
             i], "index {} expected: {} != actual: {}\n{}".format(
-                i, expected_item, sl[i], sl
-        )
+                i, expected_item, sl[i], sl)
     return list_name, len(v)
 
 
@@ -554,13 +557,11 @@ def make_ports(clocks, mod, pb_type_xml, only_type=None):
                 port_xml, 'pack_pattern', {
                     'name': carry_name,
                     'type': 'carry'
-                }
-            )
+                })
 
 
 def make_container_pb(
-        outfile, yj, mod, mod_pname, pb_type_xml, routing, children
-):
+        outfile, yj, mod, mod_pname, pb_type_xml, routing, children):
     # Containers have to include children
     # ------------------------------------------------------------
     for child_prefix, (child_type, children_names) in children.items():
@@ -598,8 +599,7 @@ def make_container_pb(
             parent_xml.append(ET.Comment(comment_str))
 
         xmlinc.include_xml(
-            parent=parent_xml, href=pb_type_path, outfile=outfile, xptr=xptr
-        )
+            parent=parent_xml, href=pb_type_path, outfile=outfile, xptr=xptr)
 
     # Contains need interconnect to their children
     # ------------------------------------------------------------
@@ -631,8 +631,11 @@ def make_container_pb(
         if driver_cell in routing_cells:
             continue
 
-        non_routing_sinks = [(sink, path_attr) for sink, path_attr in sinks
-                             if sink[0] not in routing_cells]
+        non_routing_sinks = [
+            (sink, path_attr)
+            for sink, path_attr in sinks
+            if sink[0] not in routing_cells
+        ]
 
         is_forking = len(non_routing_sinks) > 1
 
@@ -648,8 +651,7 @@ def make_container_pb(
 
             make_direct_conn(
                 ic_xml, (normalize_pb_name(driver_cell), driver_pin),
-                (normalize_pb_name(sink_cell), sink_pin), attrs
-            )
+                (normalize_pb_name(sink_cell), sink_pin), attrs)
 
     # Generate the mux interconnects
     for mux_cell in routing_cells:
@@ -662,20 +664,17 @@ def make_container_pb(
         assert len(mux_outputs) == 1, """\
 Mux {} has multiple outputs ({})!
 Currently muxes can only drive a single output.""".format(
-            mux_cell, ", ".join(mux_outputs.keys())
-        )
+            mux_cell, ", ".join(mux_outputs.keys()))
         for mux_output_pin, sinks in mux_outputs.items():
             assert len(sinks) == 1, """\
 Mux {}.{} has multiple outputs ({})!
 Currently muxes can only drive a single output.""".format(
-                mux_cell, mux_output_pin,
-                ", ".join("{}.{}".format(*pin) for pin, path_attr in sinks)
-            )
+                mux_cell, mux_output_pin, ", ".join(
+                    "{}.{}".format(*pin) for pin, path_attr in sinks))
             for (sink_cell, sink_pin), path_attr in sinks:
                 assert sink_cell not in routing_names, """\
 Mux {}.{} is trying to drive mux input pin {}.{}""".format(
-                    mux_cell, mux_output_pin, sink_cell, sink_pin
-                )
+                    mux_cell, mux_output_pin, sink_cell, sink_pin)
 
         mux_inputs = {}
         for (driver_cell, driver_pin), sinks in interconn.items():
@@ -690,8 +689,7 @@ Mux {}.{} is trying to drive mux input pin {}.{}""".format(
 Pin {}.{} is trying to drive mux pin {}.{} (already driving by {}.{})\
                  """.format(
                     driver_cell, driver_pin, mux_cell, mux_pin,
-                    *mux_inputs[sink_pin]
-                )
+                    *mux_inputs[sink_pin])
                 mux_inputs[mux_pin] = (driver_cell, driver_pin)
 
         make_mux_conn(ic_xml, mux_cell, mux_inputs, mux_outputs)
@@ -744,8 +742,7 @@ def make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml):
                         "in_port": inport,
                         "out_port": port,
                         "max": str(atvalue)
-                    }
-                )
+                    })
             elif attr.startswith(dly_mat_prefix):
                 # Constant delay matrices
                 inp = attr[len(dly_mat_prefix):]
@@ -756,15 +753,18 @@ def make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml):
                         "in_port": inport,
                         "out_port": port,
                         "type": "max"
-                    }
-                )
+                    })
                 xml_mat.text = mat
 
 
 def make_pb_type(
-        infiles, outfile, yj, mod, mode_processing=False,
-        mode_xml=None, mode_name=None
-):
+        infiles,
+        outfile,
+        yj,
+        mod,
+        mode_processing=False,
+        mode_xml=None,
+        mode_name=None):
     """Build the pb_type for a given module. mod is the YosysModule object to
     generate."""
 
@@ -817,8 +817,7 @@ def make_pb_type(
                 "num_pb": "1",
                 "name": mod_pname
             },
-            nsmap={'xi': xmlinc.xi_url}
-        )
+            nsmap={'xi': xmlinc.xi_url})
     else:
         pb_type_xml = ET.SubElement(
             mode_xml,
@@ -826,8 +825,7 @@ def make_pb_type(
                 "num_pb": "1",
                 "name": mode_name
             },
-            nsmap={'xi': xmlinc.xi_url}
-        )
+            nsmap={'xi': xmlinc.xi_url})
 
     if 'blif_model' in pb_attrs:
         ET.SubElement(pb_type_xml, "blif_model",
@@ -874,9 +872,7 @@ def make_pb_type(
                     flatten=False,
                     aig=False,
                     mode=smode,
-                    module_with_mode=mod.name
-                )
-            )
+                    module_with_mode=mod.name))
             mode_mod = mode_yj.module(mod.name)
 
             inter = {}
@@ -884,13 +880,13 @@ def make_pb_type(
             # The mode has no children. Don't generate a pb_type then. Make
             # only the interconnect instead.
             if len(mode_mod.cells) == 0:
-                inter.update(get_interconnects(
-                    mode_yj, mode_mod, smode, [smode]))
+                inter.update(
+                    get_interconnects(mode_yj, mode_mod, smode, [smode]))
 
             # The mode has children, recurse
             else:
-                make_pb_type(infiles, outfile, mode_yj, mode_mod,
-                             True, mode_xml, smode)
+                make_pb_type(
+                    infiles, outfile, mode_yj, mode_mod, True, mode_xml, smode)
                 inter.update(mode_interconnects(mod, smode))
 
             # Add or update the interconnect.
@@ -901,9 +897,7 @@ def make_pb_type(
             for (driv_cell, driv_pin), sinks in inter.items():
                 for (sink_cell, sink_pin), attrs in sinks:
                     make_direct_conn(
-                        ic_xml,
-                        (driv_cell, driv_pin),
-                        (sink_cell, sink_pin),
+                        ic_xml, (driv_cell, driv_pin), (sink_cell, sink_pin),
                         attrs)
 
     if not modes or mode_processing:
@@ -913,8 +907,7 @@ def make_pb_type(
 
         if routing or children:
             make_container_pb(
-                outfile, yj, mod, mod_pname, pb_type_xml, routing, children
-            )
+                outfile, yj, mod, mod_pname, pb_type_xml, routing, children)
         else:
             make_leaf_pb(outfile, yj, mod, mod_pname, pb_type_xml)
 
@@ -926,8 +919,9 @@ def vlog_to_pbtype(infiles, outfile, top=None):
     # Check Yosys version
     pfx = run.determine_select_prefix()
     if pfx != "=":
-        print("ERROR The version of Yosys found is outdated and not supported"
-              " by V2X")
+        print(
+            "ERROR The version of Yosys found is outdated and not supported"
+            " by V2X")
         sys.exit(-1)
 
     iname = os.path.basename(infiles[0])
@@ -946,9 +940,7 @@ def vlog_to_pbtype(infiles, outfile, top=None):
             print(
                 "ERROR file name not of format %.sim.v ({}),"
                 " cannot detect top level. Manually specify"
-                " the top level module using --top".
-                format(iname)
-            )
+                " the top level module using --top".format(iname))
             sys.exit(1)
 
     top = top.upper()
@@ -958,8 +950,5 @@ def vlog_to_pbtype(infiles, outfile, top=None):
     pb_type_xml = make_pb_type(infiles, outfile, yj, tmod)
 
     return ET.tostring(
-        pb_type_xml,
-        pretty_print=True,
-        encoding="utf-8",
-        xml_declaration=True
-    ).decode('utf-8')
+        pb_type_xml, pretty_print=True, encoding="utf-8",
+        xml_declaration=True).decode('utf-8')

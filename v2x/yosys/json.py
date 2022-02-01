@@ -8,7 +8,6 @@
 # https://opensource.org/licenses/ISC
 #
 # SPDX-License-Identifier:	ISC
-
 """
 This is intended to provide a range of helper functions around the output of
 Yosys' `write_json`. Depending on the tasks, this may need to be flattened
@@ -28,8 +27,7 @@ class YosysModule:
 
     def __str__(self):
         return "YosysModule({},\n{})".format(
-            self.name, pprint.pformat(self.data)
-        )
+            self.name, pprint.pformat(self.data))
 
     @property
     def ports(self):
@@ -46,8 +44,7 @@ class YosysModule:
         plist = []
         for port, pdata in sorted(self.data["ports"].items()):
             plist.append(
-                (port, len(pdata["bits"]), pdata["bits"], pdata["direction"])
-            )
+                (port, len(pdata["bits"]), pdata["bits"], pdata["direction"]))
         return plist
 
     @property
@@ -90,8 +87,7 @@ class YosysModule:
     def nets(self):
         """List the net ids available in the design."""
         return list(
-            sorted(set(n['bits'][0] for n in self.data["netnames"].values()))
-        )
+            sorted(set(n['bits'][0] for n in self.data["netnames"].values())))
 
     def cell_type(self, cell):
         """Return the type of a given cell"""
@@ -240,8 +236,7 @@ class YosysModule:
                         conn_io.append(port)
                     else:
                         conn_io.append(
-                            "{}[{}]".format(port, pdata["bits"].index(net))
-                        )
+                            "{}[{}]".format(port, pdata["bits"].index(net)))
         return conn_io
 
     def conn_ports(self, net, pdir):
@@ -263,10 +258,8 @@ class YosysModule:
                         else:
                             conn_ports.append(
                                 (
-                                    cell,
-                                    "{}[{}]".format(port, condata.index(net))
-                                )
-                            )
+                                    cell, "{}[{}]".format(
+                                        port, condata.index(net))))
         return conn_ports
 
     def net_name(self, netid):
@@ -380,9 +373,7 @@ class YosysJSON:
         if module not in self.data["modules"]:
             raise KeyError(
                 "No yosys module named {} (only have {})".format(
-                    module, self.data["modules"].keys()
-                )
-            )
+                    module, self.data["modules"].keys()))
         return YosysModule(module, self.data["modules"][module])
 
     def modules_with_attr(self, attr_name, attr_value):

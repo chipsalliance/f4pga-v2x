@@ -63,8 +63,7 @@ class MuxPinType(Enum):
             return "output wire"
         else:
             raise TypeError(
-                "Can't convert {} into verilog definition.".format(self)
-            )
+                "Can't convert {} into verilog definition.".format(self))
 
     def direction(self):
         if self in (self.INPUT, self.SELECT):
@@ -73,8 +72,7 @@ class MuxPinType(Enum):
             return "output"
         else:
             raise TypeError(
-                "Can't convert {} into verilog definition.".format(self)
-            )
+                "Can't convert {} into verilog definition.".format(self))
 
     def __str__(self):
         return self.value
@@ -92,14 +90,12 @@ class ModulePort(object):
         if self.width == 1:
             if self.data_width is not None and self.data_width > 1:
                 return '\t%s [%d:0] %s;\n' % (
-                    self.pin_type.verilog(), self.data_width - 1, self.name
-                )
+                    self.pin_type.verilog(), self.data_width - 1, self.name)
             else:
                 return '\t%s %s;\n' % (self.pin_type.verilog(), self.name)
         else:
             return '\t%s %s %s;\n' % (
-                self.pin_type.verilog(), self.index, self.name
-            )
+                self.pin_type.verilog(), self.index, self.name)
 
 
 def pb_type_xml(mux_type, mux_name, pins, subckt=None, num_pb=1, comment=""):
@@ -131,8 +127,8 @@ def pb_type_xml(mux_type, mux_name, pins, subckt=None, num_pb=1, comment=""):
     xml.etree.ElementTree
         pb_type.xml for requested mux
     """
-    assert isinstance(comment,
-                      str), "{} {}".format(type(comment), repr(comment))
+    assert isinstance(comment, str), "{} {}".format(
+        type(comment), repr(comment))
 
     if mux_type not in (MuxType.LOGIC, MuxType.ROUTING):
         assert False, "Unknown type {}".format(mux_type)
@@ -141,8 +137,7 @@ def pb_type_xml(mux_type, mux_name, pins, subckt=None, num_pb=1, comment=""):
         'pb_type', {
             'name': mux_name,
             'num_pb': str(num_pb),
-        }
-    )
+        })
 
     if mux_type == MuxType.LOGIC:
         add_metadata(pb_type_xml, 'bel', 'mux')
@@ -154,8 +149,7 @@ def pb_type_xml(mux_type, mux_name, pins, subckt=None, num_pb=1, comment=""):
         model.text = '.subckt {}'.format(subckt)
     else:
         assert not subckt, "Provided subckt={} for non-logic mux!".format(
-            subckt
-        )
+            subckt)
 
     if comment is not None:
         pb_type_xml.append(ET.Comment(comment))
@@ -171,8 +165,7 @@ def pb_type_xml(mux_type, mux_name, pins, subckt=None, num_pb=1, comment=""):
 
         assert port.width == 1 or port.data_width == 1, (
             'Only one of width(%d) or data_width(%d) may > 1 for pin %s' %
-            (port.width, port.data_width, port.name)
-        )
+            (port.width, port.data_width, port.name))
 
         if port.width == 1 and port.data_width > 1:
             num_pins = port.data_width
@@ -244,8 +237,7 @@ def pb_type_xml(mux_type, mux_name, pins, subckt=None, num_pb=1, comment=""):
 
         meta_fasm_mux = ET.SubElement(meta_root, 'meta', {'key': 'fasm_mux'})
         meta_fasm_mux.text = "\n".join(
-            [""] + ["{0} = {0}".format(i) for i in inputs] + [""]
-        )
+            [""] + ["{0} = {0}".format(i) for i in inputs] + [""])
 
     return pb_type_xml
 
