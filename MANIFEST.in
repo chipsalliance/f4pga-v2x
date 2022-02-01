@@ -11,7 +11,7 @@ prune third_party
 include *.md
 
 # Include the license file
-include COPYING
+include LICENSE
 
 include *.yapf
 include *.txt
