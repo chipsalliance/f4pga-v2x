@@ -1,5 +1,5 @@
 # Dependencies from setup.py's install_requires + setup_requires
--e git+https://github.com/SymbiFlow/vtr-xml-utils.git#egg=vtr-xml-utils
+-e git+https://github.com/chipsalliance/vtr-xml-utils.git#egg=vtr-xml-utils
 -e .
 
 # Required for development

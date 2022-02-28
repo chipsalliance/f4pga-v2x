@@ -14,7 +14,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-name: symbiflow-v2x
+name: f4pga-v2x
 channels:
   - defaults
   - litex-hub

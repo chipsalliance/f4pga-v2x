@@ -17,7 +17,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-# SymbiFlow V2X documentation build configuration file, created by
+# F4PGA V2X documentation build configuration file, created by
 # sphinx-quickstart on Mon Feb  5 11:04:37 2018.
 #
 # This file is execfile()d with the current directory set to its
@@ -86,17 +86,17 @@ source_parsers = {
 master_doc = 'index'
 
 # General information about the project.
-project = u'SymbiFlow Verilog to XML (V2X)'
-copyright = u'2018, SymbiFlow Team'
-author = u'SymbiFlow Team'
+project = u'F4PGA Verilog to XML (V2X)'
+copyright = u'2018-2022, F4PGA Authors'
+author = u'F4PGA Authors'
 
 # Enable github links when not on readthedocs
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
 if not on_rtd:
     html_context = {
         "display_github": True,  # Integrate GitHub
-        "github_user": "symbiflow",  # Username
-        "github_repo": "python-symbiflow-v2x",  # Repo name
+        "github_user": "chipsalliance",  # Username
+        "github_repo": "f4pga-v2x",  # Repo name
         "github_version": "master",  # Version
         "conf_py_path": "/doc/",
     }
@@ -170,7 +170,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'symbiflow-v2x'
+htmlhelp_basename = 'f4pga-v2x'
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -197,8 +197,8 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (
-        master_doc, 'SymbiFlowV2X.tex', u'SymbiFlow V2X Documentation',
-        u'SymbiFlow Team', 'manual'),
+        master_doc, 'F4PGAV2X.tex', u'F4PGA V2X Documentation',
+        u'F4PGA Authors', 'manual'),
 ]
 
 # -- Options for manual page output ---------------------------------------
@@ -206,7 +206,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'symbiflow-v2x', u'SymbiFlow V2X Documentation', [author], 1)
+    (master_doc, 'f4pga-v2x', u'F4PGA V2X Documentation', [author], 1)
 ]
 
 # -- Options for Texinfo output -------------------------------------------
@@ -216,8 +216,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (
-        master_doc, 'SymbiFlowV2X', u'SymbiFlow V2X Documentation', author,
-        'SymbiFlowV2X', 'One line description of project.', 'Miscellaneous'),
+        master_doc, 'F4PGAV2X', u'F4PGA V2X Documentation', author,
+        'F4PGAV2X', 'One line description of project.', 'Miscellaneous'),
 ]
 
 # Example configuration for intersphinx: refer to the Python standard library.
@@ -228,7 +228,7 @@ def setup(app):
     # Collect tests to form examples
     collect_examples()
 
-    github_code_repo = 'https://github.com/SymbiFlow/python-symbiflow-v2x/'
+    github_code_repo = 'https://github.com/chipsalliance/f4pga-v2x/'
     github_code_branch = 'blob/master/'
 
     docs_root_dir = os.path.realpath(os.path.dirname(__file__))

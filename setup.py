@@ -26,13 +26,13 @@ setuptools.setup(
     name="v2x",
     version="0.0.1",
     entry_points={"console_scripts": ["v2x=v2x.__main__:v2x"]},
-    author="SymbiFlow Authors",
-    author_email="symbiflow@lists.librecores.org",
+    author="F4PGA Authors",
+    author_email="f4pga-wg@lists.chipsalliance.org",
     description="Python library for generating VPR architecture \
                 description files from Verilog models.",
     long_description=long_description,
     long_description_content_type="text/x-rst",
-    url="https://github.com/SymbiFlow/python-symbiflow-v2x",
+    url="https://github.com/chipsalliance/f4pga-v2x",
     packages=setuptools.find_packages(),
     install_requires=[
         'lxml',

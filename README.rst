@@ -1,20 +1,15 @@
-Verilog to Routing XML file generation from Verilog (`python-symbiflow-v2x`)
-=============================================================================
+Verilog to Routing XML file generation from Verilog (`f4pga-v2x`)
+=================================================================
 
 
-.. image:: https://readthedocs.org/projects/python-symbiflow-v2x/badge/?version=latest
-   :target: https://python-symbiflow-v2x.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/f4pga-v2x/badge/?version=latest
+   :target: https://f4pga-v2x.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
-
-.. image:: https://travis-ci.com/SymbiFlow/python-symbiflow-v2x.svg?branch=master
-   :target: https://travis-ci.com/SymbiFlow/python-symbiflow-v2x
-   :alt: Build Status
-
 
 v2x is a tool for converting specialized annotated Verilog models into XML needed for
 `Verilog to Routing flow <https://docs.verilogtorouting.org/en/latest/arch/reference/>`_.
 
-Documentation can be found at `https://python-symbiflow-v2x.readthedocs.io/en/latest/ <https://python-symbiflow-v2x.readthedocs.io/en/latest/>`_.
+Documentation can be found at `https://f4pga-v2x.readthedocs.io/en/latest/ <https://f4pga-v2x.readthedocs.io/en/latest/>`_.
 
 Installation
 ------------
@@ -23,14 +18,14 @@ v2x can be installed from a local git repository using pip.
 
 .. code-block::
 
-   cd python-symbiflow-v2x
+   cd f4pga-v2x
    pip install .
 
 Alternatively, it can be installed from GitHub directly.
 
 .. code-block::
 
-   pip install git+https://github.com/SymbiFlow/python-symbiflow-v2x.git#egg=python-symbiflow-v2x
+   pip install git+https://github.com/chipsalliance/f4pga-v2x.git#egg=f4pga-v2x
 
 Usage
 -----
