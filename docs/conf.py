@@ -23,14 +23,19 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+
+from pathlib import Path
+
 from collect_examples import collect_examples
 from pygments.lexers.hdl import VerilogLexer
 from sphinx.highlighting import lexers
-import re
+from re import sub as re_sub
 
-import os
-import sys
-sys.path.insert(0, os.path.abspath('.'))
+from os import path as os_path, environ, popen
+from sys import path as sys_path
+
+sys_path.insert(0, os_path.abspath('.'))
+
 from markdown_code_symlinks import LinkParser, MarkdownSymlinksDomain  # noqa
 
 
@@ -65,15 +70,15 @@ source_parsers = {
 
 master_doc = 'index'
 
-on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+on_rtd = environ.get('READTHEDOCS', None) == 'True'
 if on_rtd:
-    docs_dir = os.path.abspath(os.path.dirname(__file__))
+    docs_dir = os_path.abspath(os_path.dirname(__file__))
     print("Docs dir is:", docs_dir)
     import subprocess
     subprocess.call('git fetch origin --unshallow', cwd=docs_dir, shell=True)
     subprocess.check_call('git fetch origin --tags', cwd=docs_dir, shell=True)
 
-release = re.sub('^v', '', os.popen('git describe ').read().strip())
+release = re_sub('^v', '', popen('git describe ').read().strip())
 version = release
 
 language = None
@@ -107,6 +112,9 @@ html_theme_options = {
 }
 
 html_static_path = ['_static']
+
+html_logo = str(Path(html_static_path[0]) / 'logo.svg')
+html_favicon = str(Path(html_static_path[0]) / 'favicon.svg')
 
 # -- Options for HTMLHelp output ------------------------------------------
 
@@ -145,8 +153,8 @@ def setup(app):
     github_code_repo = 'https://github.com/chipsalliance/f4pga-v2x/'
     github_code_branch = 'blob/master/'
 
-    docs_root_dir = os.path.realpath(os.path.dirname(__file__))
-    code_root_dir = os.path.realpath(os.path.join(docs_root_dir, ".."))
+    docs_root_dir = os_path.realpath(os_path.dirname(__file__))
+    code_root_dir = os_path.realpath(os_path.join(docs_root_dir, ".."))
 
     MarkdownSymlinksDomain.init_domain(
         github_code_repo, github_code_branch, docs_root_dir, code_root_dir)
