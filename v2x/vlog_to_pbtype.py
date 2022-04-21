@@ -580,7 +580,10 @@ def make_container_pb(
         module_prefix = re.match(r"([A-Za-z0-9_]+)\.sim\.v",
                                  module_basename).groups()[0]
 
-        pb_type_path = "{}/{}.pb_type.xml".format(module_path, module_prefix)
+        if len(module_path) != 0:
+            pb_type_path = "{}/{}.pb_type.xml".format(module_path, module_prefix)
+        else:
+            pb_type_path = "{}.pb_type.xml".format(module_prefix)
 
         include_as_is = True
         comment_str = ""
