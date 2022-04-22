@@ -584,6 +584,8 @@ def make_container_pb(
             pb_type_path = "{}/{}.pb_type.xml".format(module_path, module_prefix)
         else:
             pb_type_path = "{}.pb_type.xml".format(module_prefix)
+            if module_path:
+                pb_type_path = os.path.join(module_path, pb_type_path)
 
         include_as_is = True
         comment_str = ""
