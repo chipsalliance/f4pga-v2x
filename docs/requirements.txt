@@ -1,4 +1,4 @@
-git+http://github.com/SymbiFlow/sphinx_symbiflow_theme.git@master#egg=sphinx_symbiflow_theme
+https://github.com/f4pga/sphinx_f4pga_theme/archive/f4pga.zip#sphinx-f4pga-theme
 
 docutils
 sphinx-autobuild
@@ -8,10 +8,10 @@ sphinx-markdown-tables
 sphinxcontrib-napoleon
 
 # Markdown cross-reference solver library
-git+https://github.com/SymbiFlow/sphinxcontrib-markdown-symlinks.git@master#egg=markdown_code_symlinks
+https://github.com/SymbiFlow/sphinxcontrib-markdown-symlinks/archive/master.zip#markdown_code_symlinks
 
 # HDL diagrams using Yosys + netlistsvg
-git+https://github.com/SymbiFlow/sphinxcontrib-hdl-diagrams.git@master#egg=sphinxcontrib-hdl-diagrams
+https://github.com/SymbiFlow/sphinxcontrib-hdl-diagrams/archive/master.zip#sphinxcontrib-hdl-diagrams
 
 pycairo
 # vext.gi
@@ -20,4 +20,4 @@ pycairo
 -e ../
 
 # XML utils
-git+https://github.com/chipsalliance/vtr-xml-utils.git#egg=vtr-xml-utils
+https://github.com/chipsalliance/vtr-xml-utils/archive/master.zip#vtr-xml-utils
